@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>중국어 플래시 카드</title>
+    <style>
+        /* [디자인 요구사항] 2. 깔끔하고 모던한 UI */
+        /* 눈이 편안한 배경색 */
+        body {
+            font-family: 'Noto Sans KR', 'Noto Sans SC', sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        /* [기능 요구사항] 1. 카드 뒤집기 애니메이션 */
+        .card-container {
+            width: 350px;
+            height: 250px;
+            perspective: 1000px;
+            cursor: pointer;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* 입체감 그림자 */
+            border-radius: 15px;
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 15px;
+            background-color: white;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* 카드 앞면 */
+        .card-front {
+            z-index: 2;
+        }
+
+        /* 카드 뒷면 */
+        .card-back {
+            transform: rotateY(180deg);
+            z-index: 1;
+        }
+
+        /* [디자인 요구사항] 3. 중국어 한자 폰트 크기 */
+        .hanzi {
+            font-size: 64px;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .pinyin {
+            font-size: 24px;
+            color: #7f8c8d;
+        }
+
+        .meaning {
+            font-size: 28px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .example {
+            font-size: 16px;
+            color: #34495e;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        /* 버튼 영역 */
+        .controls {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* [기능 요구사항] 2. 버튼 디자인 */
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-btn {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .nav-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .shuffle-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .shuffle-btn:hover {
+            background-color: #c0392b;
+        }
+
+        /* [디자인 요구사항] 1. 모바일 반응형 */
+        @media (max-width: 400px) {
+            .card-container {
+                width: 90%;
+                height: 200px;
+            }
+            .hanzi {
+                font-size: 48px;
+            }
+            .meaning {
+                font-size: 24px;
+            }
+            button {
+                padding: 10px 18px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 카드 컨테이너 -->
+    <div class="card-container" onclick="flipCard()">
+        <div class="card" id="card">
+            <!-- 앞면: 중국어 한자, 병음 -->
+            <div class="card-face card-front">
+                <div class="hanzi" id="hanzi">你好</div>
+                <div class="pinyin" id="pinyin">nǐ hǎo</div>
+            </div>
+            <!-- 뒷면: 한국어 뜻, 예문 -->
+            <div class="card-face card-back">
+                <div class="meaning" id="meaning">안녕하세요</div>
+                <div class="example" id="example">你好！很高兴认识你。</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 컨트롤 버튼 -->
+    <div class="controls">
+        <button class="nav-btn" onclick="prevCard()">이전 카드</button>
+        <button class="shuffle-btn" onclick="shuffleCards()">무작위 섞기</button>
+        <button class="nav-btn" onclick="nextCard()">다음 카드</button>
+    </div>
+
+    <script>
+        // [기능 요구사항] 3. 단어 데이터 (JSON 배열)
+        const wordData = [
+            { hanzi: "你好", pinyin: "nǐ hǎo", meaning: "안녕하세요", example: "你好！很高兴认识你。" },
+            { hanzi: "谢谢", pinyin: "xièxie", meaning: "감사합니다", example: "谢谢你的帮助。" },
+            { hanzi: "再见", pinyin: "zàijiàn", meaning: "안녕히 계세요", example: "明天见，再见！" },
+            { hanzi: "学习", pinyin: "xuéxí", meaning: "공부하다", example: "我正在学习汉语。" },
+            { hanzi: "朋友", pinyin: "péngyou", meaning: "친구", example: "他是我的好朋友。" },
+            { hanzi: "中国", pinyin: "Zhōngguó", meaning: "중국", example: "我喜欢中国菜。" }
+        ];
+
+        let currentIndex = 0;
+        const cardElement = document.getElementById('card');
+        const hanziElement = document.getElementById('hanzi');
+        const pinyinElement = document.getElementById('pinyin');
+        const meaningElement = document.getElementById('meaning');
+        const exampleElement = document.getElementById('example');
+
+        // 카드 콘텐츠 업데이트 함수
+        function updateCardContent() {
+            const currentWord = wordData[currentIndex];
+            hanziElement.textContent = currentWord.hanzi;
+            pinyinElement.textContent = currentWord.pinyin;
+            meaningElement.textContent = currentWord.meaning;
+            exampleElement.textContent = currentWord.example;
+            // 카드가 뒤집혀 있다면 앞면으로 초기화
+            if (cardElement.classList.contains('flipped')) {
+                cardElement.classList.remove('flipped');
+            }
+        }
+
+        // 카드 뒤집기 함수
+        function flipCard() {
+            cardElement.classList.toggle('flipped');
+        }
+
+        // 이전 카드 함수
+        function prevCard() {
+            currentIndex = (currentIndex - 1 + wordData.length) % wordData.length;
+            updateCardContent();
+        }
+
+        // 다음 카드 함수
+        function nextCard() {
+            currentIndex = (currentIndex + 1) % wordData.length;
+            updateCardContent();
+        }
+
+        // 카드 무작위 섞기 함수
+        function shuffleCards() {
+            for (let i = wordData.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [wordData[i], wordData[j]] = [wordData[j], wordData[i]];
+            }
+            currentIndex = 0; // 첫 번째 카드부터 시작
+            updateCardContent();
+        }
+
+        // 초기 화면 설정
+        updateCardContent();
+
+    </script>
+</body>
+</html>
