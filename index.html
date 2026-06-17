@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎀 산리오 친구들과 함께하는 중국어 단어장 🎀</title>
-    <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Noto+Sans+SC:wght@500;700&display=swap" rel="stylesheet">
+    <title>🎀 스마트 중국어 1 _단어장 🎀</title>
+    <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Noto+Sans+SC:wght@500;700&family=Roboto:wght@500;700&display=swap" rel="stylesheet">
     <style>
         body {
-            /* [귀여운 UI] 파스텔 핑크톤 배경 */
-            font-family: 'Gaegu', cursive; /* 귀여운 손글씨풍 폰트 */
+            font-family: 'Gaegu', cursive;
             background-color: #ffeef2;
-            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj48ZyBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmRkZTUiIGZpbGwtb3BhY2l0eT0iMC41Ij48cGF0aCBkPSJNMCAwaDIwdjIwSDB6bTIwIDIwaDIwdjIwSDIwek0yMCAwaDIwdjIwSDIwek0wIDIwaDIwdjIwSDB6Ii8+PC9nPjwvZz48L3N2Zz4='); /* 은은한 패턴 배경 */
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj48ZyBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmRkZTUiIGZpbGwtb3BhY2l0eT0iMC41Ij48cGF0aCBkPSJNMCAwaDIwdjIwSDB6bTIwIDIwaDIwdjIwSDIwek0yMCAwaDIwdjIwSDIwek0wIDIwaDIwdjIwSDB6Ii8+PC9nPjwvZz48L3N2Zz4=');
             margin: 0;
             display: flex;
             justify-content: center;
@@ -22,7 +21,7 @@
             color: #5d4037;
         }
 
-        /* 상단 필터 영역 - 귀여운 리본 스타일 */
+        /* 상단 필터 영역 */
         .filter-container {
             margin-bottom: 25px;
             display: flex;
@@ -52,7 +51,7 @@
             cursor: pointer;
             font-family: 'Gaegu', cursive;
             color: #c71585;
-            appearance: none; /* 기본 화살표 숨기기 */
+            appearance: none;
             background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNNyAxMGw1IDUgNS01eiIgZmlsbD0iI2NmMTU4NSIvPjwvc3ZnPg==');
             background-repeat: no-repeat;
             background-position: right 10px center;
@@ -62,10 +61,9 @@
         select:focus {
             outline: none;
             border-color: #ff69b4;
-            box-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
         }
 
-        /* 카드 컨테이너 - 쿠로미의 장난기 가득한 보라색 테두리 */
+        /* 카드 컨테이너 */
         .card-container {
             width: 380px;
             height: 280px;
@@ -79,11 +77,11 @@
             width: 100%;
             height: 100%;
             transform-style: preserve-3d;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); /* 좀 더 생동감 있는 애니메이션 */
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             border-radius: 20px;
-            border: 4px solid #b39ddb; /* 보라색 테두리 */
-            box-shadow: 0 12px 25px rgba(179, 157, 219, 0.5); /* 보라색 그림자 */
+            border: 4px solid #b39ddb;
+            box-shadow: 0 12px 25px rgba(179, 157, 219, 0.5);
         }
 
         .card.flipped {
@@ -99,28 +97,25 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            border-radius: 16px; /* 테두리 안쪽 둥글게 */
+            border-radius: 16px;
             background-color: white;
             padding: 25px;
             box-sizing: border-box;
             overflow: hidden;
         }
 
-        /* 카드 앞면 - 마이멜로디의 핑크 가득 */
         .card-front {
             z-index: 2;
             background-color: #fff5f8;
-            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj48ZyBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmRkZTUiIGZpbGwtb3BhY2l0eT0iMC4zIj48cGF0aCBkPSJNMzAgMEgyMHYxMGgxMFYwek0xMCAwSDB2MTBoMTBWMHpNMCAxMGgxMHYxMEgwVjEwek0xMCAyMGgxMHYxMEgxMFYyMHpNMjAgMzBoMTB2MTBIMjBWMzAwek0zMCA0MGgxMHYxMEgzMFY0MHpNMzAgMjBoMTB2MTBIMzBWMjB6TTQwIDEwaDEwdjEwSDQwVjEwek01MCAwaDEwdjEwSDU5VjB6TTQwIDMwaDEwdjEwSDQwVjMwek01MCAyMGgxMHYxMEg1OVYyMHpNMjAgMTBoMTB2MTBIMjBWMTB6TTMwIDMwaDEwdjEwSDMwVjMwek0xMCA0MGgxMHYxMEgxMFY0MHpNMCAzMGgxMHYxMEgwVjMwVjMwek00MCA1MGgxMHYxMEg0MFY1MHpNMjAgNTBoMTB2MTBIMjBWNTB6TTAgNTBoMTB2MTBIMFY1MHoiLz+PC9nPjwvZz48L3N2Zz4=');
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj48ZyBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmRkZTUiIGZpbGwtb3BhY2l0eT0iMC4zIj48cGF0aCBkPSJNMzAgMEgyMHYxMGgxMFYwek0xMCAwSDB2MTBoMTBWMHpNMCAxMGgxMHYxMEgwVjEwek0xMCAyMGgxMHYxMEgxMFYyMHpNMjAgMzBoMTB2MTBIMjBWMzAwek0zMCA0MGgxMHYxMEgzMFY0MHpNMzAgMjBoMTB2MTBIMzBWMjB6TTQwIDEwaDEwdjEwSDQwVjEwek01MCAwaDEwdjEwSDU5VjB6TTQwIDMwaDEwdjEwSDQwVjMwek01MCAyMGgxMHYxMEg1OVYyMHpNMjAgMTBoMTB2MTBIMjBWMTB6TTMwIDMwaDEwdjEwSDMwVjMwek0xMCA0MGgxMHYxMEgxMFY0MHpNMwAzeDEwdjEwSDBWMwVjMwek00MCA1MGgxMHYxMEg0MFY1MHpNMjAgNTBoMTB2MTBIMjBWNTB6TTAgNTBoMTB2MTBIMFY1MHoiLz+PC9nPjwvZz48L3N2Zz4=');
         }
 
-        /* 카드 뒷면 - 폼폼푸린의 따뜻한 옐로우 */
         .card-back {
             transform: rotateY(180deg);
             z-index: 1;
             background-color: #fffdeb;
         }
 
-        /* 단어 스타일 - 귀여운 리본 배지 */
         .chapter-badge {
             position: absolute;
             top: 15px;
@@ -136,11 +131,8 @@
             gap: 5px;
         }
         
-        .chapter-badge::before {
-            content: '🎀';
-        }
+        .chapter-badge::before { content: '🎀'; }
 
-        /* 모르는 단어 하트 버튼 - 더 크고 사랑스럽게 */
         .unknown-btn {
             position: absolute;
             top: 10px;
@@ -155,11 +147,8 @@
             transition: transform 0.2s;
         }
         
-        .unknown-btn:hover {
-            transform: scale(1.2) rotate(10deg);
-        }
+        .unknown-btn:hover { transform: scale(1.2) rotate(10deg); }
 
-        /* 캐릭터 아이콘 공간 */
         .character-icon {
             position: absolute;
             bottom: 10px;
@@ -172,25 +161,30 @@
             font-family: 'Noto Sans SC', sans-serif;
             font-size: 68px;
             font-weight: 700;
-            color: #d81b60; /* 진한 핑크 */
-            margin-bottom: 5px;
+            color: #d81b60;
+            margin-bottom: 8px;
             word-break: break-all;
             text-align: center;
             text-shadow: 2px 2px 0px white, 4px 4px 0px rgba(216, 27, 96, 0.2);
         }
 
+        /* [피드백 반영] 병음용 폰트를 균일한 고딕(Roboto)으로 교체 및 디자인 다듬기 */
         .pinyin {
-            font-size: 26px;
+            font-family: 'Roboto', 'Noto Sans KR', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
             color: #880e4f;
-            background-color: rgba(255, 255, 255, 0.7);
-            padding: 3px 10px;
-            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: 4px 14px;
+            border-radius: 12px;
+            letter-spacing: 0.5px; /* 균일하고 깔끔한 자간 설정 */
+            box-shadow: 0 2px 5px rgba(216, 27, 96, 0.05);
         }
 
         .meaning {
             font-size: 32px;
             font-weight: bold;
-            color: #bf360c; /* 진한 오렌지 브라운 */
+            color: #bf360c;
             margin-bottom: 15px;
             text-shadow: 1px 1px 0px white;
         }
@@ -206,7 +200,7 @@
             max-width: 90%;
         }
 
-        /* 하단 진행도 및 버튼 - 둥글둥글 귀여운 스타일 */
+        /* 하단 진행도 및 진행바 */
         .progress-container {
             display: flex;
             align-items: center;
@@ -245,9 +239,10 @@
             justify-content: center;
         }
 
+        /* [피드백 반영] 하단 조작 버튼들의 글씨 크기 확대 (18px -> 22px) 및 패딩 조절 */
         button {
-            padding: 15px 25px;
-            font-size: 18px;
+            padding: 14px 28px;
+            font-size: 22px; 
             font-family: 'Gaegu', cursive;
             font-weight: bold;
             border: none;
@@ -264,40 +259,29 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        /* 이전/다음 버튼 - 시나모롤처럼 깨끗한 블루 */
         .nav-btn {
             background-color: #b3e5fc;
             color: #01579b;
             border: 2px solid #81d4fa;
         }
         
-        .nav-btn:hover {
-            background-color: #81d4fa;
-        }
+        .nav-btn:hover { background-color: #81d4fa; }
 
-        /* 무작위 섞기 버튼 - 헬로키티의 상징 빨간색 */
         .shuffle-btn {
             background-color: #ffcdd2;
             color: #b71c1c;
             border: 2px solid #ef9a9a;
         }
         
-        .shuffle-btn:hover {
-            background-color: #ef9a9a;
-        }
+        .shuffle-btn:hover { background-color: #ef9a9a; }
 
-        /* 반응형 디자인 */
         @media (max-width: 420px) {
             .card-container { width: 95%; height: 250px; }
             .hanzi { font-size: 56px; }
             .meaning { font-size: 28px; }
-            .pinyin { font-size: 22px; }
+            .pinyin { font-size: 20px; }
             .example { font-size: 16px; }
-            .filter-container { padding: 10px 15px; }
-            .filter-label { font-size: 18px; }
-            select { font-size: 16px; padding: 8px 15px; padding-right: 35px; }
-            button { font-size: 16px; padding: 12px 20px; }
-            .character-icon { font-size: 30px; }
+            button { font-size: 18px; padding: 12px 22px; } /* 모바일에서도 적절히 크게 유지 */
         }
     </style>
 </head>
@@ -322,12 +306,14 @@
                 <span class="chapter-badge" id="front-badge">1과</span>
                 <div class="hanzi" id="hanzi">加载중..</div>
                 <div class="pinyin" id="pinyin">pinyin</div>
-                <div class="character-icon">🐰🎀</div> </div>
+                <div class="character-icon">🐰🎀</div>
+            </div>
             <div class="card-face card-back">
                 <span class="chapter-badge" id="back-badge">1과</span>
                 <div class="meaning" id="meaning">뜻</div>
                 <div class="example" id="example">예문</div>
-                <div class="character-icon">🐶🍮</div> </div>
+                <div class="character-icon">🐶🍮</div>
+            </div>
         </div>
     </div>
 
@@ -345,7 +331,7 @@
     </div>
 
     <script>
-        // 단어 데이터베이스 (예시 데이터)
+        // 단어 데이터베이스
         const totalWordData = [
             { id: 1, chapter: "1", hanzi: "你好", pinyin: "nǐ hǎo", meaning: "안녕하세요", example: "你好！很高兴认识你。" },
             { id: 2, chapter: "1", hanzi: "谢谢", pinyin: "xièxie", meaning: "감사합니다", example: "谢谢你的帮助。" },
@@ -356,13 +342,10 @@
             { id: 7, chapter: "1", hanzi: "再见", pinyin: "zàijiàn", meaning: "안녕히 계세요", example: "明天见，再见！" }
         ];
 
-        // 로컬 저장소에서 '모르는 단어 ID 목록' 가져오기
         let unknownWordIds = JSON.parse(localStorage.getItem('sanrioUnknownWords')) || [];
-
         let currentFilteredData = [...totalWordData];
         let currentIndex = 0;
 
-        // DOM 요소 가져오기
         const cardElement = document.getElementById('card');
         const hanziElement = document.getElementById('hanzi');
         const pinyinElement = document.getElementById('pinyin');
@@ -374,10 +357,8 @@
         const frontBadge = document.getElementById('front-badge');
         const backBadge = document.getElementById('back-badge');
 
-        // 카테고리(과) 변경 함수
         function changeCategory() {
             const selectedValue = document.getElementById('chapter-select').value;
-            
             if (selectedValue === "all") {
                 currentFilteredData = [...totalWordData];
             } else if (selectedValue === "unknown") {
@@ -385,12 +366,10 @@
             } else {
                 currentFilteredData = totalWordData.filter(word => word.chapter === selectedValue);
             }
-
             currentIndex = 0;
             updateCardContent();
         }
 
-        // 카드 화면 업데이트
         function updateCardContent() {
             if (currentFilteredData.length === 0) {
                 hanziElement.textContent = "단어 없음";
@@ -406,9 +385,7 @@
                 return;
             }
             
-            // 폰트 사이즈 원상복구
             hanziElement.style.fontSize = ''; 
-
             heartElement.style.display = "block";
             const currentWord = currentFilteredData[currentIndex];
             
@@ -419,83 +396,68 @@
             frontBadge.textContent = currentWord.chapter + "과";
             backBadge.textContent = currentWord.chapter + "과";
 
-            // 하트 상태 표시 (모르는 단어이면 반짝이는 하트)
             if (unknownWordIds.includes(currentWord.id)) {
                 heartElement.textContent = "💖";
             } else {
                 heartElement.textContent = "🤍";
             }
 
-            // 진행도 업데이트
             const total = currentFilteredData.length;
             const current = currentIndex + 1;
             progressElement.textContent = `${current} / ${total}`;
             progressBarFill.style.width = `${(current / total) * 100}%`;
 
-            // 카드가 뒤집혀 있다면 앞면으로 초기화
             if (cardElement.classList.contains('flipped')) {
                 cardElement.classList.remove('flipped');
             }
         }
 
-        // 카드 뒤집기
-        function flipCard() {
-            cardElement.classList.toggle('flipped');
-        }
+        function flipCard() { cardElement.classList.toggle('flipped'); }
 
-        // 모르는 단어 토글 (하트 누르기)
         function toggleUnknown(event) {
-            event.stopPropagation(); // 카드가 뒤집히지 않도록 방지
+            event.stopPropagation();
             if (currentFilteredData.length === 0) return;
 
             const currentWord = currentFilteredData[currentIndex];
             const wordId = currentWord.id;
 
             if (unknownWordIds.includes(wordId)) {
-                // 이미 있으면 제거 (아는 단어가 됨)
                 unknownWordIds = unknownWordIds.filter(id => id !== wordId);
                 heartElement.textContent = "🤍";
             } else {
-                // 없으면 추가 (모르는 단어가 됨)
                 unknownWordIds.push(wordId);
                 heartElement.textContent = "💖";
             }
 
-            // 로컬 저장소에 저장 (키 이름을 산리오 버전용으로 변경)
             localStorage.setItem('sanrioUnknownWords', JSON.stringify(unknownWordIds));
 
-            // 만약 '모르는 단어 보기' 모드였다면 리스트를 갱신해야 하므로 카테고리 재적용
             if (document.getElementById('chapter-select').value === "unknown") {
                 changeCategory();
             }
         }
 
-        // 이전 카드
         function prevCard() {
             if (currentFilteredData.length <= 1) return;
             currentIndex = (currentIndex - 1 + currentFilteredData.length) % currentFilteredData.length;
             updateCardContent();
         }
 
-        // 다음 카드
         function nextCard() {
             if (currentFilteredData.length <= 1) return;
             currentIndex = (currentIndex + 1) % currentFilteredData.length;
             updateCardContent();
         }
 
-        // 카드 무작위 섞기
         function shuffleCards() {
             if (currentFilteredData.length <= 1) return;
             for (let i = currentFilteredData.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [currentFilteredData[i], currentFilteredData[j]] = [currentFilteredData[j], currentFilteredData[i]];
             }
-            currentIndex = 0; // 첫 번째 카드부터 시작
+            currentIndex = 0;
             updateCardContent();
         }
 
-        // 키보드 방향키 및 스페이스바 지원
         document.addEventListener('keydown', function(event) {
             if (event.code === 'Space') {
                 event.preventDefault();
@@ -507,7 +469,6 @@
             }
         });
 
-        // 페이지 로드 시 초기화
         changeCategory();
     </script>
 </body>
