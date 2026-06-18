@@ -235,7 +235,6 @@
         .autoplay-btn { background-color: #ffe082; color: #e65100; border: 2px solid #ffd54f; }
         .autoplay-btn.active { background-color: #ffb300; color: white; }
 
-        /* 팝업 레이어 */
         .modal {
             display: none; position: fixed; z-index: 100; left: 0; top: 0; 
             width: 100%; height: 100%; background-color: rgba(0,0,0,0.4);
@@ -265,7 +264,6 @@
         .list-pinyin { font-size: 14px; color: #880e4f; font-family: 'Roboto', sans-serif; margin-left: 10px;}
         .list-meaning { font-size: 18px; color: #5d4037; font-weight: bold; }
 
-        /* 게임 */
         .game-grid {
             display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
         }
@@ -487,7 +485,6 @@
             else {
                 autoplayBtn.classList.add('active');
                 autoplayBtn.textContent = "⏸️ 재생 중";
-                // ★ 1.5초(1500ms)로 속도 업!
                 autoplayTimer = setInterval(() => {
                     if (!cardElement.classList.contains('flipped')) flipCard();
                     else nextCard();
@@ -509,19 +506,23 @@
             else unknownWordIds.push(id);
             heartElement.textContent = unknownWordIds.includes(id) ? "💖" : "🤍";
             localStorage.setItem('sanrioUnknownWords', JSON.stringify(unknownWordIds));
+            if (document.getElementById('chapter-select').value === "unknown") { changeCategory(); }
         }
 
         function prevCard() {
+            if (currentFilteredData.length <= 1) return;
             currentIndex = (currentIndex - 1 + currentFilteredData.length) % currentFilteredData.length;
             updateCardContent();
         }
 
         function nextCard() {
+            if (currentFilteredData.length <= 1) return;
             currentIndex = (currentIndex + 1) % currentFilteredData.length;
             updateCardContent();
         }
 
         function shuffleCards() {
+            if (currentFilteredData.length <= 1) return;
             for (let i = currentFilteredData.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [currentFilteredData[i], currentFilteredData[j]] = [currentFilteredData[j], currentFilteredData[i]];
@@ -530,7 +531,6 @@
             updateCardContent();
         }
 
-        // 모달 관리
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
         function closeModalOnBackground(e, id) { if (e.target.id === id) closeModal(id); }
@@ -559,7 +559,6 @@
             buildWordList(res);
         }
 
-        // 게임
         function openGameModal() { if(currentFilteredData.length < 4) return; initMatchingGame(); openModal('game-modal'); }
         function initMatchingGame() {
             selectedGameItems = []; matchedCount = 0;
@@ -594,6 +593,13 @@
                 g.appendChild(div);
             });
         }
+
+        // ⌨️ 유저님이 말씀하신 소중한 키보드 조작 기능 원상 복구 완료!
+        document.addEventListener('keydown', function(event) {
+            if (event.code === 'Space') { event.preventDefault(); flipCard(); stopAutoplay(); }
+            else if (event.code === 'ArrowLeft') { prevCard(); stopAutoplay(); }
+            else if (event.code === 'ArrowRight') { nextCard(); stopAutoplay(); }
+        });
 
         loadWordData();
     </script>
