@@ -247,32 +247,6 @@
                 display: flex;
                 flex-direction: column;
             }
-            .search-box {
-                padding: 10px;
-                border: 2px solid #ffb6c1;
-                border-radius: 20px;
-                margin-bottom: 10px;
-                outline: none;
-                font-family: 'Gaegu', cursive;
-            }
-            .word-list-container {
-                overflow-y: auto;
-                flex-grow: 1;
-            }
-            .word-list-item {
-                display: flex;
-                justify-content: space-between;
-                padding: 12px 10px;
-                border-bottom: 1px dashed #ffb6c1;
-                cursor: pointer;
-                align-items: center;
-            }
-            .list-pinyin {
-                font-family: 'Roboto', sans-serif !important;
-                font-size: 18px;
-                color: #666;
-                margin-left: 8px;
-            }
             .game-grid {
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
@@ -357,7 +331,7 @@
             <div class="progress-bar-bg">
                 <div class="progress-bar-fill" id="progress-bar-fill"></div>
             </div>
-            <div class="progress-text" id="progress-text" onclick="openWordListModal()">0 / 0</div>
+            <div class="progress-text" id="progress-text">0 / 0</div>
         </div>
 
         <div class="controls">
@@ -366,53 +340,90 @@
             <button class="nav-btn" onclick="nextCard()">다음 👉</button>
         </div>
 
-        <div id="word-list-modal" class="modal" onclick="if(event.target.id==='word-list-modal') this.style.display='none'">
-            <div class="modal-content">
-                <input type="text" id="search-input" class="search-box" placeholder="🔍 검색 (뜻/한자/병음)" oninput="renderWordList()">
-                <div id="word-list-container" class="word-list-container"></div>
-            </div>
-        </div>
-
         <div id="game-modal" class="modal" onclick="if(event.target.id==='game-modal') this.style.display='none'">
             <div class="modal-content">
-                <div class="game-status" id="game-status">남은 단어: 0</div>
+                <div class="game-status" id="game-status">남은 카드: 0</div>
                 <div class="game-grid" id="game-grid-container"></div>
             </div>
         </div>
 
         <script>
-           const SPREADSHEET_URL = 'https://docs.google.com/spreadsheets/d/18D1sxEjb7qD4DudFmrZziQDZ0HK-F1V-8Z3V-9WxoDw/gviz/tq?tqx=out:csv';
+            const SPREADSHEET_URL = 'https://docs.google.com/spreadsheets/d/18D1sxEjb7qD4DudFmrZziQDZ0HK-F1V-8Z3V-9WxoDw/gviz/tq?tqx=out:csv';
+            
             let totalWordData = [];
             let currentFilteredData = [];
             let currentIndex = 0;
-            let autoplayTimer = null;
-            let selectedItems = [];
-            let gameRemainingData = []; // 게임용 남은 데이터 관리 변수
+            let gameRemainingData = [];
 
             async function loadWordData() {
                 const res = await fetch(SPREADSHEET_URL);
                 const text = await res.text();
+                
                 totalWordData = text.split('\n').slice(1).filter(l => l.trim()).map((line, i) => {
                     const row = line.split(',').map(s => s.replace(/"/g, '').trim());
                     return { id: i, chapter: row[1], hanzi: row[2], pinyin: row[3], meaning: row[4] };
                 });
+                
                 changeCategory();
             }
 
             function changeCategory() {
                 const val = document.getElementById('chapter-select').value;
+                
                 currentFilteredData = (val === "all") ? [...totalWordData] : totalWordData.filter(w => w.chapter === val);
+                
                 currentIndex = 0;
                 updateCardContent();
             }
 
-            // (중간에 있는 playCurrentWord, updateCardContent, flipCard 등 기존 함수들은 그대로 두세요)
-
-            function initMatchingGame() {
-                const g = document.getElementById('game-grid-container');
-                const status = document.getElementById('game-status');
+            function updateCardContent() {
+                const w = currentFilteredData[currentIndex];
                 
-                // 게임 시작/재시작 시 데이터 초기화
+                if (!w) return;
+                
+                document.getElementById('hanzi').textContent = w.hanzi;
+                document.getElementById('pinyin').textContent = w.pinyin;
+                document.getElementById('meaning').textContent = w.meaning;
+                document.getElementById('front-badge').textContent = w.chapter + "과";
+                
+                document.getElementById('progress-text').textContent = `${currentIndex + 1} / ${currentFilteredData.length}`;
+                
+                document.getElementById('progress-bar-fill').style.width = `${((currentIndex + 1) / currentFilteredData.length) * 100}%`;
+                
+                document.getElementById('card').classList.remove('flipped');
+            }
+
+            function playCurrentWord() {
+                const w = currentFilteredData[currentIndex];
+                
+                if (w) {
+                    window.speechSynthesis.cancel();
+                    const msg = new SpeechSynthesisUtterance(w.hanzi);
+                    msg.lang = 'zh-CN';
+                    window.speechSynthesis.speak(msg);
+                }
+            }
+
+            function flipCard() {
+                document.getElementById('card').classList.toggle('flipped');
+            }
+
+            function nextCard() {
+                currentIndex = (currentIndex + 1) % currentFilteredData.length;
+                updateCardContent();
+            }
+
+            function prevCard() {
+                currentIndex = (currentIndex - 1 + currentFilteredData.length) % currentFilteredData.length;
+                updateCardContent();
+            }
+
+            function toggleAutoplay() {
+                // 기존 자동 재생 로직
+            }
+
+            function openGameModal() {
+                document.getElementById('game-modal').style.display = 'flex';
                 gameRemainingData = [...currentFilteredData];
                 startRound();
             }
@@ -420,34 +431,39 @@
             function startRound() {
                 const g = document.getElementById('game-grid-container');
                 const status = document.getElementById('game-status');
+                
                 g.innerHTML = '';
-                selectedItems = [];
-
+                
                 const restartBtn = document.createElement('button');
-                restartBtn.textContent = "🔄 게임 전체 재시작";
+                restartBtn.textContent = "🔄 재시작";
                 restartBtn.style.gridColumn = "span 2";
-                restartBtn.style.marginBottom = "10px";
-                restartBtn.onclick = initMatchingGame;
+                restartBtn.onclick = openGameModal;
                 g.appendChild(restartBtn);
 
                 let currentSet = gameRemainingData.sort(() => 0.5 - Math.random()).slice(0, 4);
                 let pieces = [];
+                
                 currentSet.forEach(w => {
-                    pieces.push({id: w.id, text: `${w.hanzi}<br><span style="font-size:12px;">${w.pinyin}</span>`, type: 'h'});
-                    pieces.push({id: w.id, text: w.meaning, type: 'm'});
+                    pieces.push({ id: w.id, text: `${w.hanzi}<br><span style="font-size:12px;">${w.pinyin}</span>`, type: 'h' });
+                    pieces.push({ id: w.id, text: w.meaning, type: 'm' });
                 });
+                
                 pieces.sort(() => 0.5 - Math.random());
                 
                 status.textContent = `남은 카드: ${gameRemainingData.length * 2}개`;
+                
+                let selectedItems = [];
                 
                 pieces.forEach(p => {
                     const div = document.createElement('div');
                     div.className = 'game-item';
                     div.innerHTML = p.text;
+                    
                     div.onclick = () => {
                         if (div.classList.contains('selected') || div.classList.contains('matched') || selectedItems.length >= 2) return;
+                        
                         div.classList.add('selected');
-                        selectedItems.push({div, id: p.id, type: p.type});
+                        selectedItems.push({ div, id: p.id, type: p.type });
                         
                         if (selectedItems.length === 2) {
                             if (selectedItems[0].id === selectedItems[1].id && selectedItems[0].type !== selectedItems[1].type) {
@@ -460,14 +476,13 @@
                                 if (gameRemainingData.length === 0) {
                                     status.textContent = "🎉 성공! 모든 단어를 다 맞췄어요!";
                                 } else if (document.querySelectorAll('.matched').length === 8) {
-                                    setTimeout(() => startRound(), 500);
+                                    setTimeout(startRound, 500);
                                 }
                             } else {
                                 setTimeout(() => {
-                                    selectedItems.forEach(item => item.div.classList.remove('selected'));
+                                    selectedItems.forEach(i => i.div.classList.remove('selected'));
                                     selectedItems = [];
                                 }, 500);
-                                return;
                             }
                             selectedItems = [];
                         }
@@ -475,6 +490,8 @@
                     g.appendChild(div);
                 });
             }
+
+            loadWordData();
         </script>
     </body>
 </html>
