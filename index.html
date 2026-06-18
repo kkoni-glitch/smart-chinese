@@ -4,214 +4,98 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎀 스마트 중국어 단어장 🎀</title>
-    <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Noto+Sans+SC:wght@500;700&family=Roboto:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Gaegu', cursive; background-color: #ffeef2; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; flex-direction: column; padding: 20px; box-sizing: border-box; color: #5d4037; }
-        .header-container { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-bottom: 20px; }
-        .filter-container { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; justify-content: center; background-color: white; padding: 12px 25px; border-radius: 30px; box-shadow: 0 5px 15px rgba(255, 182, 193, 0.4); border: 2px solid #ffb6c1; }
-        .filter-label { font-size: 20px; font-weight: bold; color: #ff69b4; }
-        select { padding: 8px 20px; font-size: 18px; border-radius: 25px; border: 2px solid #ffb6c1; background-color: #fff0f5; cursor: pointer; font-family: 'Gaegu', cursive; color: #c71585; outline: none; }
-        .options-outer-container { display: flex; gap: 15px; align-items: center; justify-content: center; }
-        .toggle-group { display: flex; background: white; padding: 8px 20px; border-radius: 25px; font-size: 18px; font-weight: bold; border: 2px solid #ffb6c1; align-items: center; box-shadow: 0 5px 15px rgba(255, 182, 193, 0.3); }
-        .toggle-item { display: flex; align-items: center; gap: 5px; cursor: pointer; color: #ff69b4; }
-        .game-trigger-btn { background-color: #d1c4e9; color: #4a148c; border: 2px solid #b39ddb; padding: 8px 20px; border-radius: 25px; cursor: pointer; font-family: 'Gaegu', cursive; font-size: 18px; font-weight: bold; transition: all 0.2s; box-shadow: 0 5px 15px rgba(179, 157, 219, 0.4); }
-        .game-trigger-btn:hover { background-color: #b39ddb; color: white; }
-        .card-container { width: 380px; height: 280px; perspective: 1000px; cursor: pointer; margin-bottom: 20px; position: relative; }
-        .card { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); position: relative; border-radius: 20px; border: 4px solid #b39ddb; box-shadow: 0 12px 25px rgba(179, 157, 219, 0.5); }
-        .card.flipped { transform: rotateY(180deg); }
-        .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 16px; background-color: white; padding: 25px; box-sizing: border-box; overflow: hidden; }
-        .card-front { z-index: 2; background-color: #fff5f8; }
-        .card-back { transform: rotateY(180deg); z-index: 1; background-color: #fffdeb; }
-        .chapter-badge { position: absolute; top: 15px; left: 20px; background-color: #ffb6c1; padding: 5px 12px; border-radius: 15px; font-size: 16px; color: white; font-weight: bold; }
-        .chapter-badge::before { content: '🎀 '; }
-        .audio-btn { position: absolute; top: 10px; left: 95px; font-size: 24px; background: none; border: none; cursor: pointer; z-index: 10; }
-        .unknown-btn { position: absolute; top: 10px; right: 15px; font-size: 36px; background: none; border: none; cursor: pointer; z-index: 10; transition: transform 0.2s; }
-        .character-icon { position: absolute; bottom: 10px; right: 15px; font-size: 40px; opacity: 0.8; }
-        .hanzi { font-family: 'Noto Sans SC', sans-serif; font-size: 68px; font-weight: 700; color: #d81b60; margin-bottom: 8px; text-shadow: 2px 2px 0px white; text-align: center; }
-        .pinyin { font-family: 'Roboto', sans-serif; font-size: 24px; font-weight: 700; color: #880e4f; background-color: rgba(255, 255, 255, 0.85); padding: 4px 14px; border-radius: 12px; }
-        .meaning-box { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
-        .part-badge { font-size: 18px; background-color: #e8eaf6; color: #3f51b5; padding: 2px 10px; border-radius: 10px; font-weight: bold; border: 1px solid #c5cae9; }
-        .meaning { font-size: 32px; font-weight: bold; color: #bf360c; }
-        .example { font-size: 18px; color: #5d4037; text-align: center; line-height: 1.6; background-color: rgba(255, 255, 255, 0.8); padding: 10px; border-radius: 10px; max-width: 90%; }
-        .progress-container { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; background-color: rgba(255, 255, 255, 0.7); padding: 5px 15px; border-radius: 20px; }
-        .progress-bar-bg { width: 150px; height: 10px; background-color: #e0e0e0; border-radius: 5px; overflow: hidden; }
-        .progress-bar-fill { height: 100%; background-color: #ff69b4; width: 0%; transition: width 0.3s; }
-        .progress-text { font-size: 18px; color: #c71585; font-weight: bold; cursor: pointer; padding: 2px 8px; border-radius: 10px; background-color: #fff0f5; }
-        .controls { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-bottom: 15px; }
-        button { padding: 12px 24px; font-size: 22px; font-family: 'Gaegu', cursive; font-weight: bold; border: none; border-radius: 30px; cursor: pointer; transition: all 0.2s; box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1); }
-        .nav-btn { background-color: #b3e5fc; color: #01579b; border: 2px solid #81d4fa; }
-        .shuffle-btn { background-color: #ffcdd2; color: #b71c1c; border: 2px solid #ef9a9a; }
-        .autoplay-btn { background-color: #ffe082; color: #e65100; border: 2px solid #ffd54f; }
-        .autoplay-btn.active { background-color: #ffb300; color: white; }
-        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
-        .modal-content { background-color: white; border-radius: 20px; border: 3px solid #ffb6c1; width: 100%; max-width: 460px; max-height: 85vh; display: flex; flex-direction: column; padding: 25px; box-sizing: border-box; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .modal-title { font-size: 24px; font-weight: bold; color: #d81b60; }
-        .close-btn { font-size: 28px; cursor: pointer; background: none; border: none; padding: 0; color: #aaa; box-shadow: none; }
-        .search-box { width: 100%; padding: 10px 15px; font-size: 18px; border: 2px solid #ffb6c1; border-radius: 20px; font-family: 'Gaegu', cursive; margin-bottom: 15px; box-sizing: border-box; outline: none; }
-        .word-list-container { overflow-y: auto; flex-grow: 1; }
-        .word-list-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; border-bottom: 1px dashed #ffb6c1; cursor: pointer; border-radius: 10px; }
-        .word-list-item:hover { background-color: #fff0f5; }
-        .list-hanzi { font-family: 'Noto Sans SC', sans-serif; font-size: 22px; font-weight: bold; color: #d81b60; }
-        .list-pinyin { font-size: 14px; color: #880e4f; font-family: 'Roboto', sans-serif; margin-left: 10px;}
-        .list-meaning { font-size: 18px; color: #5d4037; font-weight: bold; }
-        .game-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; width: 100%; margin-top: 5px; }
-        .game-item { background-color: #fff5f8; border: 2px solid #ffb6c1; border-radius: 18px; height: 95px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; padding: 8px; transition: all 0.2s; box-shadow: 0 4px 8px rgba(255, 182, 193, 0.2); position: relative; }
-        .game-item.selected { background-color: #ffe082; border-color: #ffb300; }
-        .game-item.matched { visibility: hidden; }
-        .game-status { text-align: center; font-size: 20px; font-weight: bold; color: #7b1fa2; margin-top: 15px; }
+        /* [중요] 기존 스타일 시트에 아래 내용을 추가/수정해주세요 */
+        .game-item { /* 기존 스타일에 추가 */
+            display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; padding: 5px; text-align: center;
+        }
+        .game-pinyin { font-size: 12px; color: #880e4f; margin-top: 4px; }
     </style>
 </head>
 <body>
 
-    <div class="header-container">
-        <div class="filter-container">
-            <span class="filter-label">📂 단어 범위 선택:</span>
-            <select id="chapter-select" onchange="changeCategory()">
-                <option value="all">🌟 전체 보기</option>
-                <option value="1">🌸 1과</option><option value="2">🌸 2과</option><option value="3">🌸 3과</option>
-                <option value="4">🌸 4과</option><option value="5">🌸 5과</option>
-                <option value="6">🔄 1~5 복습</option>
-                <option value="7">🌸 7과</option><option value="8">🌸 8과</option><option value="9">🌸 9과</option>
-                <option value="10">🌸 10과</option><option value="11">🌸 11과</option>
-                <option value="7">🔄 7~11 복습</option>
-                <option value="unknown">🖤 모르는 단어</option>
-            </select>
-        </div>
-        <div class="options-outer-container">
-            <div class="toggle-group">
-                <label class="toggle-item"><input type="checkbox" id="auto-tts" checked> 🔊 자동 발음</label>
-            </div>
-            <button class="game-trigger-btn" onclick="openGameModal()">🧩 매칭 게임</button>
-        </div>
-    </div>
-
-    <div class="card-container">
-        <button class="audio-btn" onclick="speakCurrentWord(event)">🔊</button>
-        <button class="unknown-btn" onclick="toggleUnknown(event)" id="unknown-heart">🤍</button>
-        <div class="card" id="card" onclick="flipCard()">
-            <div class="card-face card-front">
-                <span class="chapter-badge" id="front-badge">-과</span>
-                <div class="hanzi" id="hanzi">로딩 중..</div>
-                <div class="pinyin" id="pinyin">loading</div>
-                <div class="character-icon">🐰🎀</div>
-            </div>
-            <div class="card-face card-back">
-                <span class="chapter-badge" id="back-badge">-과</span>
-                <div class="meaning-box">
-                    <span class="part-badge" id="part" style="display:none;"></span>
-                    <div class="meaning" id="meaning">뜻</div>
-                </div>
-                <div class="example" id="example"></div>
-                <div class="character-icon">🐶🍮</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="progress-container">
-        <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-bar-fill"></div></div>
-        <div class="progress-text" id="progress-text" onclick="openWordListModal()">0 / 0</div>
-    </div>
-
-    <div class="controls">
-        <button class="nav-btn" onclick="prevCard()">👈 이전</button>
-        <button class="autoplay-btn" id="autoplay-btn" onclick="toggleAutoplay()">⏱️ 자동 재생</button>
-        <button class="shuffle-btn" onclick="shuffleCards()">🎲 섞기</button>
-        <button class="nav-btn" onclick="nextCard()">다음 👉</button>
-    </div>
-
-    <div id="word-list-modal" class="modal" onclick="closeModalOnBackground(event, 'word-list-modal')">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title">📋 단어 목록</div>
-                <button class="close-btn" onclick="closeModal('word-list-modal')">&times;</button>
-            </div>
-            <input type="text" id="search-input" class="search-box" placeholder="🔍 검색" oninput="filterWordList()">
-            <div class="word-list-container" id="word-list-contents"></div>
-        </div>
-    </div>
-
-    <div id="game-modal" class="modal" onclick="closeModalOnBackground(event, 'game-modal')">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title">🧩 단어 매칭 게임</div>
-                <button class="close-btn" onclick="closeModal('game-modal')">&times;</button>
-            </div>
-            <div class="game-grid" id="game-grid-container"></div>
-            <div class="game-status" id="game-status-message">짝을 맞추세요!</div>
-            <button class="shuffle-btn" style="margin-top:15px;" onclick="initMatchingGame()">🔄 재시작</button>
-        </div>
-    </div>
-
     <script>
-        const SPREADSHEET_ID = '18D1sxEjb7qD4DudFmrZziQDZ0HK-F1V-8Z3V-9WxoDw';
-        const SPREADSHEET_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv`;
+        // 변수 추가
+        let totalWordData = [], currentFilteredData = [], remainingData = [], selectedGameItems = [], matchedCount = 0;
 
-        let totalWordData = [], unknownWordIds = JSON.parse(localStorage.getItem('sanrioUnknownWords')) || [], currentFilteredData = [], currentIndex = 0, autoplayTimer = null, selectedGameItems = [], matchedCount = 0;
-
-        function parseCSVLine(line) {
-            const result = []; let current = ''; let inQuotes = false;
-            for (let i = 0; i < line.length; i++) {
-                if (line[i] === '"') inQuotes = !inQuotes;
-                else if (line[i] === ',' && !inQuotes) { result.push(current.trim()); current = ''; }
-                else current += line[i];
-            }
-            result.push(current.trim()); return result;
-        }
-
-        async function loadWordData() {
-            const res = await fetch(SPREADSHEET_URL);
-            const text = await res.text();
-            totalWordData = text.split('\n').slice(1).filter(l => l.trim()).map((line, i) => {
-                const row = parseCSVLine(line);
-                return { id: i, chapter: String(row[1] || "").trim(), hanzi: row[2], pinyin: row[3], meaning: row[4], part: row[5] || "", example: row[6] || "" };
-            });
-            changeCategory();
-        }
-
+        // [수정] 데이터 로드 및 카테고리 변경 시 remainingData 초기화
         function changeCategory() {
             const val = document.getElementById('chapter-select').value;
-            if (val === "all") currentFilteredData = [...totalWordData];
-            else if (val === "unknown") currentFilteredData = totalWordData.filter(w => unknownWordIds.includes(w.id));
-            else if (val === "review1_5") currentFilteredData = totalWordData.filter(w => ["1", "2", "3", "4", "5", "1~5 복습"].includes(w.chapter));
-            else if (val === "review7_11") currentFilteredData = totalWordData.filter(w => ["7", "8", "9", "10", "11", "7~11 복습"].includes(w.chapter));
-            else currentFilteredData = totalWordData.filter(w => w.chapter === val);
-            currentIndex = 0; updateCardContent();
+            // ... (기존 필터링 로직)
+            remainingData = []; // 범위 변경 시 게임 데이터 초기화
+            updateCardContent();
         }
 
-        function updateCardContent() {
-            const w = currentFilteredData[currentIndex] || { hanzi: "단어 없음", meaning: "데이터 없음", chapter: "" };
-            document.getElementById('hanzi').textContent = w.hanzi;
-            document.getElementById('pinyin').textContent = w.pinyin;
-            document.getElementById('meaning').textContent = w.meaning;
-            document.getElementById('example').textContent = w.example;
-            document.getElementById('part').textContent = w.part;
-            document.getElementById('part').style.display = w.part ? "inline-block" : "none";
-            document.getElementById('front-badge').textContent = w.chapter + "과";
-            document.getElementById('back-badge').textContent = w.chapter + "과";
-            document.getElementById('progress-text').textContent = `${currentIndex + 1} / ${currentFilteredData.length}`;
-            document.getElementById('progress-bar-fill').style.width = `${((currentIndex + 1) / currentFilteredData.length) * 100}%`;
-            document.getElementById('unknown-heart').textContent = unknownWordIds.includes(w.id) ? "💖" : "🤍";
-            document.getElementById('card').classList.remove('flipped');
+        // [핵심 수정] 매칭 게임 로직
+        function initMatchingGame() {
+            // 처음 시작하거나, 남은 게 없으면 현재 필터링된 데이터에서 가져오기
+            if (remainingData.length === 0) {
+                remainingData = [...currentFilteredData];
+            }
+
+            // 남은 단어 중 랜덤하게 최대 4쌍(8개) 선택
+            const pool = [...remainingData].sort(() => 0.5 - Math.random()).slice(0, 4);
+
+            if (pool.length < 2) {
+                document.getElementById('game-status-message').textContent = "🎉 모두 맞췄어요!";
+                return;
+            }
+
+            let pieces = [];
+            pool.forEach(w => {
+                pieces.push({id: w.id, text: w.hanzi, pinyin: w.pinyin, type: 'h'}, {id: w.id, text: w.meaning, pinyin: '', type: 'm'});
+            });
+            pieces.sort(() => 0.5 - Math.random());
+
+            const g = document.getElementById('game-grid-container');
+            const status = document.getElementById('game-status-message');
+            g.innerHTML = '';
+            status.textContent = "짝을 맞추세요!";
+
+            pieces.forEach(p => {
+                const div = document.createElement('div');
+                div.className = 'game-item';
+                // 병음 표시 추가
+                div.innerHTML = `<div>${p.text}</div>${p.pinyin ? `<div class="game-pinyin">${p.pinyin}</div>` : ''}`;
+                
+                div.onclick = () => {
+                    if (div.classList.contains('matched') || div.classList.contains('selected')) return;
+
+                    div.classList.add('selected');
+                    selectedGameItems.push({div, id: p.id, type: p.type});
+
+                    if (selectedGameItems.length === 2) {
+                        const [item1, item2] = selectedGameItems;
+
+                        if (item1.id === item2.id && item1.type !== item2.type) {
+                            // 맞춘 경우
+                            item1.div.classList.add('matched');
+                            item2.div.classList.add('matched');
+                            
+                            // 남은 데이터에서 삭제
+                            remainingData = remainingData.filter(w => w.id !== item1.id);
+                            
+                            if (remainingData.length === 0) status.textContent = "🎉 대성공! 다 맞췄어요!";
+                        } else {
+                            // 틀린 경우
+                            setTimeout(() => {
+                                item1.div.classList.remove('selected');
+                                item2.div.classList.remove('selected');
+                            }, 500);
+                        }
+                        selectedGameItems = [];
+                    }
+                };
+                g.appendChild(div);
+            });
         }
 
-        function flipCard() { document.getElementById('card').classList.toggle('flipped'); }
-        function nextCard() { currentIndex = (currentIndex + 1) % currentFilteredData.length; updateCardContent(); }
-        function prevCard() { currentIndex = (currentIndex - 1 + currentFilteredData.length) % currentFilteredData.length; updateCardContent(); }
-        function toggleUnknown(e) { e.stopPropagation(); const id = currentFilteredData[currentIndex].id; if(unknownWordIds.includes(id)) unknownWordIds = unknownWordIds.filter(i => i !== id); else unknownWordIds.push(id); localStorage.setItem('sanrioUnknownWords', JSON.stringify(unknownWordIds)); updateCardContent(); }
-        function speakCurrentWord(e) { e.stopPropagation(); const u = new SpeechSynthesisUtterance(currentFilteredData[currentIndex].hanzi); u.lang = 'zh-CN'; speechSynthesis.speak(u); }
-        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        function closeModalOnBackground(e, id) { if (e.target.id === id) closeModal(id); }
-        function openWordListModal() { buildWordList(currentFilteredData); openModal('word-list-modal'); }
-        function buildWordList(data) { const c = document.getElementById('word-list-contents'); c.innerHTML = ''; data.forEach((w, idx) => { const item = document.createElement('div'); item.className = 'word-list-item'; item.onclick = () => { currentIndex = idx; updateCardContent(); closeModal('word-list-modal'); }; item.innerHTML = `<div><span class="list-hanzi">${w.hanzi}</span><span class="list-pinyin">${w.pinyin}</span></div><span class="list-meaning">${w.meaning}</span>`; c.appendChild(item); }); }
-        function filterWordList() { const q = document.getElementById('search-input').value.toLowerCase(); buildWordList(currentFilteredData.filter(w => w.hanzi.includes(q) || w.meaning.includes(q))); }
-        function openGameModal() { initMatchingGame(); openModal('game-modal'); }
-        function initMatchingGame() { const pool = [...currentFilteredData].sort(() => 0.5 - Math.random()).slice(0, 4); let pieces = []; pool.forEach(w => { pieces.push({id: w.id, text: w.hanzi, type: 'h'}, {id: w.id, text: w.meaning, type: 'm'}); }); pieces.sort(() => 0.5 - Math.random()); const g = document.getElementById('game-grid-container'); g.innerHTML = ''; pieces.forEach(p => { const div = document.createElement('div'); div.className = 'game-item'; div.onclick = () => { div.classList.add('selected'); selectedGameItems.push({div, id: p.id, type: p.type}); if(selectedGameItems.length === 2) { if(selectedGameItems[0].id === selectedGameItems[1].id && selectedGameItems[0].type !== selectedGameItems[1].type) { selectedGameItems[0].div.classList.add('matched'); selectedGameItems[1].div.classList.add('matched'); } else { setTimeout(() => { selectedGameItems[0].div.classList.remove('selected'); selectedGameItems[1].div.classList.remove('selected'); }, 500); } selectedGameItems = []; } }; div.innerHTML = p.text; g.appendChild(div); }); }
-        function toggleAutoplay() { if(autoplayTimer) { clearInterval(autoplayTimer); autoplayTimer = null; } else { autoplayTimer = setInterval(nextCard, 2000); } }
-        function shuffleCards() { for(let i = currentFilteredData.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [currentFilteredData[i], currentFilteredData[j]] = [currentFilteredData[j], currentFilteredData[i]]; } currentIndex = 0; updateCardContent(); }
+        // [재시작 함수]
+        function restartGame() {
+            initMatchingGame();
+        }
 
-        loadWordData();
+        // 기존 loadWordData 등 나머지 함수 유지...
     </script>
 </body>
 </html>
