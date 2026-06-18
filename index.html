@@ -210,7 +210,7 @@
                 let pieces = [];
                 currentSet.forEach(w => {
                     pieces.push({ id: w.id, text: `<div>${w.hanzi}</div><div class="game-pinyin">${w.pinyin}</div>`, type: 'h' });
-                    pieces.push({ id: w.id, text: w.meaning, type: 'm' });
+                    pieces.push({ id: w.id, text: `<div>${w.meaning}</div>`, type: 'm' });
                 });
                 pieces.sort(() => 0.5 - Math.random());
                 
@@ -221,7 +221,7 @@
                     div.className = 'game-item';
                     div.innerHTML = p.text;
                     div.onclick = () => {
-                        if (div.classList.contains('selected') || div.classList.contains('matched') || selectedItems.length >= 2) return;
+                        if (div.classList.contains('matched') || selectedItems.length >= 2 || selectedItems.some(i => i.div === div)) return;
                         div.classList.add('selected');
                         selectedItems.push({ div, id: p.id, type: p.type });
                         if (selectedItems.length === 2) {
@@ -233,7 +233,8 @@
                                 if (gameRemainingData.length === 0) status.textContent = "🎉 성공! 다 맞췄어요!";
                                 else if (document.querySelectorAll('.matched').length === 8) setTimeout(startRound, 500);
                             } else {
-                                setTimeout(() => { selectedItems.forEach(i => i.div.classList.remove('selected')); selectedItems = []; }, 500);
+                                // 오답 시 즉시 선택 해제
+                                selectedItems.forEach(i => i.div.classList.remove('selected'));
                             }
                             selectedItems = [];
                         }
