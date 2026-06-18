@@ -19,7 +19,6 @@
                 box-sizing: border-box;
                 color: #5d4037;
             }
-
             .header-container {
                 display: flex;
                 flex-direction: column;
@@ -27,7 +26,6 @@
                 gap: 15px;
                 margin-bottom: 20px;
             }
-
             .filter-container {
                 display: flex;
                 gap: 12px;
@@ -40,13 +38,11 @@
                 box-shadow: 0 5px 15px rgba(255, 182, 193, 0.4);
                 border: 2px solid #ffb6c1;
             }
-
             .filter-label {
                 font-size: 20px;
                 font-weight: bold;
                 color: #ff69b4;
             }
-
             select {
                 padding: 8px 20px;
                 font-size: 18px;
@@ -58,14 +54,12 @@
                 color: #c71585;
                 outline: none;
             }
-
             .options-outer-container {
                 display: flex;
                 gap: 15px;
                 align-items: center;
                 justify-content: center;
             }
-
             .toggle-group {
                 display: flex;
                 background: white;
@@ -79,7 +73,6 @@
                 cursor: pointer;
                 color: #ff69b4;
             }
-
             .game-trigger-btn {
                 background-color: #d1c4e9;
                 color: #4a148c;
@@ -91,7 +84,6 @@
                 font-size: 18px;
                 font-weight: bold;
             }
-
             .card-container {
                 width: 380px;
                 height: 280px;
@@ -100,7 +92,6 @@
                 margin-bottom: 20px;
                 position: relative;
             }
-
             .card {
                 width: 100%;
                 height: 100%;
@@ -111,11 +102,9 @@
                 border: 4px solid #b39ddb;
                 box-shadow: 0 12px 25px rgba(179, 157, 219, 0.5);
             }
-
             .card.flipped {
                 transform: rotateY(180deg);
             }
-
             .card-face {
                 position: absolute;
                 width: 100%;
@@ -130,18 +119,15 @@
                 padding: 25px;
                 box-sizing: border-box;
             }
-
             .card-front {
                 z-index: 2;
                 background-color: #fff5f8;
             }
-
             .card-back {
                 transform: rotateY(180deg);
                 z-index: 1;
                 background-color: #fffdeb;
             }
-
             .manual-speaker {
                 position: absolute;
                 top: 15px;
@@ -150,7 +136,6 @@
                 cursor: pointer;
                 z-index: 10;
             }
-
             .chapter-badge {
                 position: absolute;
                 top: 15px;
@@ -162,14 +147,12 @@
                 color: white;
                 font-weight: bold;
             }
-
             .hanzi {
                 font-family: 'Noto Sans SC', sans-serif;
                 font-size: 68px;
                 font-weight: 700;
                 color: #d81b60;
             }
-
             .pinyin {
                 font-family: 'Roboto', sans-serif !important;
                 font-size: 24px;
@@ -177,13 +160,11 @@
                 color: #555;
                 letter-spacing: 0.5px;
             }
-
             .meaning {
                 font-size: 32px;
                 font-weight: bold;
                 color: #bf360c;
             }
-
             .progress-container {
                 display: flex;
                 align-items: center;
@@ -193,7 +174,6 @@
                 padding: 5px 15px;
                 border-radius: 20px;
             }
-
             .progress-bar-bg {
                 width: 150px;
                 height: 10px;
@@ -201,22 +181,19 @@
                 border-radius: 5px;
                 overflow: hidden;
             }
-
             .progress-bar-fill {
                 height: 100%;
                 background-color: #ff69b4;
                 width: 0%;
                 transition: width 0.3s;
             }
-
             .progress-text {
                 font-size: 18px;
                 color: #c71585;
                 font-weight: bold;
                 cursor: pointer;
             }
-
-           .controls {
+            .controls {
                 display: flex;
                 gap: 8px;
                 justify-content: center;
@@ -224,7 +201,6 @@
                 width: 100%;
                 max-width: 400px;
             }
-
             button {
                 padding: 12px 10px;
                 font-size: 18px;
@@ -234,24 +210,20 @@
                 border-radius: 30px;
                 cursor: pointer;
                 white-space: nowrap;
-                flex: 1; /* 버튼들이 가로 공간을 균등하게 나눠 가짐 */
+                flex: 1;
             }
-
             .nav-btn {
                 background-color: #b3e5fc;
                 color: #01579b;
             }
-
             .autoplay-btn {
                 background-color: #ffe082;
                 color: #e65100;
             }
-
             .autoplay-btn.active {
                 background-color: #ffb300;
                 color: white;
             }
-
             .modal {
                 display: none;
                 position: fixed;
@@ -264,7 +236,6 @@
                 justify-content: center;
                 align-items: center;
             }
-
             .modal-content {
                 background-color: white;
                 border-radius: 20px;
@@ -276,7 +247,6 @@
                 display: flex;
                 flex-direction: column;
             }
-
             .search-box {
                 padding: 10px;
                 border: 2px solid #ffb6c1;
@@ -285,12 +255,10 @@
                 outline: none;
                 font-family: 'Gaegu', cursive;
             }
-
             .word-list-container {
                 overflow-y: auto;
                 flex-grow: 1;
             }
-
             .word-list-item {
                 display: flex;
                 justify-content: space-between;
@@ -299,20 +267,17 @@
                 cursor: pointer;
                 align-items: center;
             }
-
             .list-pinyin {
                 font-family: 'Roboto', sans-serif !important;
                 font-size: 18px;
                 color: #666;
                 margin-left: 8px;
             }
-
             .game-grid {
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
                 gap: 15px;
             }
-
             .game-item {
                 background-color: #fff5f8;
                 border: 2px solid #ffb6c1;
@@ -324,12 +289,10 @@
                 cursor: pointer;
                 font-weight: bold;
             }
-
             .game-item.selected {
                 background-color: #ffe082;
                 border-color: #ffb300;
             }
-
             .game-item.matched {
                 visibility: hidden;
             }
@@ -379,7 +342,9 @@
         </div>
 
         <div class="progress-container">
-            <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-bar-fill"></div></div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progress-bar-fill"></div>
+            </div>
             <div class="progress-text" id="progress-text" onclick="openWordListModal()">0 / 0</div>
         </div>
 
@@ -405,7 +370,11 @@
 
         <script>
             const SPREADSHEET_URL = 'https://docs.google.com/spreadsheets/d/18D1sxEjb7qD4DudFmrZziQDZ0HK-F1V-8Z3V-9WxoDw/gviz/tq?tqx=out:csv';
-            let totalWordData = [], currentFilteredData = [], currentIndex = 0, autoplayTimer = null, selectedItems = [];
+            let totalWordData = [];
+            let currentFilteredData = [];
+            let currentIndex = 0;
+            let autoplayTimer = null;
+            let selectedItems = [];
 
             async function loadWordData() {
                 const res = await fetch(SPREADSHEET_URL);
@@ -443,7 +412,6 @@
                 document.getElementById('progress-text').textContent = `${currentIndex + 1} / ${currentFilteredData.length}`;
                 document.getElementById('progress-bar-fill').style.width = `${((currentIndex + 1) / currentFilteredData.length) * 100}%`;
                 document.getElementById('card').classList.remove('flipped');
-                
                 if (document.getElementById('auto-tts').checked) {
                     playCurrentWord();
                 }
@@ -550,7 +518,7 @@
 
             function openGameModal() { 
                 document.getElementById('game-modal').style.display = 'flex'; 
-                initMatchingGame();
+                initMatchingGame(); 
             }
 
             function openWordListModal() { 
