@@ -507,10 +507,9 @@ function initMatchingGame() {
                 restartBtn.onclick = initMatchingGame;
                 g.appendChild(restartBtn);
 
-                // 현재 범위에서 4개 뽑기 (뜻 4개 + 한자 4개 = 총 8개 카드)
-                // *주의: 남은 단어가 4개 미만일 경우를 대비하여 처리
-                let pool = [...currentFilteredData];
-                let currentSet = pool.sort(() => 0.5 - Math.random()).slice(0, 4);
+                // 전체 단어 중 아직 안 나온 단어들만 관리하기 위한 로직
+                // (필요 시 전역 변수로 관리하거나, 여기서는 단순하게 전체 개수로 처리)
+                let currentSet = [...currentFilteredData].sort(() => 0.5 - Math.random()).slice(0, 4);
                 
                 let pieces = [];
                 currentSet.forEach(w => {
@@ -536,10 +535,16 @@ function initMatchingGame() {
                                 selectedItems[1].div.classList.add('matched');
                                 matchedCount++;
                                 
-                                // 전체 다 맞췄는지 확인
-                                if (matchedCount >= 4) { // 4쌍을 다 맞추면 완료 메시지
-                                    status.textContent = "🎉 성공! 한 세트 완료!";
-                                    setTimeout(() => initMatchingGame(), 1000); // 1초 뒤 다음 세트 시작
+                                // 전체 단어 개수와 비교하여 성공 여부 판단
+                                let totalPairs = currentFilteredData.length;
+                                if (matchedCount < totalPairs) {
+                                    status.textContent = `남은 카드: ${(totalPairs - matchedCount) * 2}개`;
+                                    // 4쌍을 다 맞추면 자동으로 다음 세트 불러오기
+                                    if (matchedCount % 4 === 0) {
+                                        setTimeout(() => initMatchingGame(), 500);
+                                    }
+                                } else {
+                                    status.textContent = "🎉 성공! 모든 단어를 다 맞췄어요!";
                                 }
                             } else {
                                 setTimeout(() => {
@@ -554,7 +559,6 @@ function initMatchingGame() {
                     g.appendChild(div);
                 });
             }
-
             function openGameModal() { 
                 document.getElementById('game-modal').style.display = 'flex'; 
                 initMatchingGame(); 
