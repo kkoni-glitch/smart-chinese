@@ -59,6 +59,33 @@
             outline: none;
         }
 
+        .options-outer-container {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toggle-group {
+            display: flex;
+            background: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: bold;
+            border: 2px solid #ffb6c1;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(255, 182, 193, 0.3);
+        }
+
+        .toggle-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            color: #ff69b4;
+        }
+
         .game-trigger-btn {
             background-color: #d1c4e9;
             color: #4a148c;
@@ -313,7 +340,14 @@
                 <option value="unknown">🖤 모르는 단어</option>
             </select>
         </div>
-        <button class="game-trigger-btn" onclick="openGameModal()">🧩 매칭 게임</button>
+        <div class="options-outer-container">
+            <div class="toggle-group">
+                <label class="toggle-item">
+                    <input type="checkbox" id="auto-tts" checked> 🔊 자동 발음
+                </label>
+            </div>
+            <button class="game-trigger-btn" onclick="openGameModal()">🧩 매칭 게임</button>
+        </div>
     </div>
 
     <div class="card-container">
@@ -375,6 +409,15 @@
             updateCardContent();
         }
 
+        function playTTS() {
+            if (document.getElementById('auto-tts').checked) {
+                const w = currentFilteredData[currentIndex];
+                const msg = new SpeechSynthesisUtterance(w.hanzi);
+                msg.lang = 'zh-CN';
+                window.speechSynthesis.speak(msg);
+            }
+        }
+
         function updateCardContent() {
             const w = currentFilteredData[currentIndex] || { hanzi: "끝", meaning: "없음", chapter: "" };
             document.getElementById('hanzi').textContent = w.hanzi;
@@ -384,6 +427,7 @@
             document.getElementById('progress-text').textContent = `${currentIndex + 1} / ${currentFilteredData.length}`;
             document.getElementById('progress-bar-fill').style.width = `${((currentIndex + 1) / currentFilteredData.length) * 100}%`;
             document.getElementById('card').classList.remove('flipped');
+            if (autoplayTimer) playTTS();
         }
 
         function renderWordList() {
@@ -415,6 +459,7 @@
                 btn.classList.remove('active'); 
             } else { 
                 autoplayTimer = setInterval(nextCard, 1500); 
+                playTTS();
                 btn.classList.add('active'); 
             }
         }
