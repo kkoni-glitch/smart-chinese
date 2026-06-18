@@ -285,7 +285,7 @@
         .list-pinyin { font-size: 14px; color: #880e4f; font-family: 'Roboto', sans-serif; margin-left: 10px;}
         .list-meaning { font-size: 18px; color: #5d4037; font-weight: bold; }
 
-        /* 🛠️ 매칭게임 레이아웃 및 텍스트 클릭 방지 극대화 */
+        /* 🛠️ 매칭게임 레이아웃 고도화 및 글자 겹침 방지 */
         .game-grid {
             display: grid; 
             grid-template-columns: repeat(2, 1fr); 
@@ -304,27 +304,29 @@
             justify-content: center; 
             align-items: center;
             cursor: pointer;
-            padding: 10px; 
+            padding: 8px; 
             box-sizing: border-box; 
             transition: all 0.2s;
             box-shadow: 0 4px 8px rgba(255, 182, 193, 0.2);
             overflow: hidden;
+            position: relative;
         }
         .game-item:hover { background-color: #fff0f5; transform: translateY(-2px); }
         .game-item.selected { background-color: #ffe082; border-color: #ffb300; transform: scale(0.98); }
         .game-item.matched { background-color: #c8e6c9; border-color: #4caf50; visibility: hidden; opacity: 0; }
         
-        /* 💡 내부 글자들을 클릭해도 부모 상자가 클릭되도록 pointer-events 확실하게 차단 */
         .game-item .inner-hanzi,
         .game-item .inner-pinyin,
         .game-item .inner-meaning {
             pointer-events: none;
             user-select: none;
+            text-align: center;
+            word-break: break-all;
         }
         
         .game-item .inner-hanzi { font-family: 'Noto Sans SC', sans-serif; font-size: 26px; color: #d81b60; font-weight: bold; line-height: 1.2; }
         .game-item .inner-pinyin { font-family: 'Roboto', sans-serif; font-size: 14px; color: #880e4f; margin-top: 2px; font-weight: bold; }
-        .game-item .inner-meaning { font-size: 20px; color: #5d4037; font-weight: bold; line-height: 1.3; text-align: center; }
+        .game-item .inner-meaning { font-size: 20px; color: #5d4037; font-weight: bold; line-height: 1.3; }
         
         .game-status { text-align: center; font-size: 20px; font-weight: bold; color: #7b1fa2; margin-top: 15px; }
 
@@ -451,25 +453,46 @@
         const backBadge = document.getElementById('back-badge');
         const autoplayBtn = document.getElementById('autoplay-btn');
 
+        // CSV 문자열 안전 분리 로직 (콤마, 따옴표 완벽 처리)
+        function parseCSVLine(line) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    result.push(current.trim());
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            result.push(current.trim());
+            return result;
+        }
+
         async function loadWordData() {
             try {
                 const response = await fetch(SPREADSHEET_URL);
                 const text = await response.text();
-                const lines = text.split('\n').map(line => {
-                    return line.split('","').map(cell => cell.replace(/^"|"$/g, '').trim());
-                });
+                const lines = text.split('\n');
                 const words = [];
+                
                 for (let i = 1; i < lines.length; i++) {
-                    const row = lines[i];
-                    if (row.length >= 5 && row[2]) {
+                    if (!lines[i].trim()) continue;
+                    const row = parseCSVLine(lines[i]);
+                    
+                    if (row.length >= 3 && row[2]) {
                         words.push({
                             id: parseInt(row[0]) || i,
-                            chapter: String(row[1]).trim(), 
-                            hanzi: row[2],
-                            pinyin: row[3] || "",
-                            meaning: row[4] || "",
-                            part: row[5] || "",      
-                            example: row[6] || ""
+                            chapter: String(row[1] || "").trim(), 
+                            hanzi: String(row[2] || "").trim(),
+                            pinyin: String(row[3] || "").trim(),
+                            meaning: String(row[4] || "").trim(), // 숫자 데이터 대응을 위해 String 강제 변환
+                            part: String(row[5] || "").trim(),      
+                            example: String(row[6] || "").trim()
                         });
                     }
                 }
@@ -485,9 +508,9 @@
             } else if (val === "unknown") {
                 currentFilteredData = totalWordData.filter(w => unknownWordIds.includes(w.id));
             } else if (val === "review1_5") {
-                currentFilteredData = totalWordData.filter(w => w.chapter === "review1_5" || w.chapter === "1~5과 복습");
+                currentFilteredData = totalWordData.filter(w => w.chapter === "review1_5" || w.chapter === "1~5과 복습" || w.chapter === "1~5 복습");
             } else if (val === "review7_11") {
-                currentFilteredData = totalWordData.filter(w => w.chapter === "review7_11" || w.chapter === "7~11과 복습");
+                currentFilteredData = totalWordData.filter(w => w.chapter === "review7_11" || w.chapter === "7~11과 복습" || w.chapter === "7~11 복습");
             } else {
                 currentFilteredData = totalWordData.filter(w => w.chapter === val);
             }
@@ -516,8 +539,8 @@
             exampleElement.textContent = word.example;
             
             let displayChapter = word.chapter;
-            if (displayChapter === 'review1_5' || displayChapter === '1~5과 복습') displayChapter = '1~5과 복습';
-            if (displayChapter === 'review7_11' || displayChapter === '7~11과 복습') displayChapter = '7~11과 복습';
+            if (displayChapter === 'review1_5' || displayChapter === '1~5과 복습' || displayChapter === '1~5 복습') displayChapter = '1~5과 복습';
+            if (displayChapter === 'review7_11' || displayChapter === '7~11과 복습' || displayChapter === '7~11 복습') displayChapter = '7~11과 복습';
             
             frontBadge.textContent = displayChapter.includes('복습') ? displayChapter : displayChapter + "과";
             backBadge.textContent = displayChapter.includes('복습') ? displayChapter : displayChapter + "과";
@@ -662,7 +685,6 @@
                 const div = document.createElement('div');
                 div.className = 'game-item';
                 
-                // 💡 HTML 어트리뷰트로 데이터 분리 저장하고 안전하게 onclick 연결
                 div.setAttribute('data-id', p.id);
                 div.setAttribute('data-type', p.type);
                 div.setAttribute('onclick', 'checkGameMatch(this)');
@@ -680,7 +702,6 @@
             });
         }
 
-        // 💡 매칭 시스템 전면 개편: 요소(this)를 다이렉트로 받아서 무조건 안정성 확보
         function checkGameMatch(targetDiv) {
             if (targetDiv.classList.contains('matched') || targetDiv.classList.contains('selected')) return;
             
@@ -693,7 +714,6 @@
             if (selectedGameItems.length === 2) {
                 const a = selectedGameItems[0], b = selectedGameItems[1];
                 
-                // ID는 같고, 타입(한자 'h' / 뜻 'm')은 다르면 매칭 성공
                 if (a.id === b.id && a.type !== b.type) {
                     setTimeout(() => { 
                         a.div.classList.add('matched'); 
