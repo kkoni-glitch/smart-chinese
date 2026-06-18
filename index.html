@@ -203,15 +203,18 @@
                 const g = document.getElementById('game-grid-container');
                 const status = document.getElementById('game-status');
                 g.innerHTML = '';
-                
-                const restartBtn = document.createElement('button');
-                restartBtn.textContent = "🔄 재시작";
-                restartBtn.style.gridColumn = "span 2";
-                restartBtn.onclick = startRound;
-                g.appendChild(restartBtn);
 
-                if (gameRemainingData.length === 0) { status.textContent = "🎉 모두 완료!"; return; }
+                if (gameRemainingData.length === 0) {
+                    status.textContent = "🎉 모두 완료!";
+                    const closeBtn = document.createElement('button');
+                    closeBtn.textContent = "닫기";
+                    closeBtn.style.gridColumn = "span 2";
+                    closeBtn.onclick = () => document.getElementById('game-modal').style.display = 'none';
+                    g.appendChild(closeBtn);
+                    return;
+                }
 
+                status.textContent = `남은 단어: ${gameRemainingData.length}개`;
                 let currentSet = gameRemainingData.slice(0, 4);
                 let pieces = [];
                 currentSet.forEach(w => {
@@ -220,7 +223,6 @@
                 });
                 pieces.sort(() => 0.5 - Math.random());
                 
-                status.textContent = `남은 단어: ${gameRemainingData.length}개`;
                 let selectedItems = [];
 
                 pieces.forEach(p => {
@@ -240,9 +242,15 @@
                                 gameRemainingData = gameRemainingData.filter(w => w.id !== selectedItems[0].id);
                                 status.textContent = `남은 단어: ${gameRemainingData.length}개`;
                                 selectedItems = [];
-                                if (gameRemainingData.length === 0) status.textContent = "🎉 성공!";
+                                
+                                if (document.querySelectorAll('.game-item.matched').length === 8) {
+                                    const nextBtn = document.createElement('button');
+                                    nextBtn.textContent = gameRemainingData.length > 0 ? "다음 라운드" : "완료 (닫기)";
+                                    nextBtn.style.gridColumn = "span 2";
+                                    nextBtn.onclick = startRound;
+                                    g.appendChild(nextBtn);
+                                }
                             } else {
-                                // 오답 시 붉은색 테두리 표시 후 0.5초 뒤 초기화
                                 selectedItems.forEach(i => i.div.style.borderColor = '#ff0000');
                                 setTimeout(() => {
                                     selectedItems.forEach(i => {
