@@ -39,7 +39,7 @@
             .search-box { padding: 10px; border: 2px solid #ffb6c1; border-radius: 20px; margin-bottom: 10px; outline: none; font-family: 'Gaegu', cursive; }
             .word-list-container { overflow-y: auto; flex-grow: 1; }
             .word-list-item { display: flex; justify-content: space-between; padding: 12px 10px; border-bottom: 1px dashed #ffb6c1; cursor: pointer; align-items: center; }
-            .game-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; overflow-y: auto; margin-bottom: 10px; }
+            .game-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; overflow-y: auto; }
             .game-item { background-color: #fff5f8; border: 2px solid #ffb6c1; border-radius: 15px; padding: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; font-weight: bold; text-align: center; font-size: 24px; min-height: 70px; }
             .game-pinyin { font-size: 16px; color: #888; margin-top: 5px; font-family: 'Roboto', sans-serif; }
             .game-item.selected { background-color: #ffe082; border-color: #ffb300; }
@@ -143,26 +143,6 @@
                 document.getElementById('progress-text').textContent = `${currentIndex + 1} / ${currentFilteredData.length}`;
                 document.getElementById('progress-bar-fill').style.width = `${((currentIndex + 1) / currentFilteredData.length) * 100}%`;
                 document.getElementById('card').classList.remove('flipped');
-                if (document.getElementById('auto-tts').checked) playCurrentWord();
-            }
-
-            function toggleAutoplay() {
-                const btn = document.getElementById('autoplay-btn');
-                if (autoplayInterval) {
-                    clearInterval(autoplayInterval);
-                    autoplayInterval = null;
-                    btn.classList.remove('active');
-                } else {
-                    btn.classList.add('active');
-                    autoplayInterval = setInterval(() => {
-                        const card = document.getElementById('card');
-                        if (!card.classList.contains('flipped')) {
-                            card.classList.add('flipped');
-                        } else {
-                            nextCard();
-                        }
-                    }, 2000);
-                }
             }
 
             function playCurrentWord() {
@@ -192,6 +172,11 @@
             function flipCard() { document.getElementById('card').classList.toggle('flipped'); }
             function nextCard() { currentIndex = (currentIndex + 1) % currentFilteredData.length; updateCardContent(); }
             function prevCard() { currentIndex = (currentIndex - 1 + currentFilteredData.length) % currentFilteredData.length; updateCardContent(); }
+            function toggleAutoplay() {
+                const btn = document.getElementById('autoplay-btn');
+                if (autoplayInterval) { clearInterval(autoplayInterval); autoplayInterval = null; btn.classList.remove('active'); }
+                else { btn.classList.add('active'); autoplayInterval = setInterval(() => { if (!document.getElementById('card').classList.contains('flipped')) document.getElementById('card').classList.add('flipped'); else nextCard(); }, 2000); }
+            }
 
             function openGameModal() {
                 document.getElementById('game-modal').style.display = 'flex';
@@ -205,7 +190,7 @@
                 g.innerHTML = '';
 
                 if (gameRemainingData.length === 0) {
-                    status.textContent = "🎉 성공!";
+                    status.textContent = "🎉 완료!";
                     const closeBtn = document.createElement('button');
                     closeBtn.textContent = "닫기";
                     closeBtn.style.gridColumn = "span 2";
@@ -232,7 +217,6 @@
                     div.innerHTML = p.text;
                     div.onclick = () => {
                         if (div.classList.contains('matched') || div.classList.contains('selected')) return;
-                        
                         div.classList.add('selected');
                         selectedItems.push({ div, id: p.id, type: p.type });
                         
@@ -244,7 +228,7 @@
                                 status.textContent = `남은 단어: ${gameRemainingData.length}개`;
                                 selectedItems = [];
                                 
-                                if (document.querySelectorAll('.game-item.matched').length === 8 || (gameRemainingData.length === 0 && document.querySelectorAll('.game-item.matched').length === (currentSet.length * 2))) {
+                                if (document.querySelectorAll('.game-item.matched').length === 8) {
                                     const actionBtn = document.createElement('button');
                                     actionBtn.style.gridColumn = "span 2";
                                     actionBtn.style.backgroundColor = "#ffe082";
@@ -253,7 +237,7 @@
                                         actionBtn.textContent = "다음 라운드 ➡️";
                                         actionBtn.onclick = startRound;
                                     } else {
-                                        actionBtn.textContent = "완료 닫기";
+                                        actionBtn.textContent = "닫기";
                                         actionBtn.onclick = () => document.getElementById('game-modal').style.display = 'none';
                                     }
                                     g.appendChild(actionBtn);
@@ -261,10 +245,7 @@
                             } else {
                                 selectedItems.forEach(i => i.div.style.borderColor = '#ff0000');
                                 setTimeout(() => {
-                                    selectedItems.forEach(i => {
-                                        i.div.classList.remove('selected');
-                                        i.div.style.borderColor = '#ffb6c1';
-                                    });
+                                    selectedItems.forEach(i => { i.div.classList.remove('selected'); i.div.style.borderColor = '#ffb6c1'; });
                                     selectedItems = [];
                                 }, 500);
                             }
