@@ -260,20 +260,13 @@
                 border-radius: 15px;
                 padding: 10px;
                 display: flex;
-                flex-direction: column; /* 세로로 정렬하여 병음이 아래에 오게 함 */
                 justify-content: center;
                 align-items: center;
                 cursor: pointer;
                 font-weight: bold;
                 text-align: center;
-                font-size: 24px; /* 한자 크기 */
-                min-height: 70px;
-            }
-            .game-pinyin {
-                font-size: 16px; /* 병음 크기 */
-                color: #888;
-                margin-top: 5px;
-                font-family: 'Roboto', sans-serif;
+                font-size: 16px;
+                min-height: 50px;
             }
             .game-item.selected {
                 background-color: #ffe082;
@@ -450,18 +443,9 @@
                 let currentSet = gameRemainingData.sort(() => 0.5 - Math.random()).slice(0, 4);
                 let pieces = [];
                 
-               currentSet.forEach(w => {
-                    // 한자 카드에 <div class="game-pinyin">을 넣어 병음을 추가합니다.
-                    pieces.push({ 
-                        id: w.id, 
-                        text: `${w.hanzi}<div class="game-pinyin">${w.pinyin}</div>`, 
-                        type: 'h' 
-                    });
-                    pieces.push({ 
-                        id: w.id, 
-                        text: w.meaning, 
-                        type: 'm' 
-                    });
+                currentSet.forEach(w => {
+                    pieces.push({ id: w.id, text: `${w.hanzi}<br><span style="font-size:12px;">${w.pinyin}</span>`, type: 'h' });
+                    pieces.push({ id: w.id, text: w.meaning, type: 'm' });
                 });
                 
                 pieces.sort(() => 0.5 - Math.random());
