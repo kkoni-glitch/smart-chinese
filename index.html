@@ -492,38 +492,50 @@
                 }
             }
 
-function initMatchingGame() {
+// 게임 내에서 사용할 전역 변수
+            let gameRemainingData = []; 
+
+            function initMatchingGame() {
                 const g = document.getElementById('game-grid-container');
                 const status = document.getElementById('game-status');
+                
+                // 게임 처음 시작할 때만 전체 리스트 복사
+                if (gameRemainingData.length === 0) {
+                    gameRemainingData = [...currentFilteredData];
+                }
+
                 g.innerHTML = '';
                 selectedItems = [];
                 matchedCount = 0;
 
-                // 재시작 버튼 생성
+                // 재시작 버튼
                 const restartBtn = document.createElement('button');
-                restartBtn.textContent = "🔄 게임 재시작";
+                restartBtn.textContent = "🔄 게임 전체 재시작";
                 restartBtn.style.gridColumn = "span 2";
                 restartBtn.style.marginBottom = "10px";
-                restartBtn.onclick = initMatchingGame;
+                restartBtn.onclick = () => {
+                    gameRemainingData = [...currentFilteredData];
+                    initMatchingGame();
+                };
                 g.appendChild(restartBtn);
 
-                // 전체 단어 중 아직 안 나온 단어들만 관리하기 위한 로직
-                // (필요 시 전역 변수로 관리하거나, 여기서는 단순하게 전체 개수로 처리)
-                let currentSet = [...currentFilteredData].sort(() => 0.5 - Math.random()).slice(0, 4);
-                
+                // 남은 카드 중 4개 뽑기 (단어 4쌍, 총 8개 카드)
+                let currentSet = gameRemainingData.sort(() => 0.5 - Math.random()).slice(0, 4);
                 let pieces = [];
+                
                 currentSet.forEach(w => {
-                    pieces.push({id: w.id, text: w.hanzi, type: 'h'});
+                    // 한자 카드와 뜻 카드에 병음을 함께 표시하도록 수정
+                    pieces.push({id: w.id, text: `${w.hanzi}<br><span style="font-size:12px;">${w.pinyin}</span>`, type: 'h'});
                     pieces.push({id: w.id, text: w.meaning, type: 'm'});
                 });
                 pieces.sort(() => 0.5 - Math.random());
                 
-                status.textContent = `남은 카드: ${currentFilteredData.length * 2}개`;
+                status.textContent = `남은 카드: ${gameRemainingData.length * 2}개`;
                 
                 pieces.forEach(p => {
                     const div = document.createElement('div');
                     div.className = 'game-item';
-                    div.textContent = p.text;
+                    div.innerHTML = p.text; // innerHTML을 사용하여 병음 줄바꿈 적용
                     div.onclick = () => {
                         if (div.classList.contains('selected') || div.classList.contains('matched') || selectedItems.length >= 2) return;
                         div.classList.add('selected');
@@ -533,18 +545,18 @@ function initMatchingGame() {
                             if (selectedItems[0].id === selectedItems[1].id && selectedItems[0].type !== selectedItems[1].type) {
                                 selectedItems[0].div.classList.add('matched');
                                 selectedItems[1].div.classList.add('matched');
-                                matchedCount++;
                                 
-                                // 전체 단어 개수와 비교하여 성공 여부 판단
-                                let totalPairs = currentFilteredData.length;
-                                if (matchedCount < totalPairs) {
-                                    status.textContent = `남은 카드: ${(totalPairs - matchedCount) * 2}개`;
-                                    // 4쌍을 다 맞추면 자동으로 다음 세트 불러오기
-                                    if (matchedCount % 4 === 0) {
-                                        setTimeout(() => initMatchingGame(), 500);
-                                    }
-                                } else {
+                                // 성공한 단어는 gameRemainingData에서 제거
+                                gameRemainingData = gameRemainingData.filter(w => w.id !== selectedItems[0].id);
+                                
+                                matchedCount++;
+                                status.textContent = `남은 카드: ${gameRemainingData.length * 2}개`;
+                                
+                                if (gameRemainingData.length === 0) {
                                     status.textContent = "🎉 성공! 모든 단어를 다 맞췄어요!";
+                                } else if (matchedCount === 4) {
+                                    // 4쌍 다 맞추면 다음 세트 호출
+                                    setTimeout(() => initMatchingGame(), 500);
                                 }
                             } else {
                                 setTimeout(() => {
