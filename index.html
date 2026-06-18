@@ -23,7 +23,7 @@
             .manual-speaker { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; z-index: 10; }
             .chapter-badge { position: absolute; top: 15px; left: 20px; background-color: #ffb6c1; padding: 5px 12px; border-radius: 15px; font-size: 16px; color: white; font-weight: bold; }
             .hanzi { font-family: 'Noto Sans SC', sans-serif; font-size: 68px; font-weight: 700; color: #d81b60; }
-            .pinyin { font-family: 'Noto Sans SC', sans-serif !important; font-size: 24px; font-weight: 400; color: #555; letter-spacing: 0.5px; }
+            .pinyin { font-family: 'Noto Sans SC', sans-serif; font-size: 24px; font-weight: 400; color: #555; }
             .meaning { font-size: 32px; font-weight: bold; color: #bf360c; }
             .progress-container { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; background-color: rgba(255, 255, 255, 0.7); padding: 5px 15px; border-radius: 20px; }
             .progress-bar-bg { width: 150px; height: 10px; background-color: #e0e0e0; border-radius: 5px; overflow: hidden; }
@@ -36,12 +36,10 @@
             .autoplay-btn.active { background-color: #ffb300; color: white; }
             .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); justify-content: center; align-items: center; }
             .modal-content { background-color: white; border-radius: 20px; border: 3px solid #ffb6c1; width: 90%; max-width: 460px; padding: 25px; height: 80vh; display: flex; flex-direction: column; }
-            .search-box { padding: 10px; border: 2px solid #ffb6c1; border-radius: 20px; margin-bottom: 10px; outline: none; font-family: 'Gaegu', cursive; }
-            .word-list-container { overflow-y: auto; flex-grow: 1; }
             .word-list-item { display: flex; justify-content: space-between; padding: 12px 10px; border-bottom: 1px dashed #ffb6c1; cursor: pointer; align-items: center; font-family: 'Noto Sans SC', sans-serif; }
             .game-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; overflow-y: auto; }
             .game-item { background-color: #fff5f8; border: 2px solid #ffb6c1; border-radius: 15px; padding: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; font-weight: bold; text-align: center; font-size: 24px; min-height: 70px; }
-            .game-pinyin { font-size: 16px; color: #888; margin-top: 5px; font-family: 'Roboto', sans-serif; }
+            .game-pinyin { font-size: 16px; color: #888; margin-top: 5px; font-family: 'Noto Sans SC', sans-serif; }
             .game-item.selected { background-color: #ffe082; border-color: #ffb300; }
             .game-item.matched { visibility: hidden; }
             .game-status { text-align: center; font-size: 20px; font-weight: bold; color: #d81b60; margin-bottom: 10px; }
@@ -99,7 +97,7 @@
 
         <div id="word-list-modal" class="modal" onclick="if(event.target.id==='word-list-modal') this.style.display='none'">
             <div class="modal-content">
-                <input type="text" id="search-input" class="search-box" placeholder="🔍 검색 (뜻/한자/병음)" oninput="renderWordList()">
+                <input type="text" id="search-input" class="search-box" placeholder="🔍 검색" oninput="renderWordList()">
                 <div id="word-list-container" class="word-list-container"></div>
             </div>
         </div>
@@ -143,7 +141,9 @@
                 document.getElementById('progress-text').textContent = `${currentIndex + 1} / ${currentFilteredData.length}`;
                 document.getElementById('progress-bar-fill').style.width = `${((currentIndex + 1) / currentFilteredData.length) * 100}%`;
                 document.getElementById('card').classList.remove('flipped');
-            if (document.getElementById('auto-tts').checked) {
+                
+                // 여기가 자동 발음 핵심입니다.
+                if (document.getElementById('auto-tts').checked) {
                     playCurrentWord();
                 }
             }
@@ -158,24 +158,9 @@
                 }
             }
 
-            function renderWordList() {
-                const q = document.getElementById('search-input').value.toLowerCase();
-                const container = document.getElementById('word-list-container');
-                container.innerHTML = '';
-                currentFilteredData.filter(w => w.hanzi.includes(q) || w.pinyin.toLowerCase().includes(q) || w.meaning.includes(q)).forEach((w) => {
-                    const div = document.createElement('div');
-                    div.className = 'word-list-item';
-                    div.innerHTML = `<div><span style="font-family:'Noto Sans SC'; font-weight:700;">${w.hanzi}</span> <span style="color:#666; margin-left:8px;">${w.pinyin}</span></div> <div>${w.meaning}</div>`;
-                    div.onclick = () => { currentIndex = currentFilteredData.indexOf(w); updateCardContent(); document.getElementById('word-list-modal').style.display='none'; };
-                    container.appendChild(div);
-                });
-            }
-
-            function openWordListModal() { renderWordList(); document.getElementById('word-list-modal').style.display = 'flex'; }
-            function flipCard() { document.getElementById('card').classList.toggle('flipped'); }
             function nextCard() { currentIndex = (currentIndex + 1) % currentFilteredData.length; updateCardContent(); }
             function prevCard() { currentIndex = (currentIndex - 1 + currentFilteredData.length) % currentFilteredData.length; updateCardContent(); }
-            function toggleAutoplay() {
+            function toggleAutoplay() { 
                 const btn = document.getElementById('autoplay-btn');
                 if (autoplayInterval) { clearInterval(autoplayInterval); autoplayInterval = null; btn.classList.remove('active'); }
                 else { btn.classList.add('active'); autoplayInterval = setInterval(() => { if (!document.getElementById('card').classList.contains('flipped')) document.getElementById('card').classList.add('flipped'); else nextCard(); }, 2000); }
