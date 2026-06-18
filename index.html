@@ -209,156 +209,57 @@
             currentFilteredData = [],
             currentIndex = 0,
             autoplayTimer = null,
-            selectedGameItems = [];
+            selectedGameItems = [],
+            remainingGamePool = []; // 게임에 남은 단어 관리
 
-        function parseCSVLine(line) {
-            const result = [];
-            let current = '';
-            let inQuotes = false;
-            for (let i = 0; i < line.length; i++) {
-                if (line[i] === '"') inQuotes = !inQuotes;
-                else if (line[i] === ',' && !inQuotes) { result.push(current.trim()); current = ''; }
-                else current += line[i];
-            }
-            result.push(current.trim());
-            return result;
-        }
-
-        async function loadWordData() {
-            const res = await fetch(SPREADSHEET_URL);
-            const text = await res.text();
-            totalWordData = text.split('\n').slice(1).filter(l => l.trim()).map((line, i) => {
-                const row = parseCSVLine(line);
-                return {
-                    id: i,
-                    chapter: String(row[1] || "").trim(),
-                    hanzi: row[2],
-                    pinyin: row[3],
-                    meaning: row[4],
-                    part: row[5] || "",
-                    example: row[6] || ""
-                };
-            });
-            changeCategory();
-        }
-
-        function changeCategory() {
-            const val = document.getElementById('chapter-select').value;
-            if (val === "all") currentFilteredData = [...totalWordData];
-            else if (val === "unknown") currentFilteredData = totalWordData.filter(w => unknownWordIds.includes(w.id));
-            else currentFilteredData = totalWordData.filter(w => w.chapter === val);
-            
-            currentIndex = 0;
-            updateCardContent();
-        }
-
-        function updateCardContent() {
-            const w = currentFilteredData[currentIndex] || { hanzi: "단어 없음", meaning: "데이터 없음", chapter: "" };
-            
-            document.getElementById('hanzi').textContent = w.hanzi;
-            document.getElementById('pinyin').textContent = w.pinyin;
-            document.getElementById('meaning').textContent = w.meaning;
-            document.getElementById('example').textContent = w.example;
-            document.getElementById('part').textContent = w.part;
-            
-            document.getElementById('part').style.display = w.part ? "inline-block" : "none";
-            document.getElementById('front-badge').textContent = w.chapter + "과";
-            document.getElementById('back-badge').textContent = w.chapter + "과";
-            
-            document.getElementById('progress-text').textContent = `${currentIndex + 1} / ${currentFilteredData.length}`;
-            document.getElementById('progress-bar-fill').style.width = `${currentFilteredData.length ? ((currentIndex + 1) / currentFilteredData.length) * 100 : 0}%`;
-            
-            document.getElementById('unknown-heart').textContent = unknownWordIds.includes(w.id) ? "💖" : "🤍";
-            document.getElementById('card').classList.remove('flipped');
-        }
-
+        // (데이터 로딩 및 기타 기존 함수 생략 - 동일함)
+        function parseCSVLine(line) { const result = []; let current = ''; let inQuotes = false; for (let i = 0; i < line.length; i++) { if (line[i] === '"') inQuotes = !inQuotes; else if (line[i] === ',' && !inQuotes) { result.push(current.trim()); current = ''; } else current += line[i]; } result.push(current.trim()); return result; }
+        async function loadWordData() { const res = await fetch(SPREADSHEET_URL); const text = await res.text(); totalWordData = text.split('\n').slice(1).filter(l => l.trim()).map((line, i) => { const row = parseCSVLine(line); return { id: i, chapter: String(row[1] || "").trim(), hanzi: row[2], pinyin: row[3], meaning: row[4], part: row[5] || "", example: row[6] || "" }; }); changeCategory(); }
+        function changeCategory() { const val = document.getElementById('chapter-select').value; if (val === "all") currentFilteredData = [...totalWordData]; else if (val === "unknown") currentFilteredData = totalWordData.filter(w => unknownWordIds.includes(w.id)); else currentFilteredData = totalWordData.filter(w => w.chapter === val); currentIndex = 0; updateCardContent(); }
+        function updateCardContent() { const w = currentFilteredData[currentIndex] || { hanzi: "단어 없음", meaning: "데이터 없음", chapter: "" }; document.getElementById('hanzi').textContent = w.hanzi; document.getElementById('pinyin').textContent = w.pinyin; document.getElementById('meaning').textContent = w.meaning; document.getElementById('example').textContent = w.example; document.getElementById('part').textContent = w.part; document.getElementById('part').style.display = w.part ? "inline-block" : "none"; document.getElementById('front-badge').textContent = w.chapter + "과"; document.getElementById('back-badge').textContent = w.chapter + "과"; document.getElementById('progress-text').textContent = `${currentIndex + 1} / ${currentFilteredData.length}`; document.getElementById('progress-bar-fill').style.width = `${currentFilteredData.length ? ((currentIndex + 1) / currentFilteredData.length) * 100 : 0}%`; document.getElementById('unknown-heart').textContent = unknownWordIds.includes(w.id) ? "💖" : "🤍"; document.getElementById('card').classList.remove('flipped'); }
         function flipCard() { document.getElementById('card').classList.toggle('flipped'); }
-
-        function nextCard() {
-            currentIndex = (currentIndex + 1) % currentFilteredData.length;
-            updateCardContent();
-        }
-
-        function prevCard() {
-            currentIndex = (currentIndex - 1 + currentFilteredData.length) % currentFilteredData.length;
-            updateCardContent();
-        }
-        
-        function toggleUnknown(e) { 
-            e.stopPropagation(); 
-            const id = currentFilteredData[currentIndex].id; 
-            
-            if(unknownWordIds.includes(id)) unknownWordIds = unknownWordIds.filter(i => i !== id); 
-            else unknownWordIds.push(id); 
-            
-            localStorage.setItem('sanrioUnknownWords', JSON.stringify(unknownWordIds)); 
-            updateCardContent(); 
-        }
-
-        function speakCurrentWord(e) { 
-            e.stopPropagation(); 
-            const u = new SpeechSynthesisUtterance(currentFilteredData[currentIndex].hanzi); 
-            u.lang = 'zh-CN';
-            speechSynthesis.speak(u); 
-        }
-
+        function nextCard() { currentIndex = (currentIndex + 1) % currentFilteredData.length; updateCardContent(); }
+        function prevCard() { currentIndex = (currentIndex - 1 + currentFilteredData.length) % currentFilteredData.length; updateCardContent(); }
+        function toggleUnknown(e) { e.stopPropagation(); const id = currentFilteredData[currentIndex].id; if(unknownWordIds.includes(id)) unknownWordIds = unknownWordIds.filter(i => i !== id); else unknownWordIds.push(id); localStorage.setItem('sanrioUnknownWords', JSON.stringify(unknownWordIds)); updateCardContent(); }
+        function speakCurrentWord(e) { e.stopPropagation(); const u = new SpeechSynthesisUtterance(currentFilteredData[currentIndex].hanzi); u.lang = 'zh-CN'; speechSynthesis.speak(u); }
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        function closeModalOnBackground(e, id) { if (e.target.id === id) closeModal(id); }
+        function openWordListModal() { buildWordList(currentFilteredData); openModal('word-list-modal'); }
+        function buildWordList(data) { const c = document.getElementById('word-list-contents'); c.innerHTML = ''; data.forEach((w, idx) => { const item = document.createElement('div'); item.className = 'word-list-item'; item.onclick = () => { currentIndex = idx; updateCardContent(); closeModal('word-list-modal'); }; item.innerHTML = `<div><span class="list-hanzi">${w.hanzi}</span><span class="list-pinyin">${w.pinyin}</span></div><span class="list-meaning">${w.meaning}</span>`; c.appendChild(item); }); }
+        function filterWordList() { const q = document.getElementById('search-input').value.toLowerCase(); buildWordList(currentFilteredData.filter(w => w.hanzi.includes(q) || w.meaning.includes(q))); }
+        function toggleAutoplay() { if(autoplayTimer) { clearInterval(autoplayTimer); autoplayTimer = null; } else { autoplayTimer = setInterval(nextCard, 2000); } }
+        function shuffleCards() { for(let i = currentFilteredData.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [currentFilteredData[i], currentFilteredData[j]] = [currentFilteredData[j], currentFilteredData[i]]; } currentIndex = 0; updateCardContent(); }
 
-        function closeModalOnBackground(e, id) {
-            if (e.target.id === id) closeModal(id);
-        }
-
-        function openWordListModal() {
-            buildWordList(currentFilteredData);
-            openModal('word-list-modal');
-        }
-        
-        function buildWordList(data) { 
-            const c = document.getElementById('word-list-contents');
-            c.innerHTML = ''; 
-            
-            data.forEach((w, idx) => { 
-                const item = document.createElement('div');
-                item.className = 'word-list-item'; 
-                item.onclick = () => {
-                    currentIndex = idx;
-                    updateCardContent();
-                    closeModal('word-list-modal');
-                }; 
-                item.innerHTML = `<div><span class="list-hanzi">${w.hanzi}</span><span class="list-pinyin">${w.pinyin}</span></div><span class="list-meaning">${w.meaning}</span>`; 
-                c.appendChild(item); 
-            }); 
-        }
-
-        function filterWordList() { 
-            const q = document.getElementById('search-input').value.toLowerCase(); 
-            buildWordList(currentFilteredData.filter(w => w.hanzi.includes(q) || w.meaning.includes(q))); 
-        }
-
+        // 수정된 게임 로직
         function openGameModal() {
+            remainingGamePool = [...currentFilteredData];
             initMatchingGame();
             openModal('game-modal');
         }
-        
-        function initMatchingGame() { 
-            const availableData = [...currentFilteredData];
-            if (availableData.length === 0) return;
+
+        function initMatchingGame() {
+            const g = document.getElementById('game-grid-container');
+            const statusMsg = document.getElementById('game-status-message');
+            g.innerHTML = '';
             
-            const count = Math.min(4, availableData.length);
-            const pool = availableData.sort(() => 0.5 - Math.random()).slice(0, count);
+            if (remainingGamePool.length === 0) {
+                statusMsg.textContent = "🎉 모두 완료했습니다!";
+                return;
+            }
+
+            statusMsg.textContent = `남은 단어: ${remainingGamePool.length}개`;
+            
+            // 4개씩 뽑아서 게임 진행 (또는 남은 게 4개 미만이면 남은 것만)
+            const count = Math.min(4, remainingGamePool.length);
+            const roundPool = remainingGamePool.slice(0, count);
             
             let pieces = [];
-            pool.forEach(w => {
+            roundPool.forEach(w => {
                 pieces.push({id: w.id, text: w.hanzi, pinyin: w.pinyin, type: 'h'}, {id: w.id, text: w.meaning, pinyin: '', type: 'm'});
             });
             pieces.sort(() => 0.5 - Math.random());
             
-            const g = document.getElementById('game-grid-container');
-            const statusMsg = document.getElementById('game-status-message');
-            g.innerHTML = '';
-            statusMsg.textContent = "짝을 맞추세요!";
             selectedGameItems = [];
             
             pieces.forEach(p => {
@@ -367,23 +268,26 @@
                 div.innerHTML = `<div>${p.text}</div>${p.pinyin ? `<div class="game-pinyin">${p.pinyin}</div>` : ''}`;
                 
                 div.onclick = () => {
-                    if (div.classList.contains('matched') || div.classList.contains('selected')) return;
+                    if (div.classList.contains('selected')) return;
                     div.classList.add('selected');
                     selectedGameItems.push({div, id: p.id, type: p.type});
                     
                     if(selectedGameItems.length === 2) {
                         if(selectedGameItems[0].id === selectedGameItems[1].id && selectedGameItems[0].type !== selectedGameItems[1].type) {
+                            // 매칭 성공 시 화면에서 지우고, 전체 풀에서도 제거
                             selectedGameItems[0].div.classList.add('matched');
                             selectedGameItems[1].div.classList.add('matched');
+                            remainingGamePool = remainingGamePool.filter(w => w.id !== selectedGameItems[0].id);
                             
-                            // 매칭 완료 체크
-                            if (document.querySelectorAll('.game-item:not(.matched)').length === 0) {
-                                statusMsg.textContent = "🎉 성공! 모든 단어를 맞췄어요!";
-                            }
+                            setTimeout(() => {
+                                if (remainingGamePool.length > 0) initMatchingGame();
+                                else statusMsg.textContent = "🎉 성공! 모든 단어를 맞췄어요!";
+                            }, 500);
                         } else {
                             setTimeout(() => {
                                 selectedGameItems[0].div.classList.remove('selected');
                                 selectedGameItems[1].div.classList.remove('selected');
+                                selectedGameItems = [];
                             }, 500);
                         }
                         selectedGameItems = [];
@@ -391,24 +295,6 @@
                 };
                 g.appendChild(div);
             });
-        }
-
-        function toggleAutoplay() {
-            if(autoplayTimer) {
-                clearInterval(autoplayTimer);
-                autoplayTimer = null;
-            } else {
-                autoplayTimer = setInterval(nextCard, 2000);
-            }
-        }
-
-        function shuffleCards() { 
-            for(let i = currentFilteredData.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [currentFilteredData[i], currentFilteredData[j]] = [currentFilteredData[j], currentFilteredData[i]];
-            }
-            currentIndex = 0;
-            updateCardContent();
         }
 
         loadWordData();
