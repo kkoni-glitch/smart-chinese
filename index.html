@@ -5,123 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎀 스마트 중국어 단어장 🎀</title>
     <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Noto+Sans+SC:wght@500;700&family=Roboto:wght@500;700&display=swap" rel="stylesheet">
-
     <style>
-        body {
-            font-family: 'Gaegu', cursive;
-            background-color: #ffeef2;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            flex-direction: column;
-            padding: 20px;
-            box-sizing: border-box;
-            color: #5d4037;
-        }
-
+        body { font-family: 'Gaegu', cursive; background-color: #ffeef2; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; flex-direction: column; padding: 20px; box-sizing: border-box; color: #5d4037; }
         .header-container { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-bottom: 20px; }
-
-        .filter-container {
-            display: flex; gap: 12px; align-items: center; flex-wrap: wrap; justify-content: center;
-            background-color: white; padding: 12px 25px; border-radius: 30px;
-            box-shadow: 0 5px 15px rgba(255, 182, 193, 0.4); border: 2px solid #ffb6c1;
-        }
-
-        .filter-label { font-size: 20px; font-weight: bold; color: #ff69b4; }
-
-        select {
-            padding: 8px 20px; font-size: 18px; border-radius: 25px; border: 2px solid #ffb6c1;
-            background-color: #fff0f5; cursor: pointer; font-family: 'Gaegu', cursive; color: #c71585; outline: none;
-        }
-
-        .options-outer-container { display: flex; gap: 15px; align-items: center; justify-content: center; }
-
-        .toggle-group {
-            display: flex; background: white; padding: 8px 20px; border-radius: 25px;
-            font-size: 18px; font-weight: bold; border: 2px solid #ffb6c1; align-items: center; box-shadow: 0 5px 15px rgba(255, 182, 193, 0.3);
-        }
-
-        .toggle-item { display: flex; align-items: center; gap: 5px; cursor: pointer; color: #ff69b4; }
-
-        .game-trigger-btn {
-            background-color: #d1c4e9; color: #4a148c; border: 2px solid #b39ddb; padding: 8px 20px;
-            border-radius: 25px; cursor: pointer; font-family: 'Gaegu', cursive; font-size: 18px; font-weight: bold;
-            transition: all 0.2s; box-shadow: 0 5px 15px rgba(179, 157, 219, 0.4);
-        }
-
-        .game-trigger-btn:hover { background-color: #b39ddb; color: white; }
-
-        .card-container { width: 380px; height: 280px; perspective: 1000px; cursor: pointer; margin-bottom: 20px; position: relative; }
-
-        .card {
-            width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative; border-radius: 20px; border: 4px solid #b39ddb; box-shadow: 0 12px 25px rgba(179, 157, 219, 0.5);
-        }
-
+        .filter-container { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; justify-content: center; background-color: white; padding: 12px 25px; border-radius: 30px; box-shadow: 0 5px 15px rgba(255, 182, 193, 0.4); border: 2px solid #ffb6c1; }
+        .options-outer-container { display: flex; gap: 15px; align-items: center; justify-content: center; margin-top: 10px; }
+        .toggle-group { display: flex; background: white; padding: 8px 20px; border-radius: 25px; font-size: 18px; font-weight: bold; border: 2px solid #ffb6c1; align-items: center; }
+        .game-trigger-btn { background-color: #d1c4e9; color: #4a148c; border: 2px solid #b39ddb; padding: 8px 20px; border-radius: 25px; cursor: pointer; font-size: 18px; font-weight: bold; }
+        .card-container { width: 350px; height: 250px; perspective: 1000px; cursor: pointer; margin-bottom: 20px; position: relative; }
+        .card { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.5s; position: relative; border-radius: 20px; border: 4px solid #b39ddb; box-shadow: 0 10px 20px rgba(179, 157, 219, 0.3); }
         .card.flipped { transform: rotateY(180deg); }
-
-        .card-face {
-            position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            border-radius: 16px; background-color: white; padding: 25px; box-sizing: border-box; overflow: hidden;
-        }
-
-        .card-front { z-index: 2; background-color: #fff5f8; }
-        .card-back { transform: rotateY(180deg); z-index: 1; background-color: #fffdeb; }
-
-        .chapter-badge {
-            position: absolute; top: 15px; left: 20px; background-color: #ffb6c1; padding: 5px 12px;
-            border-radius: 15px; font-size: 16px; color: white; font-weight: bold;
-        }
-
-        .audio-btn { position: absolute; top: 10px; left: 95px; font-size: 24px; background: none; border: none; cursor: pointer; z-index: 10; }
-        .unknown-btn { position: absolute; top: 10px; right: 15px; font-size: 36px; background: none; border: none; cursor: pointer; z-index: 10; }
-        .character-icon { position: absolute; bottom: 10px; right: 15px; font-size: 40px; opacity: 0.8; }
-
-        .hanzi { font-family: 'Noto Sans SC', sans-serif; font-size: 68px; font-weight: 700; color: #d81b60; margin-bottom: 8px; text-align: center; }
-        .pinyin { font-family: 'Roboto', sans-serif; font-size: 24px; font-weight: 700; color: #880e4f; background-color: rgba(255, 255, 255, 0.85); padding: 4px 14px; border-radius: 12px; }
-
-        .meaning-box { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
-        .part-badge { font-size: 18px; background-color: #e8eaf6; color: #3f51b5; padding: 2px 10px; border-radius: 10px; font-weight: bold; }
-        .meaning { font-size: 32px; font-weight: bold; color: #bf360c; }
-        .example { font-size: 18px; color: #5d4037; text-align: center; line-height: 1.6; background-color: rgba(255, 255, 255, 0.8); padding: 10px; border-radius: 10px; max-width: 90%; }
-
-        .progress-container {
-            display: flex; align-items: center; gap: 10px; margin-bottom: 15px; background-color: rgba(255, 255, 255, 0.7);
-            padding: 5px 15px; border-radius: 20px;
-        }
-
-        .progress-bar-bg { width: 150px; height: 10px; background-color: #e0e0e0; border-radius: 5px; overflow: hidden; }
-        .progress-bar-fill { height: 100%; background-color: #ff69b4; width: 0%; transition: width 0.3s; }
-        .progress-text { font-size: 18px; color: #c71585; font-weight: bold; cursor: pointer; padding: 2px 8px; border-radius: 10px; background-color: #fff0f5; }
-
-        .controls { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-bottom: 15px; }
-
-        button { padding: 12px 24px; font-size: 22px; font-family: 'Gaegu', cursive; font-weight: bold; border: none; border-radius: 30px; cursor: pointer; }
-        .nav-btn { background-color: #b3e5fc; color: #01579b; }
-        .shuffle-btn { background-color: #ffcdd2; color: #b71c1c; }
-        .autoplay-btn { background-color: #ffe082; color: #e65100; }
-
-        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
-        .modal-content { background-color: white; border-radius: 20px; border: 3px solid #ffb6c1; width: 100%; max-width: 400px; max-height: 80vh; display: flex; flex-direction: column; padding: 20px; box-sizing: border-box; }
-        
-        .game-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; width: 100%; margin-top: 10px; }
-        .game-item {
-            background-color: #fff5f8; border: 2px solid #ffb6c1; border-radius: 15px; height: 70px; /* 작게 축소 */
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            cursor: pointer; font-size: 16px; font-weight: bold; color: #5d4037;
-        }
-        .game-item.selected { background-color: #ffe082; border-color: #ffb300; }
+        .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 16px; background-color: white; }
+        .card-back { transform: rotateY(180deg); background-color: #fffdeb; }
+        .hanzi { font-size: 60px; font-weight: 700; color: #d81b60; }
+        .meaning { font-size: 28px; font-weight: bold; color: #bf360c; }
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); justify-content: center; align-items: center; }
+        .modal-content { background-color: white; border-radius: 20px; padding: 20px; width: 90%; max-width: 400px; }
+        .game-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
+        .game-item { background: #fff5f8; border: 2px solid #ffb6c1; border-radius: 10px; padding: 10px; text-align: center; cursor: pointer; font-size: 14px; }
+        .game-item.selected { background: #ffe082; border-color: #ffb300; }
         .game-item.matched { visibility: hidden; }
-        .game-status { text-align: center; font-size: 18px; font-weight: bold; color: #7b1fa2; margin: 10px 0; }
     </style>
 </head>
 <body>
     <div class="header-container">
         <div class="filter-container">
-            <span class="filter-label">📂 단어 범위 선택:</span>
             <select id="chapter-select" onchange="changeCategory()">
                 <option value="all">🌟 전체 보기</option>
                 <option value="1">🌸 1과</option>
@@ -136,160 +44,105 @@
                 <option value="10">🌸 10과</option>
                 <option value="11">🌸 11과</option>
                 <option value="12">🔄 7~11 복습</option>
-                <option value="unknown">🖤 모르는 단어</option>
             </select>
         </div>
-        <button class="game-trigger-btn" onclick="openGameModal()">🧩 매칭 게임</button>
+        <div class="options-outer-container">
+            <div class="toggle-group">
+                <label><input type="checkbox" id="auto-tts" checked> 🔊 자동 발음</label>
+            </div>
+            <button class="game-trigger-btn" onclick="openGameModal()">🧩 매칭 게임</button>
+        </div>
     </div>
 
     <div class="card-container">
-        <button class="audio-btn" onclick="speakCurrentWord(event)">🔊</button>
-        <button class="unknown-btn" onclick="toggleUnknown(event)" id="unknown-heart">🤍</button>
         <div class="card" id="card" onclick="flipCard()">
-            <div class="card-face card-front">
-                <span class="chapter-badge" id="front-badge">-과</span>
-                <div class="hanzi" id="hanzi">로딩 중..</div>
-                <div class="pinyin" id="pinyin">loading</div>
-            </div>
-            <div class="card-face card-back">
-                <div class="meaning-box"><div class="meaning" id="meaning">뜻</div></div>
-                <div class="example" id="example"></div>
-            </div>
+            <div class="card-face"><div class="hanzi" id="hanzi">로딩 중..</div></div>
+            <div class="card-face card-back"><div class="meaning" id="meaning">뜻</div></div>
         </div>
-    </div>
-
-    <div class="progress-container">
-        <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-bar-fill"></div></div>
-        <div class="progress-text" id="progress-text">0 / 0</div>
-    </div>
-
-    <div class="controls">
-        <button class="nav-btn" onclick="prevCard()">👈 이전</button>
-        <button class="autoplay-btn" onclick="toggleAutoplay()">⏱️ 자동</button>
-        <button class="shuffle-btn" onclick="shuffleCards()">🎲 섞기</button>
-        <button class="nav-btn" onclick="nextCard()">다음 👉</button>
     </div>
 
     <div id="game-modal" class="modal">
         <div class="modal-content">
-            <div class="modal-title">🧩 매칭 게임</div>
             <div class="game-grid" id="game-grid-container"></div>
-            <div class="game-status" id="game-status-message">짝을 맞추세요!</div>
             <button onclick="document.getElementById('game-modal').style.display='none'">닫기</button>
         </div>
     </div>
 
     <script>
-        const SPREADSHEET_ID = '18D1sxEjb7qD4DudFmrZziQDZ0HK-F1V-8Z3V-9WxoDw';
-        const SPREADSHEET_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv`;
+        const SPREADSHEET_URL = 'https://docs.google.com/spreadsheets/d/18D1sxEjb7qD4DudFmrZziQDZ0HK-F1V-8Z3V-9WxoDw/gviz/tq?tqx=out:csv';
+        let totalData = [], filteredData = [], currentIndex = 0, selectedItems = [];
 
-        let totalWordData = [], unknownWordIds = JSON.parse(localStorage.getItem('sanrioUnknownWords')) || [], currentFilteredData = [], currentIndex = 0, selectedGameItems = [], remainingGamePool = [];
-
-        async function loadWordData() {
+        async function fetchData() {
             const res = await fetch(SPREADSHEET_URL);
             const text = await res.text();
-            totalWordData = text.split('\n').slice(1).filter(l => l.trim()).map((line, i) => {
-                const row = line.split(',').map(s => s.replace(/"/g, '').trim());
-                return { id: i, chapter: row[1], hanzi: row[2], pinyin: row[3], meaning: row[4], example: row[6] || "" };
+            totalData = text.split('\n').slice(1).filter(l => l.trim()).map((line, i) => {
+                const row = line.split(',').map(s => s.replace(/"/g, ''));
+                return { id: i, chapter: row[1], hanzi: row[2], meaning: row[4] };
             });
             changeCategory();
         }
 
         function changeCategory() {
             const val = document.getElementById('chapter-select').value;
-            if (val === "all") currentFilteredData = [...totalWordData];
-            else if (val === "unknown") currentFilteredData = totalWordData.filter(w => unknownWordIds.includes(w.id));
-            else currentFilteredData = totalWordData.filter(w => w.chapter === val);
+            filteredData = val === 'all' ? totalData : totalData.filter(d => d.chapter === val);
             currentIndex = 0;
-            updateCardContent();
+            updateCard();
         }
 
-        function updateCardContent() {
-            const w = currentFilteredData[currentIndex] || { hanzi: "없음", pinyin: "", meaning: "데이터 없음", example: "" };
+        function updateCard() {
+            const w = filteredData[currentIndex] || { hanzi: "데이터 없음", meaning: "없음" };
             document.getElementById('hanzi').textContent = w.hanzi;
-            document.getElementById('pinyin').textContent = w.pinyin;
             document.getElementById('meaning').textContent = w.meaning;
-            document.getElementById('example').textContent = w.example;
-            document.getElementById('front-badge').textContent = w.chapter + "과";
-            document.getElementById('progress-text').textContent = `${currentIndex + 1} / ${currentFilteredData.length}`;
-            document.getElementById('progress-bar-fill').style.width = `${currentFilteredData.length ? ((currentIndex + 1) / currentFilteredData.length) * 100 : 0}%`;
-            document.getElementById('unknown-heart').textContent = unknownWordIds.includes(w.id) ? "💖" : "🤍";
             document.getElementById('card').classList.remove('flipped');
         }
 
-        function flipCard() { document.getElementById('card').classList.toggle('flipped'); }
-        function nextCard() { currentIndex = (currentIndex + 1) % currentFilteredData.length; updateCardContent(); }
-        function prevCard() { currentIndex = (currentIndex - 1 + currentFilteredData.length) % currentFilteredData.length; updateCardContent(); }
-        
-        function toggleUnknown(e) {
-            e.stopPropagation();
-            const id = currentFilteredData[currentIndex].id;
-            if (unknownWordIds.includes(id)) unknownWordIds = unknownWordIds.filter(i => i !== id);
-            else unknownWordIds.push(id);
-            localStorage.setItem('sanrioUnknownWords', JSON.stringify(unknownWordIds));
-            updateCardContent();
-        }
-
-        function speakCurrentWord(e) {
-            e.stopPropagation();
-            const u = new SpeechSynthesisUtterance(currentFilteredData[currentIndex].hanzi);
-            u.lang = 'zh-CN';
-            speechSynthesis.speak(u);
-        }
-
-        function shuffleCards() {
-            currentFilteredData.sort(() => Math.random() - 0.5);
-            currentIndex = 0;
-            updateCardContent();
+        function flipCard() {
+            const card = document.getElementById('card');
+            card.classList.toggle('flipped');
+            if (card.classList.contains('flipped') && document.getElementById('auto-tts').checked) {
+                const u = new SpeechSynthesisUtterance(document.getElementById('hanzi').textContent);
+                u.lang = 'zh-CN';
+                speechSynthesis.speak(u);
+            }
         }
 
         function openGameModal() {
-            remainingGamePool = [...currentFilteredData];
-            initMatchingGame();
-            document.getElementById('game-modal').style.display = 'flex';
-        }
-
-        function initMatchingGame() {
-            const g = document.getElementById('game-grid-container'), statusMsg = document.getElementById('game-status-message');
-            g.innerHTML = '';
-            if (remainingGamePool.length === 0) { statusMsg.textContent = "🎉 완료!"; return; }
-            statusMsg.textContent = `남은 단어: ${remainingGamePool.length}개`;
-
-            const roundPool = remainingGamePool.slice(0, 4);
-            let pieces = [];
-            roundPool.forEach(w => {
-                pieces.push({ id: w.id, text: w.hanzi, type: 'h' }, { id: w.id, text: w.meaning, type: 'm' });
+            const container = document.getElementById('game-grid-container');
+            container.innerHTML = '';
+            const gameData = filteredData.slice(0, 4);
+            let items = [];
+            gameData.forEach(d => {
+                items.push({ id: d.id, text: d.hanzi, type: 'h' }, { id: d.id, text: d.meaning, type: 'm' });
             });
-            pieces.sort(() => 0.5 - Math.random());
-            selectedGameItems = [];
+            items.sort(() => 0.5 - Math.random());
 
-            pieces.forEach(p => {
+            items.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'game-item';
-                div.textContent = p.text;
+                div.textContent = item.text;
                 div.onclick = () => {
-                    if (div.classList.contains('selected') || div.classList.contains('matched') || selectedGameItems.length >= 2) return;
+                    if (div.classList.contains('selected') || selectedItems.length >= 2) return;
                     div.classList.add('selected');
-                    selectedGameItems.push({ div, id: p.id, type: p.type });
-                    if (selectedGameItems.length === 2) {
-                        if (selectedGameItems[0].id === selectedGameItems[1].id && selectedGameItems[0].type !== selectedGameItems[1].type) {
-                            selectedGameItems[0].div.classList.add('matched');
-                            selectedGameItems[1].div.classList.add('matched');
-                            remainingGamePool = remainingGamePool.filter(w => w.id !== selectedGameItems[0].id);
-                            setTimeout(() => { if (remainingGamePool.length > 0) initMatchingGame(); else statusMsg.textContent = "🎉 성공!"; selectedGameItems = []; }, 500);
+                    selectedItems.push({ div, id: item.id, type: item.type });
+                    
+                    if (selectedItems.length === 2) {
+                        if (selectedItems[0].id === selectedItems[1].id && selectedItems[0].type !== selectedItems[1].type) {
+                            selectedItems[0].div.classList.add('matched');
+                            selectedItems[1].div.classList.add('matched');
+                            selectedItems = [];
                         } else {
                             setTimeout(() => {
-                                selectedGameItems[0].div.classList.remove('selected');
-                                selectedGameItems[1].div.classList.remove('selected');
-                                selectedGameItems = [];
-                            }, 300);
+                                selectedItems.forEach(s => s.div.classList.remove('selected'));
+                                selectedItems = [];
+                            }, 500);
                         }
                     }
                 };
-                g.appendChild(div);
+                container.appendChild(div);
             });
+            document.getElementById('game-modal').style.display = 'flex';
         }
-        loadWordData();
+        fetchData();
     </script>
 </body>
 </html>
