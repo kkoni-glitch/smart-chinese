@@ -143,6 +143,9 @@
                 document.getElementById('progress-text').textContent = `${currentIndex + 1} / ${currentFilteredData.length}`;
                 document.getElementById('progress-bar-fill').style.width = `${((currentIndex + 1) / currentFilteredData.length) * 100}%`;
                 document.getElementById('card').classList.remove('flipped');
+            if (document.getElementById('auto-tts').checked) {
+                    playCurrentWord();
+                }
             }
 
             function playCurrentWord() {
