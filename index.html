@@ -381,13 +381,13 @@
         </div>
 
         <script>
-            const SPREADSHEET_URL = 'https://docs.google.com/spreadsheets/d/18D1sxEjb7qD4DudFmrZziQDZ0HK-F1V-8Z3V-9WxoDw/gviz/tq?tqx=out:csv';
+           const SPREADSHEET_URL = 'https://docs.google.com/spreadsheets/d/18D1sxEjb7qD4DudFmrZziQDZ0HK-F1V-8Z3V-9WxoDw/gviz/tq?tqx=out:csv';
             let totalWordData = [];
             let currentFilteredData = [];
             let currentIndex = 0;
             let autoplayTimer = null;
             let selectedItems = [];
-            let matchedCount = 0;
+            let gameRemainingData = []; // 게임용 남은 데이터 관리 변수
 
             async function loadWordData() {
                 const res = await fetch(SPREADSHEET_URL);
@@ -406,125 +406,33 @@
                 updateCardContent();
             }
 
-            function playCurrentWord() {
-                const w = currentFilteredData[currentIndex];
-                if (w) {
-                    window.speechSynthesis.cancel();
-                    const msg = new SpeechSynthesisUtterance(w.hanzi);
-                    msg.lang = 'zh-CN';
-                    window.speechSynthesis.speak(msg);
-                }
-            }
-
-            function updateCardContent() {
-                const w = currentFilteredData[currentIndex] || { hanzi: "끝", meaning: "없음", chapter: "" };
-                document.getElementById('hanzi').textContent = w.hanzi;
-                document.getElementById('pinyin').textContent = w.pinyin;
-                document.getElementById('meaning').textContent = w.meaning;
-                document.getElementById('front-badge').textContent = w.chapter + "과";
-                document.getElementById('progress-text').textContent = `${currentIndex + 1} / ${currentFilteredData.length}`;
-                document.getElementById('progress-bar-fill').style.width = `${((currentIndex + 1) / currentFilteredData.length) * 100}%`;
-                document.getElementById('card').classList.remove('flipped');
-                if (document.getElementById('auto-tts').checked) {
-                    playCurrentWord();
-                }
-            }
-
-            function renderWordList() {
-                const q = document.getElementById('search-input').value.toLowerCase();
-                const container = document.getElementById('word-list-container');
-                container.innerHTML = '';
-                currentFilteredData.filter(w => 
-                    w.hanzi.includes(q) || 
-                    w.pinyin.toLowerCase().includes(q) || 
-                    w.meaning.includes(q)
-                ).forEach((w) => {
-                    const div = document.createElement('div');
-                    div.className = 'word-list-item';
-                    div.innerHTML = `
-                        <div>
-                            <span style="font-family:'Noto Sans SC', sans-serif; font-weight:700;">${w.hanzi}</span>
-                            <span class="list-pinyin">${w.pinyin}</span>
-                        </div>
-                        <div style="font-size:18px;">${w.meaning}</div>
-                    `;
-                    div.onclick = () => { 
-                        currentIndex = currentFilteredData.indexOf(w); 
-                        updateCardContent(); 
-                        document.getElementById('word-list-modal').style.display='none'; 
-                    };
-                    container.appendChild(div);
-                });
-            }
-
-            function flipCard() { 
-                document.getElementById('card').classList.toggle('flipped'); 
-            }
-
-            function nextCard() { 
-                currentIndex = (currentIndex + 1) % currentFilteredData.length; 
-                updateCardContent(); 
-            }
-
-            function prevCard() { 
-                currentIndex = (currentIndex - 1 + currentFilteredData.length) % currentFilteredData.length; 
-                updateCardContent(); 
-            }
-
-            function toggleAutoplay() {
-                const btn = document.getElementById('autoplay-btn');
-                if (autoplayTimer) {
-                    clearInterval(autoplayTimer);
-                    autoplayTimer = null;
-                    btn.classList.remove('active');
-                } else {
-                    btn.classList.add('active');
-                    playCurrentWord();
-                    autoplayTimer = setInterval(() => {
-                        flipCard();
-                        setTimeout(() => {
-                            nextCard();
-                            if (document.getElementById('auto-tts').checked) {
-                                playCurrentWord();
-                            }
-                        }, 1500);
-                    }, 3000);
-                }
-            }
-
-// 게임 내에서 사용할 전역 변수
-            let gameRemainingData = []; 
+            // (중간에 있는 playCurrentWord, updateCardContent, flipCard 등 기존 함수들은 그대로 두세요)
 
             function initMatchingGame() {
                 const g = document.getElementById('game-grid-container');
                 const status = document.getElementById('game-status');
                 
-                // 게임 처음 시작할 때만 전체 리스트 복사
-                if (gameRemainingData.length === 0) {
-                    gameRemainingData = [...currentFilteredData];
-                }
+                // 게임 시작/재시작 시 데이터 초기화
+                gameRemainingData = [...currentFilteredData];
+                startRound();
+            }
 
+            function startRound() {
+                const g = document.getElementById('game-grid-container');
+                const status = document.getElementById('game-status');
                 g.innerHTML = '';
                 selectedItems = [];
-                matchedCount = 0;
 
-                // 재시작 버튼
                 const restartBtn = document.createElement('button');
                 restartBtn.textContent = "🔄 게임 전체 재시작";
                 restartBtn.style.gridColumn = "span 2";
                 restartBtn.style.marginBottom = "10px";
-                restartBtn.onclick = () => {
-                    gameRemainingData = [...currentFilteredData];
-                    initMatchingGame();
-                };
+                restartBtn.onclick = initMatchingGame;
                 g.appendChild(restartBtn);
 
-                // 남은 카드 중 4개 뽑기 (단어 4쌍, 총 8개 카드)
                 let currentSet = gameRemainingData.sort(() => 0.5 - Math.random()).slice(0, 4);
                 let pieces = [];
-                
                 currentSet.forEach(w => {
-                    // 한자 카드와 뜻 카드에 병음을 함께 표시하도록 수정
                     pieces.push({id: w.id, text: `${w.hanzi}<br><span style="font-size:12px;">${w.pinyin}</span>`, type: 'h'});
                     pieces.push({id: w.id, text: w.meaning, type: 'm'});
                 });
@@ -535,7 +443,7 @@
                 pieces.forEach(p => {
                     const div = document.createElement('div');
                     div.className = 'game-item';
-                    div.innerHTML = p.text; // innerHTML을 사용하여 병음 줄바꿈 적용
+                    div.innerHTML = p.text;
                     div.onclick = () => {
                         if (div.classList.contains('selected') || div.classList.contains('matched') || selectedItems.length >= 2) return;
                         div.classList.add('selected');
@@ -546,17 +454,13 @@
                                 selectedItems[0].div.classList.add('matched');
                                 selectedItems[1].div.classList.add('matched');
                                 
-                                // 성공한 단어는 gameRemainingData에서 제거
                                 gameRemainingData = gameRemainingData.filter(w => w.id !== selectedItems[0].id);
-                                
-                                matchedCount++;
                                 status.textContent = `남은 카드: ${gameRemainingData.length * 2}개`;
                                 
                                 if (gameRemainingData.length === 0) {
                                     status.textContent = "🎉 성공! 모든 단어를 다 맞췄어요!";
-                                } else if (matchedCount === 4) {
-                                    // 4쌍 다 맞추면 다음 세트 호출
-                                    setTimeout(() => initMatchingGame(), 500);
+                                } else if (document.querySelectorAll('.matched').length === 8) {
+                                    setTimeout(() => startRound(), 500);
                                 }
                             } else {
                                 setTimeout(() => {
@@ -571,17 +475,6 @@
                     g.appendChild(div);
                 });
             }
-            function openGameModal() { 
-                document.getElementById('game-modal').style.display = 'flex'; 
-                initMatchingGame(); 
-            }
-
-            function openWordListModal() { 
-                renderWordList(); 
-                document.getElementById('word-list-modal').style.display = 'flex'; 
-            }
-
-            loadWordData();
         </script>
     </body>
 </html>
