@@ -276,18 +276,23 @@
             .game-grid {
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
-                gap: 15px;
+                gap: 10px;
+                overflow-y: auto;
+                margin-bottom: 10px;
             }
             .game-item {
                 background-color: #fff5f8;
                 border: 2px solid #ffb6c1;
-                border-radius: 20px;
-                height: 80px;
+                border-radius: 15px;
+                padding: 10px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 cursor: pointer;
                 font-weight: bold;
+                text-align: center;
+                font-size: 16px;
+                min-height: 50px;
             }
             .game-item.selected {
                 background-color: #ffe082;
@@ -295,6 +300,13 @@
             }
             .game-item.matched {
                 visibility: hidden;
+            }
+            .game-status {
+                text-align: center;
+                font-size: 20px;
+                font-weight: bold;
+                color: #d81b60;
+                margin-bottom: 10px;
             }
         </style>
     </head>
@@ -363,8 +375,8 @@
 
         <div id="game-modal" class="modal" onclick="if(event.target.id==='game-modal') this.style.display='none'">
             <div class="modal-content">
+                <div class="game-status" id="game-status">남은 단어: 0</div>
                 <div class="game-grid" id="game-grid-container"></div>
-                <button style="margin-top:20px; width:100%" onclick="initMatchingGame()">🔄 재시작</button>
             </div>
         </div>
 
@@ -375,6 +387,7 @@
             let currentIndex = 0;
             let autoplayTimer = null;
             let selectedItems = [];
+            let matchedCount = 0;
 
             async function loadWordData() {
                 const res = await fetch(SPREADSHEET_URL);
@@ -481,15 +494,19 @@
 
             function initMatchingGame() {
                 const g = document.getElementById('game-grid-container');
+                const status = document.getElementById('game-status');
                 g.innerHTML = '';
                 selectedItems = [];
-                const pool = [...currentFilteredData].sort(() => 0.5 - Math.random()).slice(0, 4);
+                matchedCount = 0;
                 let pieces = [];
-                pool.forEach(w => {
+                
+                currentFilteredData.forEach(w => {
                     pieces.push({id: w.id, text: w.hanzi, type: 'h'});
                     pieces.push({id: w.id, text: w.meaning, type: 'm'});
                 });
                 pieces.sort(() => 0.5 - Math.random());
+                status.textContent = `남은 단어: ${currentFilteredData.length}`;
+                
                 pieces.forEach(p => {
                     const div = document.createElement('div');
                     div.className = 'game-item';
@@ -498,10 +515,16 @@
                         if (div.classList.contains('selected') || div.classList.contains('matched') || selectedItems.length >= 2) return;
                         div.classList.add('selected');
                         selectedItems.push({div, id: p.id, type: p.type});
+                        
                         if (selectedItems.length === 2) {
                             if (selectedItems[0].id === selectedItems[1].id && selectedItems[0].type !== selectedItems[1].type) {
                                 selectedItems[0].div.classList.add('matched');
                                 selectedItems[1].div.classList.add('matched');
+                                matchedCount++;
+                                status.textContent = `남은 단어: ${currentFilteredData.length - matchedCount}`;
+                                if (matchedCount === currentFilteredData.length) {
+                                    status.textContent = "🎉 성공! 모든 단어를 맞췄어요!";
+                                }
                             } else {
                                 setTimeout(() => {
                                     selectedItems.forEach(item => item.div.classList.remove('selected'));
