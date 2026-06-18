@@ -473,34 +473,36 @@
             return result;
         }
 
-        async function loadWordData() {
-            try {
-                const response = await fetch(SPREADSHEET_URL);
-                const text = await response.text();
-                const lines = text.split('\n');
-                const words = [];
-                
-                for (let i = 1; i < lines.length; i++) {
-                    if (!lines[i].trim()) continue;
-                    const row = parseCSVLine(lines[i]);
-                    
-                    if (row.length >= 3 && row[2]) {
-                        words.push({
-                            id: parseInt(row[0]) || i,
-                            chapter: String(row[1] || "").trim(), 
-                            hanzi: String(row[2] || "").trim(),
-                            pinyin: String(row[3] || "").trim(),
-                            meaning: String(row[4] || "").trim(), // 숫자 데이터 대응을 위해 String 강제 변환
-                            part: String(row[5] || "").trim(),      
-                            example: String(row[6] || "").trim()
-                        });
-                    }
-                }
-                totalWordData = words;
-                changeCategory();
-            } catch (error) { console.error("로드 실패:", error); }
+      // 코드 내 loadWordData 함수 부분을 아래 로직으로 교체하세요
+async function loadWordData() {
+    try {
+        const response = await fetch(SPREADSHEET_URL);
+        const text = await response.text();
+        const lines = text.split('\n');
+        const words = [];
+        
+        for (let i = 1; i < lines.length; i++) {
+            if (!lines[i].trim()) continue;
+            const row = parseCSVLine(lines[i]);
+            
+            // 데이터 파싱 안정화: B열(row[1])이 review1_5와 일치하는지 확인
+            if (row.length >= 5) {
+                words.push({
+                    id: parseInt(row[0]) || i,
+                    chapter: String(row[1] || "").trim(), // B열
+                    hanzi: String(row[2] || "").trim(),   // C열
+                    pinyin: String(row[3] || "").trim(),  // D열
+                    // 뜻(E열)이 비어있으면 F열(품사)이라도 가져오도록 보완
+                    meaning: (row[4] && row[4].length > 1) ? row[4] : (row[5] || ""), 
+                    part: row[5] || "",
+                    example: row[6] || ""
+                });
+            }
         }
-
+        totalWordData = words;
+        changeCategory();
+    } catch (error) { console.error("로드 실패:", error); }
+}
         function changeCategory() {
             const val = document.getElementById('chapter-select').value;
             if (val === "all") {
