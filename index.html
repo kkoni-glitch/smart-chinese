@@ -492,24 +492,34 @@
                 }
             }
 
-            function initMatchingGame() {
+function initMatchingGame() {
                 const g = document.getElementById('game-grid-container');
                 const status = document.getElementById('game-status');
                 g.innerHTML = '';
                 selectedItems = [];
                 matchedCount = 0;
+
+                // 재시작 버튼 생성
+                const restartBtn = document.createElement('button');
+                restartBtn.textContent = "🔄 게임 재시작";
+                restartBtn.style.gridColumn = "span 2";
+                restartBtn.style.marginBottom = "10px";
+                restartBtn.onclick = initMatchingGame;
+                g.appendChild(restartBtn);
+
+                // 현재 범위에서 4개 뽑기 (뜻 4개 + 한자 4개 = 총 8개 카드)
+                // *주의: 남은 단어가 4개 미만일 경우를 대비하여 처리
+                let pool = [...currentFilteredData];
+                let currentSet = pool.sort(() => 0.5 - Math.random()).slice(0, 4);
                 
-                // 전체 단어 중 4개(2쌍)만 뽑아서 게임 시작
-                let currentSet = [...currentFilteredData].sort(() => 0.5 - Math.random()).slice(0, 2);
                 let pieces = [];
-                
                 currentSet.forEach(w => {
                     pieces.push({id: w.id, text: w.hanzi, type: 'h'});
                     pieces.push({id: w.id, text: w.meaning, type: 'm'});
                 });
                 pieces.sort(() => 0.5 - Math.random());
                 
-                status.textContent = `진행 중 (남은 세트: ${Math.ceil((currentFilteredData.length - matchedCount) / 2)})`;
+                status.textContent = `남은 카드: ${currentFilteredData.length * 2}개`;
                 
                 pieces.forEach(p => {
                     const div = document.createElement('div');
@@ -526,13 +536,10 @@
                                 selectedItems[1].div.classList.add('matched');
                                 matchedCount++;
                                 
-                                // 한 세트(2개)를 다 맞추면 다음 세트 호출
-                                if (matchedCount % 2 === 0) {
-                                    if (matchedCount < currentFilteredData.length) {
-                                        initMatchingGame();
-                                    } else {
-                                        status.textContent = "🎉 성공! 모든 단어를 맞췄어요!";
-                                    }
+                                // 전체 다 맞췄는지 확인
+                                if (matchedCount >= 4) { // 4쌍을 다 맞추면 완료 메시지
+                                    status.textContent = "🎉 성공! 한 세트 완료!";
+                                    setTimeout(() => initMatchingGame(), 1000); // 1초 뒤 다음 세트 시작
                                 }
                             } else {
                                 setTimeout(() => {
