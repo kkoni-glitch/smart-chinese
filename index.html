@@ -356,7 +356,9 @@
             pieces.sort(() => 0.5 - Math.random());
             
             const g = document.getElementById('game-grid-container');
+            const statusMsg = document.getElementById('game-status-message');
             g.innerHTML = '';
+            statusMsg.textContent = "짝을 맞추세요!";
             selectedGameItems = [];
             
             pieces.forEach(p => {
@@ -373,6 +375,11 @@
                         if(selectedGameItems[0].id === selectedGameItems[1].id && selectedGameItems[0].type !== selectedGameItems[1].type) {
                             selectedGameItems[0].div.classList.add('matched');
                             selectedGameItems[1].div.classList.add('matched');
+                            
+                            // 매칭 완료 체크
+                            if (document.querySelectorAll('.game-item:not(.matched)').length === 0) {
+                                statusMsg.textContent = "🎉 성공! 모든 단어를 맞췄어요!";
+                            }
                         } else {
                             setTimeout(() => {
                                 selectedGameItems[0].div.classList.remove('selected');
