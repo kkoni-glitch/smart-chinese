@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎀 스마트 중국어 단어장 🎀</title>
-    <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Noto+Sans+SC:wght@500;700&family=Roboto:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Noto+Sans+SC:wght@500;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Gaegu', cursive;
@@ -168,10 +168,11 @@
         }
 
         .pinyin {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Roboto', sans-serif !important;
             font-size: 24px;
-            font-weight: 700;
-            color: #880e4f;
+            font-weight: 400;
+            color: #555;
+            letter-spacing: 0.5px;
         }
 
         .meaning {
@@ -286,9 +287,17 @@
         .word-list-item {
             display: flex;
             justify-content: space-between;
-            padding: 10px;
+            padding: 12px 10px;
             border-bottom: 1px dashed #ffb6c1;
             cursor: pointer;
+            align-items: center;
+        }
+
+        .list-pinyin {
+            font-family: 'Roboto', sans-serif !important;
+            font-size: 18px;
+            color: #666;
+            margin-left: 8px;
         }
 
         .game-grid {
@@ -434,10 +443,20 @@
             const q = document.getElementById('search-input').value.toLowerCase();
             const container = document.getElementById('word-list-container');
             container.innerHTML = '';
-            currentFilteredData.filter(w => w.hanzi.includes(q) || w.pinyin.includes(q) || w.meaning.includes(q)).forEach((w, i) => {
+            currentFilteredData.filter(w => 
+                w.hanzi.includes(q) || 
+                w.pinyin.toLowerCase().includes(q) || 
+                w.meaning.includes(q)
+            ).forEach((w) => {
                 const div = document.createElement('div');
                 div.className = 'word-list-item';
-                div.innerHTML = `<div><strong>${w.hanzi}</strong> ${w.pinyin}</div><div>${w.meaning}</div>`;
+                div.innerHTML = `
+                    <div>
+                        <span style="font-family:'Noto Sans SC', sans-serif; font-weight:700;">${w.hanzi}</span>
+                        <span class="list-pinyin">${w.pinyin}</span>
+                    </div>
+                    <div style="font-size:18px;">${w.meaning}</div>
+                `;
                 div.onclick = () => { 
                     currentIndex = currentFilteredData.indexOf(w); 
                     updateCardContent(); 
