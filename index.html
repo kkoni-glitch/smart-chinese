@@ -24,7 +24,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
             margin-bottom: 20px;
         }
 
@@ -59,18 +59,25 @@
             outline: none;
         }
 
-        /* 🔊 자동 발음과 🧩 매칭 게임 영역 정돈 */
-        .toggle-group {
+        /* ⭐ [수정] 자동발음과 매칭게임 아이콘을 각각 완전히 분리하여 담는 바깥 정렬 박스 */
+        .options-outer-container {
             display: flex;
             gap: 15px;
-            background: rgba(255, 255, 255, 0.8);
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 🔊 자동 발음 단독 주머니 */
+        .toggle-group {
+            display: flex;
+            background: white;
             padding: 8px 20px;
             border-radius: 25px;
             font-size: 18px;
             font-weight: bold;
-            border: 1px solid #ffb6c1;
+            border: 2px solid #ffb6c1;
             align-items: center;
-            box-shadow: 0 4px 10px rgba(255, 182, 193, 0.2);
+            box-shadow: 0 5px 15px rgba(255, 182, 193, 0.3);
         }
 
         .toggle-item {
@@ -78,20 +85,22 @@
             align-items: center;
             gap: 5px;
             cursor: pointer;
+            color: #ff69b4;
         }
 
+        /* 🧩 매칭 게임 단독 버튼 (독립 배치 완료) */
         .game-trigger-btn {
             background-color: #d1c4e9;
             color: #4a148c;
             border: 2px solid #b39ddb;
-            padding: 4px 16px;
-            border-radius: 20px;
+            padding: 8px 20px;
+            border-radius: 25px;
             cursor: pointer;
             font-family: 'Gaegu', cursive;
             font-size: 18px;
             font-weight: bold;
             transition: all 0.2s;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+            box-shadow: 0 5px 15px rgba(179, 157, 219, 0.4);
         }
         .game-trigger-btn:hover {
             background-color: #b39ddb;
@@ -279,7 +288,7 @@
         .list-pinyin { font-size: 14px; color: #880e4f; font-family: 'Roboto', sans-serif; margin-left: 10px;}
         .list-meaning { font-size: 18px; color: #5d4037; font-weight: bold; }
 
-        /* 매칭 게임창 디자인 다듬기 */
+        /* 매칭 게임 내부 아이템 디자인 */
         .game-grid {
             display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
         }
@@ -292,7 +301,7 @@
         .game-item.selected { background-color: #ffe082; border-color: #ffb300; }
         .game-item.matched { background-color: #c8e6c9; border-color: #4caf50; visibility: hidden; }
         
-        /* 게임 내 한자 및 병음 스타일 분리 */
+        /* [매칭게임] 한자 및 밑에 들어가는 병음 스타일 */
         .game-item .inner-hanzi { font-family: 'Noto Sans SC', sans-serif; font-size: 24px; color: #d81b60; font-weight: bold; }
         .game-item .inner-pinyin { font-family: 'Roboto', sans-serif; font-size: 13px; color: #880e4f; margin-top: 2px; opacity: 0.8; }
         
@@ -327,8 +336,11 @@
             </select>
         </div>
 
-        <div class="toggle-group">
-            <label class="toggle-item"><input type="checkbox" id="auto-tts" checked> 🔊 자동 발음</label>
+        <div class="options-outer-container">
+            <div class="toggle-group">
+                <label class="toggle-item"><input type="checkbox" id="auto-tts" checked> 🔊 자동 발음</label>
+            </div>
+            
             <button class="game-trigger-btn" onclick="openGameModal()">🧩 매칭 게임</button>
         </div>
     </div>
@@ -581,7 +593,6 @@
 
         function openGameModal() { if(currentFilteredData.length < 4) return; initMatchingGame(); openModal('game-modal'); }
         
-        // 🧩 매칭 게임 렌더링 로직 수정 완료
         function initMatchingGame() {
             selectedGameItems = []; matchedCount = 0;
             document.getElementById('game-status-message').textContent = "짝을 맞추세요! 🧸";
@@ -589,7 +600,6 @@
             let pieces = [];
             
             pool.forEach(w => {
-                // 한자 아이템 구조에 pinyin 데이터셋을 포함시킴
                 pieces.push({ id: w.id, type: 'h', text: w.hanzi, pinyin: w.pinyin });
                 pieces.push({ id: w.id, type: 'm', text: w.meaning });
             });
@@ -601,7 +611,6 @@
                 const div = document.createElement('div');
                 div.className = 'game-item';
                 
-                // ⭐ [수정 핵심] 한자 타입일 경우 하단에 병음이 깔끔하게 함께 렌더링되도록 변경
                 if (p.type === 'h') {
                     div.innerHTML = `
                         <div class="inner-hanzi">${p.text}</div>
@@ -629,7 +638,6 @@
             });
         }
 
-        // 키보드 조작 기능 완벽 유지
         document.addEventListener('keydown', function(event) {
             if (event.code === 'Space') { event.preventDefault(); flipCard(); stopAutoplay(); }
             else if (event.code === 'ArrowLeft') { prevCard(); stopAutoplay(); }
