@@ -498,14 +498,18 @@
                 g.innerHTML = '';
                 selectedItems = [];
                 matchedCount = 0;
+                
+                // 전체 단어 중 4개(2쌍)만 뽑아서 게임 시작
+                let currentSet = [...currentFilteredData].sort(() => 0.5 - Math.random()).slice(0, 2);
                 let pieces = [];
                 
-                currentFilteredData.forEach(w => {
+                currentSet.forEach(w => {
                     pieces.push({id: w.id, text: w.hanzi, type: 'h'});
                     pieces.push({id: w.id, text: w.meaning, type: 'm'});
                 });
                 pieces.sort(() => 0.5 - Math.random());
-                status.textContent = `남은 단어: ${currentFilteredData.length}`;
+                
+                status.textContent = `진행 중 (남은 세트: ${Math.ceil((currentFilteredData.length - matchedCount) / 2)})`;
                 
                 pieces.forEach(p => {
                     const div = document.createElement('div');
@@ -521,9 +525,14 @@
                                 selectedItems[0].div.classList.add('matched');
                                 selectedItems[1].div.classList.add('matched');
                                 matchedCount++;
-                                status.textContent = `남은 단어: ${currentFilteredData.length - matchedCount}`;
-                                if (matchedCount === currentFilteredData.length) {
-                                    status.textContent = "🎉 성공! 모든 단어를 맞췄어요!";
+                                
+                                // 한 세트(2개)를 다 맞추면 다음 세트 호출
+                                if (matchedCount % 2 === 0) {
+                                    if (matchedCount < currentFilteredData.length) {
+                                        initMatchingGame();
+                                    } else {
+                                        status.textContent = "🎉 성공! 모든 단어를 맞췄어요!";
+                                    }
                                 }
                             } else {
                                 setTimeout(() => {
