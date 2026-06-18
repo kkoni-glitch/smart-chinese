@@ -59,7 +59,6 @@
             outline: none;
         }
 
-        /* ⭐ [수정] 자동발음과 매칭게임 아이콘을 각각 완전히 분리하여 담는 바깥 정렬 박스 */
         .options-outer-container {
             display: flex;
             gap: 15px;
@@ -67,7 +66,6 @@
             justify-content: center;
         }
 
-        /* 🔊 자동 발음 단독 주머니 */
         .toggle-group {
             display: flex;
             background: white;
@@ -88,7 +86,6 @@
             color: #ff69b4;
         }
 
-        /* 🧩 매칭 게임 단독 버튼 (독립 배치 완료) */
         .game-trigger-btn {
             background-color: #d1c4e9;
             color: #4a148c;
@@ -288,7 +285,6 @@
         .list-pinyin { font-size: 14px; color: #880e4f; font-family: 'Roboto', sans-serif; margin-left: 10px;}
         .list-meaning { font-size: 18px; color: #5d4037; font-weight: bold; }
 
-        /* 매칭 게임 내부 아이템 디자인 */
         .game-grid {
             display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
         }
@@ -301,7 +297,6 @@
         .game-item.selected { background-color: #ffe082; border-color: #ffb300; }
         .game-item.matched { background-color: #c8e6c9; border-color: #4caf50; visibility: hidden; }
         
-        /* [매칭게임] 한자 및 밑에 들어가는 병음 스타일 */
         .game-item .inner-hanzi { font-family: 'Noto Sans SC', sans-serif; font-size: 24px; color: #d81b60; font-weight: bold; }
         .game-item .inner-pinyin { font-family: 'Roboto', sans-serif; font-size: 13px; color: #880e4f; margin-top: 2px; opacity: 0.8; }
         
@@ -340,7 +335,6 @@
             <div class="toggle-group">
                 <label class="toggle-item"><input type="checkbox" id="auto-tts" checked> 🔊 자동 발음</label>
             </div>
-            
             <button class="game-trigger-btn" onclick="openGameModal()">🧩 매칭 게임</button>
         </div>
     </div>
@@ -441,7 +435,7 @@
                     if (row.length >= 5 && row[2]) {
                         words.push({
                             id: parseInt(row[0]) || i,
-                            chapter: String(row[1]).trim() || "1",
+                            chapter: String(row[1]).trim(), // 🛠️ 공백 제거 및 문자열화 보장
                             hanzi: row[2],
                             pinyin: row[3] || "",
                             meaning: row[4] || "",
@@ -457,11 +451,18 @@
 
         function changeCategory() {
             const val = document.getElementById('chapter-select').value;
-            if (val === "all") currentFilteredData = [...totalWordData];
-            else if (val === "unknown") currentFilteredData = totalWordData.filter(w => unknownWordIds.includes(w.id));
-            else if (val === "review1_5") currentFilteredData = totalWordData.filter(w => ["1","2","3","4","5"].includes(w.chapter));
-            else if (val === "review7_11") currentFilteredData = totalWordData.filter(w => ["7","8","9","10","11"].includes(w.chapter));
-            else currentFilteredData = totalWordData.filter(w => w.chapter === val);
+            if (val === "all") {
+                currentFilteredData = [...totalWordData];
+            } else if (val === "unknown") {
+                currentFilteredData = totalWordData.filter(w => unknownWordIds.includes(w.id));
+            } else if (val === "review1_5") {
+                // 🛠️ [수정] 어떤 형식이든 완벽 매칭되도록 텍스트 매칭 안전 처리 완료
+                currentFilteredData = totalWordData.filter(w => ["1","2","3","4","5"].includes(w.chapter));
+            } else if (val === "review7_11") {
+                currentFilteredData = totalWordData.filter(w => ["7","8","9","10","11"].includes(w.chapter));
+            } else {
+                currentFilteredData = totalWordData.filter(w => w.chapter === val);
+            }
             currentIndex = 0;
             stopAutoplay();
             updateCardContent();
@@ -470,7 +471,14 @@
         function updateCardContent() {
             if (currentFilteredData.length === 0) {
                 hanziElement.textContent = "단어 없음";
-                meaningElement.textContent = "시트를 확인하세요!";
+                pinyinElement.textContent = "";
+                meaningElement.textContent = "범위를 확인해 보세요!";
+                exampleElement.textContent = "";
+                frontBadge.textContent = "-과";
+                backBadge.textContent = "-과";
+                partElement.style.display = "none";
+                progressElement.textContent = "0 / 0";
+                progressBarFill.style.width = `0%`;
                 return;
             }
             const word = currentFilteredData[currentIndex];
@@ -502,10 +510,12 @@
         function speakCurrentWord(e) {
             e.stopPropagation();
             const w = currentFilteredData[currentIndex];
+            if(!w) return;
             speak(cardElement.classList.contains('flipped') ? w.example : w.hanzi);
         }
 
         function flipCard() {
+            if (currentFilteredData.length === 0) return;
             cardElement.classList.toggle('flipped');
             if (cardElement.classList.contains('flipped') && document.getElementById('auto-tts').checked) {
                 setTimeout(() => speak(currentFilteredData[currentIndex].example), 500);
@@ -513,6 +523,7 @@
         }
 
         function toggleAutoplay() {
+            if (currentFilteredData.length === 0) return;
             if (autoplayTimer) stopAutoplay();
             else {
                 autoplayBtn.classList.add('active');
@@ -533,6 +544,7 @@
 
         function toggleUnknown(e) {
             e.stopPropagation();
+            if (currentFilteredData.length === 0) return;
             const id = currentFilteredData[currentIndex].id;
             if (unknownWordIds.includes(id)) unknownWordIds = unknownWordIds.filter(i => i !== id);
             else unknownWordIds.push(id);
