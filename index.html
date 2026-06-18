@@ -203,13 +203,13 @@
                 const restartBtn = document.createElement('button');
                 restartBtn.textContent = "🔄 재시작";
                 restartBtn.style.gridColumn = "span 2";
-                restartBtn.onclick = openGameModal;
+                restartBtn.onclick = startRound;
                 g.appendChild(restartBtn);
 
                 let currentSet = gameRemainingData.sort(() => 0.5 - Math.random()).slice(0, 4);
                 let pieces = [];
                 currentSet.forEach(w => {
-                    pieces.push({ id: w.id, text: `${w.hanzi}<div class="game-pinyin">${w.pinyin}</div>`, type: 'h' });
+                    pieces.push({ id: w.id, text: `<div>${w.hanzi}</div><div class="game-pinyin">${w.pinyin}</div>`, type: 'h' });
                     pieces.push({ id: w.id, text: w.meaning, type: 'm' });
                 });
                 pieces.sort(() => 0.5 - Math.random());
