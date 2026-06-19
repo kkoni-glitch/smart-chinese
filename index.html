@@ -279,60 +279,6 @@ function openGameModal() {
     });
 }
 
-            status.textContent = `남은 단어: ${gameRemainingData.length}개`;
-            let currentSet = gameRemainingData.slice(0, 4);
-            let pieces = [];
-            currentSet.forEach(w => {
-                pieces.push({ id: w.id, text: `<div>${w.hanzi}</div><div class="game-pinyin">${w.pinyin}</div>`, type: 'h' });
-                pieces.push({ id: w.id, text: `<div>${w.meaning}</div>`, type: 'm' });
-            });
-            pieces.sort(() => 0.5 - Math.random());
-            
-            let selectedItems = [];
-
-            pieces.forEach(p => {
-                const div = document.createElement('div');
-                div.className = 'game-item';
-                div.innerHTML = p.text;
-                div.onclick = () => {
-                    if (div.classList.contains('matched') || div.classList.contains('selected')) return;
-                    div.classList.add('selected');
-                    selectedItems.push({ div, id: p.id, type: p.type });
-                    
-                    if (selectedItems.length === 2) {
-                        if (selectedItems[0].id === selectedItems[1].id && selectedItems[0].type !== selectedItems[1].type) {
-                            selectedItems[0].div.classList.add('matched');
-                            selectedItems[1].div.classList.add('matched');
-                            gameRemainingData = gameRemainingData.filter(w => w.id !== selectedItems[0].id);
-                            status.textContent = `남은 단어: ${gameRemainingData.length}개`;
-                            selectedItems = [];
-                            
-                            if (document.querySelectorAll('.game-item:not(.matched)').length === 0) {
-                                if (gameRemainingData.length > 0) {
-                                    const nextBtn = document.createElement('button');
-                                    nextBtn.textContent = "다음 라운드 ➡️";
-                                    nextBtn.style.gridColumn = "span 2";
-                                    nextBtn.style.backgroundColor = "#ffe082";
-                                    nextBtn.onclick = startRound;
-                                    g.appendChild(nextBtn);
-                                } else {
-                                    status.textContent = "🎉 모두 완료!";
-                                    
-                                }
-                            }
-                        } else {
-                            selectedItems.forEach(i => i.div.style.borderColor = '#ff0000');
-                            setTimeout(() => {
-                                selectedItems.forEach(i => { i.div.classList.remove('selected'); i.div.style.borderColor = '#ffb6c1'; });
-                                selectedItems = [];
-                            }, 500);
-                        }
-                    }
-                };
-                g.appendChild(div);
-            });
-        }
-        loadWordData();
     </script>
 </body>
 </html>
