@@ -175,12 +175,29 @@
         function nextCard() { currentIndex = (currentIndex + 1) % currentFilteredData.length; updateCardContent(); }
         function prevCard() { currentIndex = (currentIndex - 1 + currentFilteredData.length) % currentFilteredData.length; updateCardContent(); }
         
-        function toggleAutoplay() { 
-            const btn = document.getElementById('autoplay-btn');
-            if (autoplayInterval) { clearInterval(autoplayInterval); autoplayInterval = null; btn.classList.remove('active'); }
-            else { btn.classList.add('active'); autoplayInterval = setInterval(() => { if (!document.getElementById('card').classList.contains('flipped')) document.getElementById('card').classList.add('flipped'); else nextCard(); }, 2000); }
-        }
-
+       function toggleAutoplay() { 
+    const btn = document.getElementById('autoplay-btn');
+    if (autoplayInterval) { 
+        clearInterval(autoplayInterval); 
+        autoplayInterval = null; 
+        btn.classList.remove('active'); 
+    } else { 
+        btn.classList.add('active');
+        
+        // 시작하자마자 첫 단어 발음
+        playCurrentWord();
+        
+        autoplayInterval = setInterval(() => { 
+            if (!document.getElementById('card').classList.contains('flipped')) {
+                document.getElementById('card').classList.add('flipped');
+            } else { 
+                nextCard();
+                // 다음 카드로 넘어갈 때마다 발음
+                playCurrentWord();
+            } 
+        }, 2000); 
+    } 
+}
         function openWordListModal() {
             document.getElementById('word-list-modal').style.display = 'flex';
             document.getElementById('search-input').value = '';
