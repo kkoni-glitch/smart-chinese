@@ -130,17 +130,36 @@
         let totalWordData = [], currentFilteredData = [], currentIndex = 0, gameRemainingData = [];
         let autoplayInterval = null;
 
-        async function loadWordData() {
-            try {
-                const res = await fetch(SPREADSHEET_URL);
-                const text = await res.text();
-                totalWordData = text.split('\n').slice(1).filter(l => l.trim()).map((line, i) => {
-                    const row = line.split(',').map(s => s.replace(/"/g, '').trim());
-                    return { id: i, chapter: row[1], hanzi: row[2], pinyin: row[3], meaning: row[4] };
-                });
-                changeCategory();
-            } catch (e) { document.getElementById('hanzi').textContent = "오류 발생!"; }
-        }
+async function loadWordData() {
+    try {
+        const res = await fetch(SPREADSHEET_URL);
+        const text = await res.text();
+        
+        // 1. 줄바꿈 기준 분리 후 첫 줄(헤더) 제외
+        const lines = text.split('\n').slice(1); 
+        
+        totalWordData = lines.filter(l => l.trim()).map((line, i) => {
+            // 정규식을 사용해 콤마가 포함된 따옴표 영역을 안전하게 분리
+            const row = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(s => s.replace(/"/g, '').trim());
+            
+            // 데이터가 제대로 들어오는지 콘솔 확인 (디버깅)
+            console.log(`Row ${i}:`, row); 
+            
+            return { 
+                id: i, 
+                chapter: row[1], // B열
+                hanzi: row[2],   // C열
+                pinyin: row[3],  // D열
+                meaning: row[4]  // E열
+            };
+        });
+        
+        changeCategory();
+    } catch (e) { 
+        console.error("데이터 로드 오류:", e);
+        document.getElementById('hanzi').textContent = "오류 발생!"; 
+    }
+}
 
         function changeCategory() {
             const val = document.getElementById('chapter-select').value;
