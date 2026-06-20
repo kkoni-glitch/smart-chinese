@@ -172,7 +172,7 @@
             }
         }
 
-        function nextCard() { currentIndex = (currentIndex + 1) % currentFilteredData.length; updateCardContent(); }
+        function nextCard() { currentIndex = (currentIndex + 1) % currentFilteredData.length; updateCardContent(); playCurrentWord(); }
         function prevCard() { currentIndex = (currentIndex - 1 + currentFilteredData.length) % currentFilteredData.length; updateCardContent(); }
         
        function toggleAutoplay() { 
