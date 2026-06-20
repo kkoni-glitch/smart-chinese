@@ -183,17 +183,13 @@
         btn.classList.remove('active'); 
     } else { 
         btn.classList.add('active');
-        
-        // 시작하자마자 첫 단어 발음
-        playCurrentWord();
+        playCurrentWord(); // 시작할 때 딱 한 번 호출
         
         autoplayInterval = setInterval(() => { 
             if (!document.getElementById('card').classList.contains('flipped')) {
                 document.getElementById('card').classList.add('flipped');
             } else { 
-                nextCard();
-                // 다음 카드로 넘어갈 때마다 발음
-                playCurrentWord();
+                nextCard(); // 여기서 발음까지 알아서 호출됨
             } 
         }, 1500); 
     } 
