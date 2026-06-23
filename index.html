@@ -15,6 +15,7 @@
         .toggle-group { display: flex; background: white; padding: 10px 20px; border-radius: 25px; font-size: 18px; font-weight: bold; border: 2px solid #ffb6c1; align-items: center; box-shadow: 0 5px 15px rgba(255, 182, 193, 0.3); cursor: pointer; color: #ff69b4; }
         
         .game-trigger-btn { background-color: #d1c4e9; color: #4a148c; border: 2px solid #b39ddb; padding: 8px 20px; border-radius: 25px; cursor: pointer; font-family: 'Gaegu', cursive; font-size: 18px; font-weight: bold; }
+        .pinyin-trigger-btn { background-color: #ffe0b2; color: #e65100; border: 2px solid #ffb74d; padding: 8px 20px; border-radius: 25px; cursor: pointer; font-family: 'Gaegu', cursive; font-size: 18px; font-weight: bold; }
         
         .card-container { width: 380px; height: 280px; perspective: 1000px; cursor: pointer; margin-bottom: 20px; position: relative; }
         .card { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); position: relative; border-radius: 20px; border: 4px solid #b39ddb; box-shadow: 0 12px 25px rgba(179, 157, 219, 0.5); }
@@ -32,13 +33,11 @@
         .progress-bar-fill { height: 100%; background-color: #ff69b4; width: 0%; transition: width 0.3s; }
         .progress-text { font-size: 18px; color: #c71585; font-weight: bold; }
         
-        /* 하단 컨트롤 영역 스타일 */
         .controls { display: flex; gap: 6px; justify-content: center; margin-bottom: 15px; width: 100%; max-width: 420px; }
         button { padding: 12px 8px; font-size: 17px; font-family: 'Gaegu', cursive; font-weight: bold; border: none; border-radius: 30px; cursor: pointer; white-space: nowrap; flex: 1; }
         .nav-btn { background-color: #b3e5fc; color: #01579b; }
         .autoplay-btn { background-color: #ffe082; color: #e65100; }
         .autoplay-btn.active { background-color: #ffb300; color: white; }
-        /* 🔀 하단 버튼들과 통일감을 주도록 민트색 스타일 조정 */
         .shuffle-trigger-btn { background-color: #b2dfdb; color: #004d40; }
         
         .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); justify-content: center; align-items: center; }
@@ -46,6 +45,7 @@
         .search-box { padding: 10px; margin-bottom: 10px; border: 2px solid #ffb6c1; border-radius: 15px; font-family: 'Gaegu', cursive; font-size: 18px; }
         .word-list-container { overflow-y: auto; flex-grow: 1; }
         .word-list-item { display: flex; justify-content: space-between; padding: 12px 10px; border-bottom: 1px dashed #ffb6c1; cursor: pointer; align-items: center; font-family: 'Noto Sans SC', sans-serif; }
+        
         .game-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; overflow-y: auto; flex-grow: 1; margin-bottom: 15px; }
         .game-item { background-color: #fff5f8; border: 2px solid #ffb6c1; border-radius: 15px; padding: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; font-weight: bold; text-align: center; font-size: 24px; min-height: 70px; }
         .game-item.selected { background-color: #ffe082; border-color: #ffb300; }
@@ -53,14 +53,7 @@
         .game-status { text-align: center; font-size: 20px; font-weight: bold; color: #d81b60; margin-bottom: 10px; }
         .game-controls { display: flex; gap: 10px; border-top: 2px solid #eee; padding-top: 15px; }
         .game-btn { flex: 1; padding: 12px; border-radius: 20px; border: none; font-family: 'Gaegu', cursive; font-size: 18px; cursor: pointer; }
-        .game-pinyin { 
-            font-size: 16px; 
-            color: #888; 
-            margin-top: 5px; 
-            font-family: 'Noto Sans SC', sans-serif; 
-            font-weight: 500; 
-            letter-spacing: 0.5px; 
-        }
+        .game-pinyin { font-size: 16px; color: #888; margin-top: 5px; font-family: 'Noto Sans SC', sans-serif; font-weight: 500; letter-spacing: 0.5px; }
     </style>
 </head>
 <body>
@@ -87,6 +80,7 @@
         </div>
         <div class="options-outer-container">
             <label class="toggle-group"><input type="checkbox" id="auto-tts" checked> 🔊 자동 발음 켜기</label>
+            <button class="pinyin-trigger-btn" onclick="openPinyinModal()">✍️ 병음 테스트</button>
             <button class="game-trigger-btn" onclick="openGameModal()">🧩 매칭 게임</button>
         </div>
     </div>
@@ -108,7 +102,6 @@
         <div class="progress-text" id="progress-text">0 / 0</div>
     </div>
 
-    <!-- 💡 조작 버튼들이 모여있는 컨트롤 구역입니다. '자동 재생' 옆에 '카드 섞기'를 배치했습니다. -->
     <div class="controls">
         <button class="nav-btn" onclick="prevCard()">👈 이전</button>
         <button class="autoplay-btn" id="autoplay-btn" onclick="toggleAutoplay()">⏱️ 자동 재생</button>
@@ -135,30 +128,41 @@
         </div>
     </div>
 
+    <div id="pinyin-modal" class="modal">
+        <div class="modal-content" style="height: auto; max-width: 400px; text-align: center;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 0 5px;">
+                <div class="game-status" id="pinyin-status" style="margin: 0;">문제: 0 / 0</div>
+                <div id="pinyin-hearts" style="font-size: 22px; letter-spacing: 2px;">❤️❤️❤️</div>
+            </div>
+            <div style="margin: 25px 0;">
+                <div id="pinyin-q-hanzi" style="font-family: 'Noto Sans SC', sans-serif; font-size: 58px; font-weight: 700; color: #d81b60;">汉字</div>
+                <div id="pinyin-q-meaning" style="font-size: 22px; color: #5d4037; margin-top: 5px; font-weight: bold;">뜻</div>
+            </div>
+            <!-- 💡 플레이스홀더 문구를 직관적으로 변경했습니다. -->
+            <input type="text" id="pinyin-input" class="search-box" style="text-align: center; font-size: 22px; width: 100%; box-sizing: border-box;" placeholder="예: ni3 hao3 또는 nǐ hǎo" onkeydown="if(event.key==='Enter') checkPinyin()">
+            <div id="pinyin-feedback" style="font-size: 20px; font-weight: bold; margin: 15px 0; min-height: 50px; line-height: 1.4;"></div>
+            <div class="game-controls">
+                <button class="game-btn" style="background-color: #ffcdd2;" onclick="closePinyinModal()">❌ 종료</button>
+                <button class="game-btn" id="pinyin-action-btn" style="background-color: #c8e6c9;" onclick="checkPinyin()">✔️ 확인</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const SPREADSHEET_URL = 'https://docs.google.com/spreadsheets/d/18D1sxEjb7qD4DudFmrZziQDZ0HK-F1V-8Z3V-9WxoDw/gviz/tq?tqx=out:csv';
         let totalWordData = [], currentFilteredData = [], currentIndex = 0, gameRemainingData = [];
         let autoplayInterval = null;
+        let pinyinTestData = [], pinyinCurrentIdx = 0, pinyinIsAnswered = false, pinyinLives = 3;
 
         async function loadWordData() {
             try {
                 const res = await fetch(SPREADSHEET_URL);
                 const text = await res.text();
                 const lines = text.split('\n').slice(1); 
-                
                 totalWordData = lines.filter(l => l.trim()).map((line, i) => {
                     const row = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(s => s.replace(/"/g, '').trim());
-                    console.log(`Row ${i}:`, row); 
-                    
-                    return { 
-                        id: i, 
-                        chapter: row[1], 
-                        hanzi: row[2],   
-                        pinyin: row[3],  
-                        meaning: row[4]  
-                    };
+                    return { id: i, chapter: row[1], hanzi: row[2], pinyin: row[3], meaning: row[4] };
                 });
-                
                 changeCategory();
             } catch (e) { 
                 console.error("데이터 로드 오류:", e);
@@ -174,17 +178,11 @@
         }
 
         function shuffleMainCards() {
-            if (currentFilteredData.length === 0) {
-                alert("선택된 범위에 단어가 없습니다!");
-                return;
-            }
+            if (currentFilteredData.length === 0) { alert("선택된 범위에 단어가 없습니다!"); return; }
             currentFilteredData.sort(() => 0.5 - Math.random());
             currentIndex = 0; 
             updateCardContent();
-            
-            if (document.getElementById('auto-tts').checked) {
-                playCurrentWord();
-            }
+            if (document.getElementById('auto-tts').checked) { playCurrentWord(); }
         }
 
         function updateCardContent() {
@@ -214,9 +212,7 @@
         function nextCard() { 
             currentIndex = (currentIndex + 1) % currentFilteredData.length; 
             updateCardContent(); 
-            if (document.getElementById('auto-tts').checked) {
-                playCurrentWord(); 
-            }
+            if (document.getElementById('auto-tts').checked) { playCurrentWord(); }
         }
         function prevCard() { currentIndex = (currentIndex - 1 + currentFilteredData.length) % currentFilteredData.length; updateCardContent(); }
         
@@ -228,16 +224,11 @@
                 btn.classList.remove('active'); 
             } else { 
                 btn.classList.add('active');
-                if (document.getElementById('auto-tts').checked) {
-                    playCurrentWord(); 
-                }
-                
+                if (document.getElementById('auto-tts').checked) { playCurrentWord(); }
                 autoplayInterval = setInterval(() => { 
                     if (!document.getElementById('card').classList.contains('flipped')) {
                         document.getElementById('card').classList.add('flipped');
-                    } else { 
-                        nextCard(); 
-                    } 
+                    } else { nextCard(); } 
                 }, 2000); 
             } 
         }
@@ -263,16 +254,10 @@
             });
         }
 
-        function openGameModal() {
-            document.getElementById('game-modal').style.display = 'flex';
-            shuffleGame(); 
-        }
-
+        /* 🧩 매칭 게임 */
+        function openGameModal() { document.getElementById('game-modal').style.display = 'flex'; shuffleGame(); }
         function shuffleGame() {
-            if (currentFilteredData.length === 0) {
-                alert("선택된 범위에 단어가 없습니다!");
-                return;
-            }
+            if (currentFilteredData.length === 0) { alert("선택된 범위에 단어가 없습니다!"); return; }
             gameRemainingData = [...currentFilteredData].sort(() => 0.5 - Math.random());
             startRound(); 
         }
@@ -326,6 +311,144 @@
                 };
                 g.appendChild(div);
             });
+        }
+
+        /* ✍️ 병음 받아쓰기 테스트 관련 스크립트 */
+        function openPinyinModal() {
+            if (currentFilteredData.length === 0) { alert("선택된 범위에 단어가 없습니다!"); return; }
+            document.getElementById('pinyin-modal').style.display = 'flex';
+            pinyinTestData = [...currentFilteredData].sort(() => 0.5 - Math.random());
+            pinyinCurrentIdx = 0;
+            pinyinLives = 3; 
+            
+            document.getElementById('pinyin-input').style.display = 'block';
+            const btn = document.getElementById('pinyin-action-btn');
+            btn.onclick = checkPinyin;
+            
+            updatePinyinHeartsUI();
+            showPinyinQuestion();
+        }
+
+        function closePinyinModal() { document.getElementById('pinyin-modal').style.display = 'none'; }
+
+        function updatePinyinHeartsUI() {
+            let heartStr = "";
+            for (let i = 0; i < 3; i++) { heartStr += (i < pinyinLives) ? "❤️" : "💔"; }
+            document.getElementById('pinyin-hearts').textContent = heartStr;
+        }
+
+        function showPinyinQuestion() {
+            if (pinyinLives <= 0) return; 
+            
+            if (pinyinCurrentIdx >= pinyinTestData.length) {
+                document.getElementById('pinyin-status').textContent = "🎉 미션 클리어!";
+                document.getElementById('pinyin-q-hanzi').textContent = "통과 완료! 💯";
+                document.getElementById('pinyin-q-meaning').textContent = "학원 시험 걱정 끝!";
+                document.getElementById('pinyin-input').style.display = 'none';
+                document.getElementById('pinyin-feedback').innerHTML = `<span style="color:#2e7d32; font-size:20px;">하트를 남기고 살아남으셨습니다!</span>`;
+                
+                const btn = document.getElementById('pinyin-action-btn');
+                btn.textContent = "🔄 한 판 더 하기";
+                btn.style.background = "#fff9c4";
+                pinyinIsAnswered = true;
+                btn.onclick = openPinyinModal;
+                return;
+            }
+
+            pinyinIsAnswered = false;
+            const w = pinyinTestData[pinyinCurrentIdx];
+            document.getElementById('pinyin-status').textContent = `문제: ${pinyinCurrentIdx + 1} / ${pinyinTestData.length}`;
+            document.getElementById('pinyin-q-hanzi').textContent = w.hanzi;
+            document.getElementById('pinyin-q-meaning').textContent = w.meaning;
+            
+            const input = document.getElementById('pinyin-input');
+            input.value = '';
+            input.disabled = false;
+            input.focus();
+            document.getElementById('pinyin-feedback').textContent = '';
+            
+            const btn = document.getElementById('pinyin-action-btn');
+            btn.textContent = "✔️ 확인";
+            btn.style.background = "#c8e6c9";
+        }
+
+        /* 🔥 [핵심 업데이트] 숫자 입력을 실제 성조 기호로 바꿔주는 스마트 변환 함수 */
+        function numberedToToneMarks(str) {
+            str = str.replace(/v/g, 'ü');
+            const toneChars = {
+                'a': ['ā', 'á', 'ǎ', 'à'], 'o': ['ō', 'ó', 'ǒ', 'ò'], 'e': ['ē', 'é', 'ě', 'è'],
+                'i': ['ī', 'í', 'ǐ', 'ì'], 'u': ['ū', 'ú', 'ǔ', 'ù'], 'ü': ['ǖ', 'ǘ', 'ǚ', 'ǜ']
+            };
+            return str.toLowerCase().replace(/([a-zü]+)([1-4])/g, function(match, word, toneNum) {
+                let toneIdx = parseInt(toneNum) - 1;
+                let replaced = false;
+                if (word.includes('a')) { word = word.replace('a', toneChars['a'][toneIdx]); replaced = true; }
+                if (!replaced && word.includes('o')) { word = word.replace('o', toneChars['o'][toneIdx]); replaced = true; }
+                if (!replaced && word.includes('e')) { word = word.replace('e', toneChars['e'][toneIdx]); replaced = true; }
+                if (!replaced && word.includes('ui')) { word = word.replace('i', toneChars['i'][toneIdx]); replaced = true; }
+                if (!replaced && word.includes('iu')) { word = word.replace('u', toneChars['u'][toneIdx]); replaced = true; }
+                if (!replaced) {
+                    for (let v of ['i', 'u', 'ü']) {
+                        if (word.includes(v)) { word = word.replace(v, toneChars[v][toneIdx]); break; }
+                    }
+                }
+                return word;
+            });
+        }
+
+        function checkPinyin() {
+            const btn = document.getElementById('pinyin-action-btn');
+            if (pinyinLives <= 0) { openPinyinModal(); return; }
+
+            if (pinyinIsAnswered) {
+                pinyinCurrentIdx++;
+                showPinyinQuestion();
+                return;
+            }
+
+            const w = pinyinTestData[pinyinCurrentIdx];
+            const input = document.getElementById('pinyin-input');
+            const feedback = document.getElementById('pinyin-feedback');
+            
+            // 사용자의 숫자 입력을 기호로 자동 치환 후 공백 제거 및 기기별 인코딩 오류 방지용 뎨코딩 통일(.normalize) 추가
+            let userInputNormalized = numberedToToneMarks(input.value.trim().toLowerCase()).replace(/\s+/g, '').normalize("NFC");
+            let correctAnswerNormalized = w.pinyin.toLowerCase().replace(/\s+/g, '').replace(/v/g, 'ü').normalize("NFC");
+
+            // 성조까지 일치하는지 엄격하게 검증!
+            if (userInputNormalized === correctAnswerNormalized) {
+                feedback.textContent = "정답입니다! 🎉";
+                feedback.style.color = "#2e7d32";
+            } else {
+                pinyinLives--;
+                updatePinyinHeartsUI();
+                
+                if (pinyinLives <= 0) {
+                    feedback.innerHTML = `틀렸습니다. 😢 정답은 <span style="color:#d81b60;">${w.pinyin}</span><br><br><strong style="color:#c62828; font-size:24px;">💀 GAME OVER 💀</strong><br><span style="font-size:16px; color:#555;">다시 도전해 보세요!</span>`;
+                    input.disabled = true;
+                    pinyinIsAnswered = true;
+                    btn.textContent = "🔄 재도전하기";
+                    btn.style.background = "#ffcc80";
+                    
+                    window.speechSynthesis.cancel();
+                    const msg = new SpeechSynthesisUtterance(w.hanzi);
+                    msg.lang = 'zh-CN';
+                    window.speechSynthesis.speak(msg);
+                    return;
+                } else {
+                    feedback.innerHTML = `틀렸습니다. 😢<br>정답: <span style="color: #d81b60; font-family: 'Noto Sans SC';">${w.pinyin}</span>`;
+                    feedback.style.color = "#c62828";
+                }
+            }
+
+            window.speechSynthesis.cancel();
+            const msg = new SpeechSynthesisUtterance(w.hanzi);
+            msg.lang = 'zh-CN';
+            window.speechSynthesis.speak(msg);
+
+            input.disabled = true;
+            pinyinIsAnswered = true;
+            btn.textContent = "➡️ 다음 문제";
+            btn.style.background = "#b3e5fc";
         }
         
         loadWordData();
