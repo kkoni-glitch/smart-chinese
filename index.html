@@ -160,11 +160,10 @@
         let autoplayInterval = null;
         let pinyinTestData = [], pinyinCurrentIdx = 0, pinyinIsAnswered = false, pinyinLives = 5;
 
-        /* 🌟 [핵심 변경] 기계 음성 대신 온라인 고품질 원어민 오디오를 재생하는 공통 함수 */
+        /* 🌟 [속도 변경 완료] ttsspeed=0.8 파라미터를 추가하여 0.8배속으로 천천히 재생 */
         function playOnlineZhAudio(text) {
             if (!text) return;
-            // 구글 번역의 고음질 중국어(zh-CN) 발음 주소를 실시간 조합하여 재생합니다.
-            const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=zh-CN&client=tw-ob&q=${encodeURIComponent(text)}`;
+            const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=zh-CN&client=tw-ob&ttsspeed=0.8&q=${encodeURIComponent(text)}`;
             const audio = new Audio(audioUrl);
             audio.play().catch(e => console.log("오디오 재생 실패:", e));
         }
@@ -214,7 +213,6 @@
 
         function flipCard() { document.getElementById('card').classList.toggle('flipped'); }
         
-        /* 🌟 기계음 대신 원어민 음성 함수로 연결 */
         function playCurrentWord() {
             const w = currentFilteredData[currentIndex];
             if (w) { playOnlineZhAudio(w.hanzi); }
@@ -437,7 +435,6 @@
                     btn.textContent = "🔄 재도전하기";
                     btn.style.background = "#ffcc80";
                     
-                    /* 🌟 틀렸을 때도 정확한 온라인 원어민 발음 재생 */
                     playOnlineZhAudio(w.hanzi);
                     return;
                 } else {
@@ -446,7 +443,6 @@
                 }
             }
 
-            /* 🌟 맞았을 때나 일반 정답 확인 시 온라인 원어민 발음 재생 */
             playOnlineZhAudio(w.hanzi);
 
             input.disabled = true;
