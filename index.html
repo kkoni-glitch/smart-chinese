@@ -142,7 +142,7 @@
         <div class="modal-content" style="height: auto; max-width: 400px; text-align: center;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 0 5px;">
                 <div class="game-status" id="pinyin-status" style="margin: 0;">문제: 0 / 0</div>
-                <div id="pinyin-hearts" style="font-size: 22px; letter-spacing: 2px;">❤️❤️❤️</div>
+                <div id="pinyin-hearts" style="font-size: 22px; letter-spacing: 2px;">❤️❤️❤️❤️❤️</div>
             </div>
             <div style="margin: 25px 0;">
                 <div id="pinyin-q-hanzi" style="font-family: 'Noto Sans SC', sans-serif; font-size: 58px; font-weight: 700; color: #d81b60;">汉字</div>
@@ -165,7 +165,7 @@
         const SPREADSHEET_URL = 'https://docs.google.com/spreadsheets/d/18D1sxEjb7qD4DudFmrZziQDZ0HK-F1V-8Z3V-9WxoDw/gviz/tq?tqx=out:csv';
         let totalWordData = [], currentFilteredData = [], currentIndex = 0, gameRemainingData = [];
         let autoplayInterval = null;
-        let pinyinTestData = [], pinyinCurrentIdx = 0, pinyinIsAnswered = false, pinyinLives = 3;
+        let pinyinTestData = [], pinyinCurrentIdx = 0, pinyinIsAnswered = false, pinyinLives = 5;
 
         async function loadWordData() {
             try {
@@ -346,7 +346,7 @@
 
         function updatePinyinHeartsUI() {
             let heartStr = "";
-            for (let i = 0; i < 3; i++) { heartStr += (i < pinyinLives) ? "❤️" : "💔"; }
+            for (let i = 0; i < 5; i++) { heartStr += (i < pinyinLives) ? "❤️" : "💔"; }
             document.getElementById('pinyin-hearts').textContent = heartStr;
         }
 
