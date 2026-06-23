@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎀 스마트 중국어 🎀 단어장 🎀</title>
-    <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Noto+Sans+SC:wght@500;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Noto+Sans+SC:wght@500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Gaegu', cursive; background-color: #ffeef2; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; flex-direction: column; padding: 20px; box-sizing: border-box; color: #5d4037; }
         
@@ -28,7 +28,9 @@
         .manual-speaker { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; z-index: 10; }
         .chapter-badge { position: absolute; top: 15px; left: 20px; background-color: #ffb6c1; padding: 5px 12px; border-radius: 15px; font-size: 16px; color: white; font-weight: bold; }
         .hanzi { font-family: 'Noto Sans SC', sans-serif; font-size: 68px; font-weight: 700; color: #d81b60; }
-        .pinyin { font-family: 'Noto Sans SC', sans-serif; font-size: 24px; font-weight: 400; color: #555; }
+        
+        /* 💕 메인 카드 병음은 다시 귀여운 개구체로 원상복구! */
+        .pinyin { font-family: 'Gaegu', cursive; font-size: 28px; font-weight: bold; color: #555; margin-top: 5px; }
         .meaning { font-size: 32px; font-weight: bold; color: #bf360c; }
         
         .progress-container { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; background-color: rgba(255, 255, 255, 0.8); padding: 10px 20px; border-radius: 30px; cursor: pointer; border: 2px solid #ffb6c1; box-shadow: 0 4px 10px rgba(255,182,193,0.3); }
@@ -56,7 +58,9 @@
         .game-status { text-align: center; font-size: 20px; font-weight: bold; color: #d81b60; margin-bottom: 10px; }
         .game-controls { display: flex; gap: 10px; border-top: 2px solid #eee; padding-top: 15px; }
         .game-btn { flex: 1; padding: 12px; border-radius: 20px; border: none; font-family: 'Gaegu', cursive; font-size: 18px; cursor: pointer; }
-        .game-pinyin { font-size: 16px; color: #888; margin-top: 5px; font-family: 'Noto Sans SC', sans-serif; font-weight: 500; letter-spacing: 0.5px; }
+        
+        /* 💕 매칭게임 내부 병음도 다시 귀여운 서체로 컴백! */
+        .game-pinyin { font-size: 18px; color: #888; margin-top: 3px; font-family: 'Gaegu', cursive; }
     </style>
 </head>
 <body>
@@ -133,6 +137,7 @@
         </div>
     </div>
 
+    <!-- ✍️ 오직 병음 테스트 창 내부만 채점 가독성을 위해 선명한 고딕체(Roboto) 커스텀 -->
     <div id="pinyin-modal" class="modal">
         <div class="modal-content" style="height: auto; max-width: 400px; text-align: center;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 0 5px;">
@@ -141,11 +146,14 @@
             </div>
             <div style="margin: 25px 0;">
                 <div id="pinyin-q-hanzi" style="font-family: 'Noto Sans SC', sans-serif; font-size: 58px; font-weight: 700; color: #d81b60;">汉字</div>
-                <!-- 💡 실시간 뜻 노출용 공간 (기본 상태는 공백) -->
                 <div id="pinyin-q-meaning" style="font-size: 22px; color: #e65100; margin-top: 10px; font-weight: bold; min-height: 30px;"></div>
             </div>
-            <input type="text" id="pinyin-input" class="search-box" style="text-align: center; font-size: 22px; width: 100%; box-sizing: border-box;" placeholder="예: ni3 hao3 또는 nǐ hǎo" onkeydown="if(event.key==='Enter') checkPinyin()">
-            <div id="pinyin-feedback" style="font-size: 20px; font-weight: bold; margin: 15px 0; min-height: 50px; line-height: 1.4;"></div>
+            
+            <!-- ⚡ 입력할 때 헷갈리지 않게 입력창만 깔끔한 고딕 느낌(Roboto) 적용 -->
+            <input type="text" id="pinyin-input" class="search-box" style="text-align: center; font-size: 22px; width: 100%; box-sizing: border-box; font-family: 'Roboto', 'Arial', sans-serif; font-weight: 500;" placeholder="예: ni3 hao3 또는 nǐ hǎo" onkeydown="if(event.key==='Enter') checkPinyin()">
+            
+            <!-- ⚡ 정답 확인할 때 성조 부호 피드백이 정확히 보이도록 고딕 서체 적용 -->
+            <div id="pinyin-feedback" style="font-size: 20px; font-weight: bold; margin: 15px 0; min-height: 50px; line-height: 1.4; font-family: 'Roboto', 'Arial', sans-serif;"></div>
             <div class="game-controls">
                 <button class="game-btn" style="background-color: #ffcdd2;" onclick="closePinyinModal()">❌ 종료</button>
                 <button class="game-btn" id="pinyin-action-btn" style="background-color: #c8e6c9;" onclick="checkPinyin()">✔️ 확인</button>
@@ -342,7 +350,6 @@
             document.getElementById('pinyin-hearts').textContent = heartStr;
         }
 
-        /* 🔥 [업데이트] 문제 출제 시 오직 한자만 띄웁니다. */
         function showPinyinQuestion() {
             if (pinyinLives <= 0) return; 
             
@@ -351,7 +358,7 @@
                 document.getElementById('pinyin-q-hanzi').textContent = "통과 완료! 💯";
                 document.getElementById('pinyin-q-meaning').textContent = "학원 시험 걱정 끝!";
                 document.getElementById('pinyin-input').style.display = 'none';
-                document.getElementById('pinyin-feedback').innerHTML = `<span style="color:#2e7d32; font-size:20px;">하트를 남기고 살아남으셨습니다!</span>`;
+                document.getElementById('pinyin-feedback').innerHTML = `<span style="color:#2e7d32; font-size:20px; font-family:'Gaegu', cursive;">하트를 남기고 살아남으셨습니다!</span>`;
                 
                 const btn = document.getElementById('pinyin-action-btn');
                 btn.textContent = "🔄 한 판 더 하기";
@@ -365,8 +372,6 @@
             const w = pinyinTestData[pinyinCurrentIdx];
             document.getElementById('pinyin-status').textContent = `문제: ${pinyinCurrentIdx + 1} / ${pinyinTestData.length}`;
             document.getElementById('pinyin-q-hanzi').textContent = w.hanzi;
-            
-            // 💡 문제 풀기 전에는 뜻 칸을 완전 비워둡니다.
             document.getElementById('pinyin-q-meaning').textContent = "";
             
             const input = document.getElementById('pinyin-input');
@@ -403,7 +408,6 @@
             });
         }
 
-        /* 🔥 [업데이트] 맞든 틀리든 채점 버튼을 누르면 뜻을 아래에 공개합니다. */
         function checkPinyin() {
             const btn = document.getElementById('pinyin-action-btn');
             if (pinyinLives <= 0) { openPinyinModal(); return; }
@@ -418,7 +422,6 @@
             const input = document.getElementById('pinyin-input');
             const feedback = document.getElementById('pinyin-feedback');
             
-            // 💡 정답 체크 시점에 한자 아래 공간에 한국어 뜻을 즉시 공개!
             document.getElementById('pinyin-q-meaning').textContent = `Meaning: ${w.meaning}`;
 
             let userInputNormalized = numberedToToneMarks(input.value.trim().toLowerCase()).replace(/\s+/g, '').normalize("NFC");
@@ -432,7 +435,7 @@
                 updatePinyinHeartsUI();
                 
                 if (pinyinLives <= 0) {
-                    feedback.innerHTML = `틀렸습니다. 😢 정답은 <span style="color:#d81b60;">${w.pinyin}</span><br><br><strong style="color:#c62828; font-size:24px;">💀 GAME OVER 💀</strong><br><span style="font-size:16px; color:#555;">다시 도전해 보세요!</span>`;
+                    feedback.innerHTML = `틀렸습니다. 😢 정답은 <span style="color:#d81b60; font-weight:700;">${w.pinyin}</span><br><br><strong style="color:#c62828; font-size:24px; font-family:'Gaegu', cursive;">💀 GAME OVER 💀</strong><br><span style="font-size:16px; color:#555; font-family:'Gaegu', cursive;">다시 도전해 보세요!</span>`;
                     input.disabled = true;
                     pinyinIsAnswered = true;
                     btn.textContent = "🔄 재도전하기";
@@ -444,7 +447,7 @@
                     window.speechSynthesis.speak(msg);
                     return;
                 } else {
-                    feedback.innerHTML = `틀렸습니다. 😢<br>정답: <span style="color: #d81b60; font-family: 'Noto Sans SC';">${w.pinyin}</span>`;
+                    feedback.innerHTML = `틀렸습니다. 😢<br>정답: <span style="color: #d81b60; font-weight:700;">${w.pinyin}</span>`;
                     feedback.style.color = "#c62828";
                 }
             }
