@@ -7,33 +7,33 @@
     <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Sans+SC:wght@500;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* 톤온톤 인디핑크 & 에스프레소 로즈 감성 Palette */
-            --bg-body: #faf4f5;          /* 아주 연하고 차분한 로즈 화이트 단색 background */
-            --text-main: #543d36;         /* 부드러운 딥 브라운 */
+            /* 💕 화사하고 깔끔한 리얼 핑크 톤온톤 스펙트럼 💕 */
+            --bg-body: #fff5f7;          /* 화사하고 깨끗한 딸기우유빛 베이스 */
+            --text-main: #4a2830;         /* 가독성을 위한 깊은 버건디 초콜릿 */
             --font-ui: 'Noto Sans KR', sans-serif;
             --font-card: 'Gaegu', cursive;
             
             --bg-container: #ffffff;
-            --border-main: #e8cfd4;       /* 튀지 않는 차분한 로즈 베이지 선 */
-            --text-accent: #bd7d8d;       /* 우아한 분위기의 인디핑크 */
-            --text-darkaccent: #784754;   /* 깊이감 있는 딥 로즈 브라운 */
+            --border-main: #ffccd5;       /* 부드러운 파스텔 달콤한 핑크 선 */
+            --text-accent: #ff758f;       /* 통통 튀는 러블리 핑크 */
+            --text-darkaccent: #c9184a;   /* 선명하고 확실한 포인트 진핑크 */
             
             --bg-card-front: #ffffff;
-            --bg-card-back: #fffbfc;
-            --border-card: #e1c5cc;
-            --shadow-card: rgba(120, 71, 84, 0.06); /* 부드럽고 고급스러운 그림자 */
-            --text-hanzi: #8a4857;        /* 정돈된 리치 로즈 색상 */
-            --text-meaning: #543d36;      /* 뜻 화면도 메인 텍스트와 톤을 맞춰 단정하게 고정 */
+            --bg-card-back: #fff0f3;
+            --border-card: #ffb3c1;
+            --shadow-card: rgba(201, 24, 74, 0.06); /* 은은한 핑크빛 그림자 */
+            --text-hanzi: #a4133c;        /* 눈에 확 들어오는 예쁜 루비 핑크 */
+            --text-meaning: #4a2830;      /* 뜻 화면도 정돈된 버건디 톤으로 고정 */
             
-            /* 버튼 라인업 - 완벽한 로즈 베이지 톤온톤 구성 */
-            --btn-pinyin-bg: #f5eae2; --btn-pinyin-text: #6e463b; --btn-pinyin-border: #e6d3ca;
-            --btn-game-bg: #f3e6e8; --btn-game-text: #784754; --btn-game-border: #e3cfd3;
-            --btn-nav-bg: #f3e6e8; --btn-nav-text: #784754;
-            --btn-auto-bg: #faf0f2; --btn-auto-text: #8a4857; --btn-auto-active: #bd7d8d;
-            --btn-shuffle-bg: #eae0e2; --btn-shuffle-text: #5a3c44;
+            /* 버튼 라인업 - 조잡함 ZERO, 완벽한 파스텔 핑크 톤온톤 */
+            --btn-pinyin-bg: #fff0f3; --btn-pinyin-text: #a4133c; --btn-pinyin-border: #ffccd5;
+            --btn-game-bg: #ffe5ec; --btn-game-text: #c9184a; --btn-game-border: #ffb3c1;
+            --btn-nav-bg: #ffe5ec; --btn-nav-text: #a4133c;
+            --btn-auto-bg: #fff5f7; --btn-auto-text: #ff758f; --btn-auto-active: #ff4d6d;
+            --btn-shuffle-bg: #ffccd5; --btn-shuffle-text: #800f2f;
             
-            --btn-modal-close: #eed6dc; --btn-modal-shuffle: #e3cfd3; --btn-modal-retry: #f5eae2;
-            --btn-modal-text: #543d36;
+            --btn-modal-close: #ffccd5; --btn-modal-shuffle: #ffe5ec; --btn-modal-retry: #fff0f3;
+            --btn-modal-text: #4a2830;
         }
 
         body.theme-bw {
@@ -69,7 +69,7 @@
         .book-select-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; max-width: 380px; text-align: center; }
         .book-title { font-size: 26px; color: var(--text-hanzi); margin-bottom: 25px; font-weight: bold; font-family: var(--font-card); }
         .book-grid { display: flex; flex-direction: column; gap: 12px; width: 100%; }
-        .book-card { background: var(--bg-container); border: 1px solid var(--border-main); padding: 18px; border-radius: 16px; font-size: 16px; font-weight: bold; color: var(--text-darkaccent); cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.02); transition: transform 0.2s, background-color 0.2s; text-align: center; }
+        .book-card { background: var(--bg-container); border: 1px solid var(--border-main); padding: 18px; border-radius: 16px; font-size: 16px; font-weight: bold; color: var(--text-darkaccent); cursor: pointer; box-shadow: 0 4px 10px rgba(201,24,74,0.02); transition: transform 0.2s, background-color 0.2s; text-align: center; }
         .book-card:hover { transform: scale(1.01); background-color: var(--bg-card-back); }
 
         .main-app-container { display: none; flex-direction: column; align-items: center; width: 100%; max-width: 380px; }
@@ -77,11 +77,11 @@
         .top-utility-bar { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 12px; gap: 10px; }
         .home-btn { background-color: transparent; border: 1px solid var(--border-main); color: var(--text-darkaccent); padding: 6px 14px; border-radius: 12px; font-size: 13px; cursor: pointer; font-weight: 500; background-color: var(--bg-container); box-shadow: 0 2px 5px rgba(0,0,0,0.01); }
         .theme-switcher-container { display: flex; background: var(--bg-container); padding: 3px; border-radius: 12px; border: 1px solid var(--border-main); box-shadow: 0 2px 5px rgba(0,0,0,0.01); }
-        .theme-btn { padding: 4px 12px; font-size: 12px; font-weight: bold; border: none; border-radius: 9px; cursor: pointer; background: transparent; color: #bbb; transition: all 0.2s; }
+        .theme-btn { padding: 4px 12px; font-size: 12px; font-weight: bold; border: none; border-radius: 9px; cursor: pointer; background: transparent; color: #ccc; transition: all 0.2s; }
         .theme-btn.active { background-color: var(--text-accent); color: white; }
         body.theme-bw .theme-btn.active { background-color: #111111; color: #ffffff; }
 
-        .dashboard-box { background-color: var(--bg-container); border: 1px solid var(--border-main); border-radius: 16px; padding: 12px; width: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.01); margin-bottom: 15px; }
+        .dashboard-box { background-color: var(--bg-container); border: 1px solid var(--border-main); border-radius: 16px; padding: 12px; width: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 4px 15px rgba(201,24,74,0.01); margin-bottom: 15px; }
         .dashboard-row { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 10px; }
         
         .filter-group { display: flex; align-items: center; gap: 6px; flex-grow: 1; }
@@ -109,26 +109,26 @@
         body.theme-bw .chapter-badge { color: white; background: #111; }
         
         .hanzi { font-family: 'Noto Sans SC', sans-serif; font-size: 64px; font-weight: 700; color: var(--text-hanzi); }
-        .pinyin { font-family: 'Noto Sans SC', sans-serif; font-size: 21px; font-weight: 400; color: #66524e; margin-top: 5px; }
+        .pinyin { font-family: 'Noto Sans SC', sans-serif; font-size: 21px; font-weight: 400; color: #7d525b; margin-top: 5px; }
         body.theme-bw .pinyin { color: #333; }
         .meaning { font-family: var(--font-card); font-size: 32px; font-weight: bold; color: var(--text-meaning); }
         
-        .progress-container { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 12px; background-color: var(--bg-container); padding: 8px 16px; border-radius: 14px; cursor: pointer; border: 1px solid var(--border-main); box-shadow: 0 2px 6px rgba(0,0,0,0.01); width: 100%; box-sizing: border-box; }
-        .progress-bar-bg { flex-grow: 1; max-width: 180px; height: 6px; background-color: #ede2e4; border-radius: 4px; overflow: hidden; }
+        .progress-container { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 12px; background-color: var(--bg-container); padding: 8px 16px; border-radius: 14px; cursor: pointer; border: 1px solid var(--border-main); box-shadow: 0 2px 6px rgba(201,24,74,0.01); width: 100%; box-sizing: border-box; }
+        .progress-bar-bg { flex-grow: 1; max-width: 180px; height: 6px; background-color: #ffe5ec; border-radius: 4px; overflow: hidden; }
         .progress-bar-fill { height: 100%; background-color: var(--text-accent); width: 0%; transition: width 0.3s; }
         body.theme-bw .progress-bar-fill { background-color: #111; }
         .progress-text { font-size: 14px; color: var(--text-darkaccent); font-weight: bold; }
         
         .controls { display: flex; gap: 6px; justify-content: center; width: 100%; }
-        .controls button { padding: 12px 6px; font-size: 14px; font-family: var(--font-ui); font-weight: bold; border: none; border-radius: 14px; cursor: pointer; white-space: nowrap; flex: 1; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .controls button { padding: 12px 6px; font-size: 14px; font-family: var(--font-ui); font-weight: bold; border: none; border-radius: 14px; cursor: pointer; white-space: nowrap; flex: 1; box-shadow: 0 2px 5px rgba(201,24,74,0.02); }
         .nav-btn { background-color: var(--btn-nav-bg); color: var(--btn-nav-text); }
         .autoplay-btn { background-color: var(--btn-auto-bg); color: var(--btn-auto-text); }
         .autoplay-btn.active { background-color: var(--btn-auto-active); color: white; }
         body.theme-bw .autoplay-btn.active { background-color: #111111; color: #ffffff; }
         .shuffle-trigger-btn { background-color: var(--btn-shuffle-bg); color: var(--btn-shuffle-text); }
         
-        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.3); justify-content: center; align-items: center; }
-        .modal-content { background-color: var(--bg-container); border-radius: 20px; border: 1px solid var(--border-main); width: 90%; max-width: 380px; padding: 20px; height: 75vh; display: flex; flex-direction: column; font-family: var(--font-ui); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.2); justify-content: center; align-items: center; }
+        .modal-content { background-color: var(--bg-container); border-radius: 20px; border: 1px solid var(--border-main); width: 90%; max-width: 380px; padding: 20px; height: 75vh; display: flex; flex-direction: column; font-family: var(--font-ui); box-shadow: 0 10px 30px rgba(201,24,74,0.08); }
         .search-box { padding: 10px; margin-bottom: 10px; border: 1px solid var(--border-main); border-radius: 10px; font-family: var(--font-ui); font-size: 15px; background: var(--bg-container); color: var(--text-main); outline: none; }
         .word-list-container { overflow-y: auto; flex-grow: 1; }
         .word-list-item { display: flex; justify-content: space-between; padding: 10px 6px; border-bottom: 1px dashed var(--border-main); cursor: pointer; align-items: center; font-family: 'Noto Sans SC', sans-serif; font-size: 14px; color: var(--text-main); }
@@ -139,15 +139,15 @@
         body.theme-bw .game-item.selected { background-color: #111111; color: white; }
         .game-item.matched { visibility: hidden; }
         .game-status { text-align: center; font-size: 16px; font-weight: bold; color: var(--text-hanzi); margin-bottom: 8px; }
-        .game-controls { display: flex; gap: 8px; border-top: 1px solid #f3e6e8; padding-top: 12px; }
+        .game-controls { display: flex; gap: 8px; border-top: 1px solid #ffe5ec; padding-top: 12px; }
         
         .game-btn { flex: 1; padding: 10px; border-radius: 12px; border: none; font-family: var(--font-ui); font-size: 14px; cursor: pointer; color: var(--btn-modal-text); font-weight: bold; }
-        .game-btn.btn-close { background-color: var(--btn-modal-close); color: #784754; }
-        .game-btn.btn-shuffle { background-color: var(--btn-modal-shuffle); color: #5a3c44; }
-        .game-btn.btn-retry { background-color: var(--btn-modal-retry); color: #6e463b; }
+        .game-btn.btn-close { background-color: var(--btn-modal-close); color: #a4133c; }
+        .game-btn.btn-shuffle { background-color: var(--btn-modal-shuffle); color: #c9184a; }
+        .game-btn.btn-retry { background-color: var(--btn-modal-retry); color: #a4133c; }
         body.theme-bw .game-btn.btn-retry { color: white; }
         
-        .game-pinyin { font-size: 13px; color: #8a716c; margin-top: 3px; font-family: 'Noto Sans SC', sans-serif; font-weight: 500; }
+        .game-pinyin { font-size: 13px; color: #a4133c; margin-top: 3px; font-family: 'Noto Sans SC', sans-serif; font-weight: 500; }
     </style>
 </head>
 <body>
@@ -159,7 +159,7 @@
 
     <div id="main-app" class="main-app-container">
         <div class="top-utility-bar">
-            <button class="home-btn" onclick="goBackToBooks()">📔책 선택</button>
+            <button class="home-btn" onclick="goBackToBooks()">📔 책 선택</button>
             <div class="theme-switcher-container">
                 <button id="theme-pink-btn" class="theme-btn active" onclick="changeTheme('pink')">🩷 PINK</button>
                 <button id="theme-bw-btn" class="theme-btn" onclick="changeTheme('bw')">🖤 BLACK</button>
@@ -247,9 +247,8 @@
     </div>
 
     <script>
-        // 📚 요청에 맞추어 딱 필요한 2개의 책 목록 구조로 최적화했습니다.
         const BOOK_DATA = [
-            { title: "📘 스마트 중국어 (1권)", url: "https://docs.google.com/spreadsheets/d/18D1sxEjb7qD4DudFmrZziQDZ0HK-F1V-8Z3V-9WxoDw/gviz/tq?tqx=out:csv", type: "lesson" },
+            { title: "📘 스마트 중국어 1", url: "https://docs.google.com/spreadsheets/d/18D1sxEjb7qD4DudFmrZziQDZ0HK-F1V-8Z3V-9WxoDw/gviz/tq?tqx=out:csv", type: "lesson" },
             { title: "📙 HSK 단어장", url: "https://docs.google.com/spreadsheets/d/1zSUNaMz8rFvFfIx-YzgcIA-sNU1N3ZQRvAX-NbXzPfU/gviz/tq?tqx=out:csv", type: "hsk" }
         ];
 
@@ -613,7 +612,7 @@
                 document.getElementById('pinyin-q-hanzi').textContent = "통과 완료! 💯";
                 document.getElementById('pinyin-q-meaning').textContent = "학원 시험 걱정 끝!";
                 document.getElementById('pinyin-input').style.display = 'none';
-                document.getElementById('pinyin-feedback').innerHTML = `<span style="color:#8a4857; font-size:18px;">하트를 남기고 살아남으셨습니다!</span>`;
+                document.getElementById('pinyin-feedback').innerHTML = `<span style="color:#a4133c; font-size:18px;">하트를 남기고 살아남으셨습니다!</span>`;
                 
                 const btn = document.getElementById('pinyin-action-btn');
                 btn.textContent = "🔄 한 판 더 하기";
@@ -684,13 +683,13 @@
 
             if (userInputNormalized === correctAnswerNormalized) {
                 feedback.textContent = "정답입니다! 🎉";
-                feedback.style.color = "#784754";
+                feedback.style.color = "#c9184a";
             } else {
                 pinyinLives--;
                 updatePinyinHeartsUI();
                 
                 if (pinyinLives <= 0) {
-                    feedback.innerHTML = `틀렸습니다. 😢 정답은 <span style="color:var(--text-hanzi); font-weight:700;">${w.pinyin}</span><br><br><strong style="color:#784754; font-size:22px;">💀 GAME OVER 💀</strong><br><span style="font-size:14px; color:#66524e;">다시 도전해 보세요!</span>`;
+                    feedback.innerHTML = `틀렸습니다. 😢 정답은 <span style="color:var(--text-hanzi); font-weight:700;">${w.pinyin}</span><br><br><strong style="color:#a4133c; font-size:22px;">💀 GAME OVER 💀</strong><br><span style="font-size:14px; color:#4a2830;">다시 도전해 보세요!</span>`;
                     input.disabled = true;
                     pinyinIsAnswered = true;
                     btn.textContent = "🔄 재도전하기";
@@ -699,7 +698,7 @@
                     return;
                 } else {
                     feedback.innerHTML = `틀렸습니다. 😢<br>정답: <span style="color: var(--text-hanzi); font-weight:700;">${w.pinyin}</span>`;
-                    feedback.style.color = "#8a4857";
+                    feedback.style.color = "#a4133c";
                 }
             }
 
