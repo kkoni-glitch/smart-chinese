@@ -100,7 +100,9 @@
         .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 16px; background-color: white; padding: 20px; box-sizing: border-box; }
         .card-front { z-index: 2; background-color: var(--bg-card-front); }
         .card-back { transform: rotateY(180deg); z-index: 1; background-color: var(--bg-card-back); }
-        .manual-speaker { position: absolute; top: 12px; right: 15px; font-size: 24px; cursor: pointer; z-index: 10; }
+        
+        .manual-speaker { position: absolute; top: 12px; right: 15px; font-size: 24px; cursor: pointer; z-index: 10; user-select: none; }
+        .heart-btn { position: absolute; top: 12px; right: 48px; font-size: 24px; cursor: pointer; z-index: 10; user-select: none; }
         .chapter-badge { position: absolute; top: 12px; left: 15px; background-color: var(--border-main); padding: 4px 10px; border-radius: 12px; font-size: 13px; color: var(--bg-container); font-weight: bold; }
         body.theme-bw .chapter-badge { color: white; background: #111; }
         
@@ -196,6 +198,8 @@
         <div class="card-container">
             <div class="card" id="card" onclick="flipCard()">
                 <div class="card-face card-front">
+                    <!-- 🖤 모르는 단어 체크용 하트 버튼 컴백! -->
+                    <span class="heart-btn" id="heart-btn" onclick="event.stopPropagation(); toggleUnknownWord()">🤍</span>
                     <span class="manual-speaker" onclick="event.stopPropagation(); playCurrentWord()">🔊</span>
                     <span class="chapter-badge" id="front-badge">-과</span>
                     <div class="hanzi" id="hanzi">로딩 중..</div>
@@ -259,9 +263,8 @@
 
     <script>
         const BOOK_DATA = [
-            { title: "📘 초급 중국어 (1권)", url: "https://docs.google.com/spreadsheets/d/18D1sxEjb7qD4DudFmrZziQDZ0HK-F1V-8Z3V-9WxoDw/gviz/tq?tqx=out:csv" },
-            { title: "📕 중급 중국어 (2권)", url: "https://docs.google.com/spreadsheets/d/1zSUNaMz8rFvFfIx-YzgcIA-sNU1N3ZQRvAX-NbXzPfU/gviz/tq?tqx=out:csv" },
-            { title: "📙 HSK 단어장 (3권)", url: "여기에_세번째_스프레드시트_CSV_주소를_넣으세요" }
+            { title: "📘 스마트 중국어 (1권)", url: "https://docs.google.com/spreadsheets/d/18D1sxEjb7qD4DudFmrZziQDZ0HK-F1V-8Z3V-9WxoDw/gviz/tq?tqx=out:csv" },
+            { title: "📕 HSK 단어장", url: "https://docs.google.com/spreadsheets/d/1zSUNaMz8rFvFfIx-YzgcIA-sNU1N3ZQRvAX-NbXzPfU/gviz/tq?tqx=out:csv" },
         ];
 
         let SPREADSHEET_URL = ''; 
@@ -269,20 +272,28 @@
         let autoplayInterval = null;
         let pinyinTestData = [], pinyinCurrentIdx = 0, pinyinIsAnswered = false, pinyinLives = 5;
 
-        // 🔊 [완전 해결] 브라우저 내장 Web Speech API 기반 음성 출력 함수
+        // 브라우저 내장 Web Speech API 기반 음성 출력 함수 (CORS 안 타는 최신 로직)
         function playOnlineZhAudio(text) {
             if (!text) return;
             if ('speechSynthesis' in window) {
-                // 이전 음성 재생 중이었다면 강제 종료 후 새로고침 (밀림 방지)
                 window.speechSynthesis.cancel();
-                
                 const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'zh-CN'; // 중국어 대륙 발음 지정
-                utterance.rate = 0.85;    // 학습용 최적 속도 설정
+                utterance.lang = 'zh-CN'; 
+                utterance.rate = 0.85;    
                 window.speechSynthesis.speak(utterance);
-            } else {
-                console.log("음성 출력을 지원하지 않는 브라우저입니다.");
             }
+        }
+
+        // 💾 모르는 단어 로컬 저장소 연동 키 추출 함수 (책마다 따로 저장되도록 분리)
+        function getStorageKey() {
+            return 'unknown_words_' + btoa(SPREADSHEET_URL).replace(/=/g, '');
+        }
+        function getUnknownWords() {
+            const data = localStorage.getItem(getStorageKey());
+            return data ? JSON.parse(data) : [];
+        }
+        function saveUnknownWords(arr) {
+            localStorage.setItem(getStorageKey(), JSON.stringify(arr));
         }
 
         function changeTheme(theme) {
@@ -348,7 +359,14 @@
 
         function changeCategory() {
             const val = document.getElementById('chapter-select').value;
-            currentFilteredData = (val === "all") ? [...totalWordData] : totalWordData.filter(w => w.chapter === val);
+            if (val === "unknown") {
+                const unknowns = getUnknownWords();
+                currentFilteredData = totalWordData.filter(w => unknowns.includes(w.hanzi));
+            } else if (val === "all") {
+                currentFilteredData = [...totalWordData];
+            } else {
+                currentFilteredData = totalWordData.filter(w => w.chapter === val);
+            }
             currentIndex = 0;
             updateCardContent();
         }
@@ -368,6 +386,7 @@
                 document.getElementById('meaning').textContent = "범위를 확인하세요";
                 document.getElementById('progress-text').textContent = "0 / 0";
                 document.getElementById('progress-bar-fill').style.width = "0%";
+                document.getElementById('heart-btn').textContent = "🤍";
                 return;
             }
             const w = currentFilteredData[currentIndex];
@@ -379,6 +398,29 @@
             document.getElementById('progress-text').textContent = `${currentIndex + 1} / ${currentFilteredData.length}`;
             document.getElementById('progress-bar-fill').style.width = `${((currentIndex + 1) / currentFilteredData.length) * 100}%`;
             document.getElementById('card').classList.remove('flipped');
+
+            // 🖤 하트 상태 복구 토글 UI 적용
+            const unknowns = getUnknownWords();
+            document.getElementById('heart-btn').textContent = unknowns.includes(w.hanzi) ? "🖤" : "🤍";
+        }
+
+        // 🖤 하트 클릭 시 모르는 단어 등록/해제 처리 함수
+        function toggleUnknownWord() {
+            if (currentFilteredData.length === 0) return;
+            const w = currentFilteredData[currentIndex];
+            if (!w) return;
+
+            let unknowns = getUnknownWords();
+            const heartBtn = document.getElementById('heart-btn');
+
+            if (unknowns.includes(w.hanzi)) {
+                unknowns = unknowns.filter(h => h !== w.hanzi);
+                heartBtn.textContent = "🤍";
+            } else {
+                unknowns.push(w.hanzi);
+                heartBtn.textContent = "🖤";
+            }
+            saveUnknownWords(unknowns);
         }
 
         function flipCard() { document.getElementById('card').classList.toggle('flipped'); }
