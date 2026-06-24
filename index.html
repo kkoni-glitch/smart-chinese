@@ -7,31 +7,33 @@
     <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Sans+SC:wght@500;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-body: #ffeef2;
-            --text-main: #5d4037;
+            /* 톤온톤 인디핑크 & 에스프레소 로즈 감성 Palette */
+            --bg-body: #faf4f5;          /* 아주 연하고 차분한 로즈 화이트 단색 background */
+            --text-main: #543d36;         /* 부드러운 딥 브라운 */
             --font-ui: 'Noto Sans KR', sans-serif;
             --font-card: 'Gaegu', cursive;
             
-            --bg-container: white;
-            --border-main: #ffb6c1;
-            --text-accent: #ff69b4;
-            --text-darkaccent: #c71585;
+            --bg-container: #ffffff;
+            --border-main: #e8cfd4;       /* 튀지 않는 차분한 로즈 베이지 선 */
+            --text-accent: #bd7d8d;       /* 우아한 분위기의 인디핑크 */
+            --text-darkaccent: #784754;   /* 깊이감 있는 딥 로즈 브라운 */
             
-            --bg-card-front: #fff5f8;
-            --bg-card-back: #fffdeb;
-            --border-card: #b39ddb;
-            --shadow-card: rgba(179, 157, 219, 0.3);
-            --text-hanzi: #d81b60;
-            --text-meaning: #bf360c;
+            --bg-card-front: #ffffff;
+            --bg-card-back: #fffbfc;
+            --border-card: #e1c5cc;
+            --shadow-card: rgba(120, 71, 84, 0.06); /* 부드럽고 고급스러운 그림자 */
+            --text-hanzi: #8a4857;        /* 정돈된 리치 로즈 색상 */
+            --text-meaning: #543d36;      /* 뜻 화면도 메인 텍스트와 톤을 맞춰 단정하게 고정 */
             
-            --btn-pinyin-bg: #ffe0b2; --btn-pinyin-text: #e65100; --btn-pinyin-border: #ffb74d;
-            --btn-game-bg: #d1c4e9; --btn-game-text: #4a148c; --btn-game-border: #b39ddb;
-            --btn-nav-bg: #b3e5fc; --btn-nav-text: #01579b;
-            --btn-auto-bg: #ffe082; --btn-auto-text: #e65100; --btn-auto-active: #ffb300;
-            --btn-shuffle-bg: #b2dfdb; --btn-shuffle-text: #004d40;
+            /* 버튼 라인업 - 완벽한 로즈 베이지 톤온톤 구성 */
+            --btn-pinyin-bg: #f5eae2; --btn-pinyin-text: #6e463b; --btn-pinyin-border: #e6d3ca;
+            --btn-game-bg: #f3e6e8; --btn-game-text: #784754; --btn-game-border: #e3cfd3;
+            --btn-nav-bg: #f3e6e8; --btn-nav-text: #784754;
+            --btn-auto-bg: #faf0f2; --btn-auto-text: #8a4857; --btn-auto-active: #bd7d8d;
+            --btn-shuffle-bg: #eae0e2; --btn-shuffle-text: #5a3c44;
             
-            --btn-modal-close: #ffcdd2; --btn-modal-shuffle: #e1bee7; --btn-modal-retry: #fff9c4;
-            --btn-modal-text: #5d4037;
+            --btn-modal-close: #eed6dc; --btn-modal-shuffle: #e3cfd3; --btn-modal-retry: #f5eae2;
+            --btn-modal-text: #543d36;
         }
 
         body.theme-bw {
@@ -65,99 +67,99 @@
         body { font-family: var(--font-ui); background-color: var(--bg-body); margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; flex-direction: column; padding: 15px; box-sizing: border-box; color: var(--text-main); transition: background-color 0.3s, color 0.3s; }
         
         .book-select-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; max-width: 380px; text-align: center; }
-        .book-title { font-size: 28px; color: var(--text-hanzi); margin-bottom: 25px; font-weight: bold; font-family: var(--font-card); }
+        .book-title { font-size: 26px; color: var(--text-hanzi); margin-bottom: 25px; font-weight: bold; font-family: var(--font-card); }
         .book-grid { display: flex; flex-direction: column; gap: 12px; width: 100%; }
-        .book-card { background: var(--bg-container); border: 2px solid var(--border-main); padding: 18px; border-radius: 20px; font-size: 18px; font-weight: bold; color: var(--text-darkaccent); cursor: pointer; box-shadow: 0 6px 15px rgba(0,0,0,0.05); transition: transform 0.2s; text-align: center; }
-        .book-card:hover { transform: scale(1.02); background-color: var(--bg-card-front); }
+        .book-card { background: var(--bg-container); border: 1px solid var(--border-main); padding: 18px; border-radius: 16px; font-size: 16px; font-weight: bold; color: var(--text-darkaccent); cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.02); transition: transform 0.2s, background-color 0.2s; text-align: center; }
+        .book-card:hover { transform: scale(1.01); background-color: var(--bg-card-back); }
 
         .main-app-container { display: none; flex-direction: column; align-items: center; width: 100%; max-width: 380px; }
 
         .top-utility-bar { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 12px; gap: 10px; }
-        .home-btn { background-color: transparent; border: 1px solid var(--border-main); color: var(--text-darkaccent); padding: 6px 14px; border-radius: 15px; font-size: 14px; cursor: pointer; font-weight: 500; background-color: var(--bg-container); box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
-        .theme-switcher-container { display: flex; background: var(--bg-container); padding: 3px; border-radius: 15px; border: 1px solid var(--border-main); box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
-        .theme-btn { padding: 4px 12px; font-size: 13px; font-weight: bold; border: none; border-radius: 12px; cursor: pointer; background: transparent; color: #aaa; transition: all 0.2s; }
+        .home-btn { background-color: transparent; border: 1px solid var(--border-main); color: var(--text-darkaccent); padding: 6px 14px; border-radius: 12px; font-size: 13px; cursor: pointer; font-weight: 500; background-color: var(--bg-container); box-shadow: 0 2px 5px rgba(0,0,0,0.01); }
+        .theme-switcher-container { display: flex; background: var(--bg-container); padding: 3px; border-radius: 12px; border: 1px solid var(--border-main); box-shadow: 0 2px 5px rgba(0,0,0,0.01); }
+        .theme-btn { padding: 4px 12px; font-size: 12px; font-weight: bold; border: none; border-radius: 9px; cursor: pointer; background: transparent; color: #bbb; transition: all 0.2s; }
         .theme-btn.active { background-color: var(--text-accent); color: white; }
         body.theme-bw .theme-btn.active { background-color: #111111; color: #ffffff; }
 
-        .dashboard-box { background-color: var(--bg-container); border: 2px solid var(--border-main); border-radius: 20px; padding: 12px; width: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 15px; }
+        .dashboard-box { background-color: var(--bg-container); border: 1px solid var(--border-main); border-radius: 16px; padding: 12px; width: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.01); margin-bottom: 15px; }
         .dashboard-row { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 10px; }
         
         .filter-group { display: flex; align-items: center; gap: 6px; flex-grow: 1; }
-        .filter-label { font-size: 14px; font-weight: bold; color: var(--text-darkaccent); white-space: nowrap; }
-        select { padding: 6px 12px; font-size: 15px; border-radius: 12px; border: 1px solid var(--border-main); background-color: var(--bg-card-front); cursor: pointer; color: var(--text-darkaccent); outline: none; flex-grow: 1; font-family: var(--font-ui); font-weight: 500; }
+        .filter-label { font-size: 13px; font-weight: bold; color: var(--text-darkaccent); white-space: nowrap; }
+        select { padding: 6px 12px; font-size: 14px; border-radius: 10px; border: 1px solid var(--border-main); background-color: var(--bg-card-back); cursor: pointer; color: var(--text-darkaccent); outline: none; flex-grow: 1; font-family: var(--font-ui); font-weight: 500; }
         
-        .toggle-group { display: flex; align-items: center; gap: 4px; font-size: 14px; font-weight: bold; cursor: pointer; color: var(--text-accent); white-space: nowrap; padding: 6px; }
-        .toggle-group input { margin: 0; width: 16px; height: 16px; cursor: pointer; }
+        .toggle-group { display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: bold; cursor: pointer; color: var(--text-accent); white-space: nowrap; padding: 6px; }
+        .toggle-group input { margin: 0; width: 15px; height: 15px; cursor: pointer; }
         
         .button-group-container { display: flex; gap: 8px; width: 100%; }
-        .pinyin-trigger-btn, .game-trigger-btn { padding: 10px 0; border-radius: 15px; cursor: pointer; font-size: 15px; font-weight: bold; flex: 1; text-align: center; font-family: var(--font-ui); }
-        .pinyin-trigger-btn { background-color: var(--btn-pinyin-bg); color: var(--btn-pinyin-text); border: 1px solid var(--btn-pinyin-border); }
-        .game-trigger-btn { background-color: var(--btn-game-bg); color: var(--btn-game-text); border: 1px solid var(--btn-game-border); }
+        .pinyin-trigger-btn, .game-trigger-btn { padding: 10px 0; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: bold; flex: 1; text-align: center; font-family: var(--font-ui); border: 1px solid transparent; }
+        .pinyin-trigger-btn { background-color: var(--btn-pinyin-bg); color: var(--btn-pinyin-text); border-color: var(--btn-pinyin-border); }
+        .game-trigger-btn { background-color: var(--btn-game-bg); color: var(--btn-game-text); border-color: var(--btn-game-border); }
         
         .card-container { width: 100%; height: 260px; perspective: 1000px; cursor: pointer; margin-bottom: 15px; position: relative; }
-        .card { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; border-radius: 20px; border: 3px solid var(--border-card); box-shadow: 0 10px 20px var(--shadow-card); }
+        .card { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; border-radius: 20px; border: 2px solid var(--border-card); box-shadow: 0 8px 20px var(--shadow-card); }
         .card.flipped { transform: rotateY(180deg); }
         .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 16px; background-color: white; padding: 20px; box-sizing: border-box; }
         .card-front { z-index: 2; background-color: var(--bg-card-front); }
         .card-back { transform: rotateY(180deg); z-index: 1; background-color: var(--bg-card-back); }
         
-        .manual-speaker { position: absolute; top: 12px; right: 15px; font-size: 24px; cursor: pointer; z-index: 10; user-select: none; }
-        .heart-btn { position: absolute; top: 12px; right: 48px; font-size: 24px; cursor: pointer; z-index: 10; user-select: none; }
-        .chapter-badge { position: absolute; top: 12px; left: 15px; background-color: var(--border-main); padding: 4px 10px; border-radius: 12px; font-size: 13px; color: var(--bg-container); font-weight: bold; }
+        .manual-speaker { position: absolute; top: 12px; right: 15px; font-size: 22px; cursor: pointer; z-index: 10; user-select: none; opacity: 0.8; }
+        .heart-btn { position: absolute; top: 12px; right: 48px; font-size: 22px; cursor: pointer; z-index: 10; user-select: none; }
+        .chapter-badge { position: absolute; top: 12px; left: 15px; background-color: var(--text-accent); padding: 4px 10px; border-radius: 10px; font-size: 12px; color: white; font-weight: bold; }
         body.theme-bw .chapter-badge { color: white; background: #111; }
         
         .hanzi { font-family: 'Noto Sans SC', sans-serif; font-size: 64px; font-weight: 700; color: var(--text-hanzi); }
-        .pinyin { font-family: 'Noto Sans SC', sans-serif; font-size: 22px; font-weight: 400; color: #555; margin-top: 5px; }
+        .pinyin { font-family: 'Noto Sans SC', sans-serif; font-size: 21px; font-weight: 400; color: #66524e; margin-top: 5px; }
         body.theme-bw .pinyin { color: #333; }
         .meaning { font-family: var(--font-card); font-size: 32px; font-weight: bold; color: var(--text-meaning); }
         
-        .progress-container { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 12px; background-color: var(--bg-container); padding: 8px 16px; border-radius: 20px; cursor: pointer; border: 1px solid var(--border-main); box-shadow: 0 2px 6px rgba(0,0,0,0.02); width: 100%; box-sizing: border-box; }
-        .progress-bar-bg { flex-grow: 1; max-width: 180px; height: 8px; background-color: #e0e0e0; border-radius: 4px; overflow: hidden; }
+        .progress-container { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 12px; background-color: var(--bg-container); padding: 8px 16px; border-radius: 14px; cursor: pointer; border: 1px solid var(--border-main); box-shadow: 0 2px 6px rgba(0,0,0,0.01); width: 100%; box-sizing: border-box; }
+        .progress-bar-bg { flex-grow: 1; max-width: 180px; height: 6px; background-color: #ede2e4; border-radius: 4px; overflow: hidden; }
         .progress-bar-fill { height: 100%; background-color: var(--text-accent); width: 0%; transition: width 0.3s; }
         body.theme-bw .progress-bar-fill { background-color: #111; }
-        .progress-text { font-size: 15px; color: var(--text-darkaccent); font-weight: bold; }
+        .progress-text { font-size: 14px; color: var(--text-darkaccent); font-weight: bold; }
         
         .controls { display: flex; gap: 6px; justify-content: center; width: 100%; }
-        .controls button { padding: 12px 6px; font-size: 15px; font-family: var(--font-ui); font-weight: bold; border: none; border-radius: 20px; cursor: pointer; white-space: nowrap; flex: 1; box-shadow: 0 3px 6px rgba(0,0,0,0.05); }
+        .controls button { padding: 12px 6px; font-size: 14px; font-family: var(--font-ui); font-weight: bold; border: none; border-radius: 14px; cursor: pointer; white-space: nowrap; flex: 1; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
         .nav-btn { background-color: var(--btn-nav-bg); color: var(--btn-nav-text); }
         .autoplay-btn { background-color: var(--btn-auto-bg); color: var(--btn-auto-text); }
         .autoplay-btn.active { background-color: var(--btn-auto-active); color: white; }
         body.theme-bw .autoplay-btn.active { background-color: #111111; color: #ffffff; }
         .shuffle-trigger-btn { background-color: var(--btn-shuffle-bg); color: var(--btn-shuffle-text); }
         
-        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); justify-content: center; align-items: center; }
-        .modal-content { background-color: var(--bg-container); border-radius: 20px; border: 2px solid var(--border-main); width: 90%; max-width: 380px; padding: 20px; height: 75vh; display: flex; flex-direction: column; font-family: var(--font-ui); }
-        .search-box { padding: 10px; margin-bottom: 10px; border: 1px solid var(--border-main); border-radius: 12px; font-family: var(--font-ui); font-size: 16px; background: var(--bg-container); color: var(--text-main); outline: none; }
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.3); justify-content: center; align-items: center; }
+        .modal-content { background-color: var(--bg-container); border-radius: 20px; border: 1px solid var(--border-main); width: 90%; max-width: 380px; padding: 20px; height: 75vh; display: flex; flex-direction: column; font-family: var(--font-ui); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .search-box { padding: 10px; margin-bottom: 10px; border: 1px solid var(--border-main); border-radius: 10px; font-family: var(--font-ui); font-size: 15px; background: var(--bg-container); color: var(--text-main); outline: none; }
         .word-list-container { overflow-y: auto; flex-grow: 1; }
-        .word-list-item { display: flex; justify-content: space-between; padding: 10px 6px; border-bottom: 1px dashed var(--border-main); cursor: pointer; align-items: center; font-family: 'Noto Sans SC', sans-serif; font-size: 15px; color: var(--text-main); }
+        .word-list-item { display: flex; justify-content: space-between; padding: 10px 6px; border-bottom: 1px dashed var(--border-main); cursor: pointer; align-items: center; font-family: 'Noto Sans SC', sans-serif; font-size: 14px; color: var(--text-main); }
         
         .game-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; overflow-y: auto; flex-grow: 1; margin-bottom: 12px; }
-        .game-item { background-color: var(--bg-card-front); border: 1px solid var(--border-main); border-radius: 12px; padding: 8px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; font-weight: bold; text-align: center; font-size: 20px; min-height: 60px; color: var(--text-main); font-family: var(--font-ui); }
-        .game-item.selected { background-color: var(--btn-auto-bg); border-color: var(--btn-auto-active); }
+        .game-item { background-color: var(--bg-card-back); border: 1px solid var(--border-main); border-radius: 12px; padding: 8px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; font-weight: bold; text-align: center; font-size: 18px; min-height: 60px; color: var(--text-main); font-family: var(--font-ui); }
+        .game-item.selected { background-color: var(--text-accent); color: white; border-color: var(--text-accent); }
         body.theme-bw .game-item.selected { background-color: #111111; color: white; }
         .game-item.matched { visibility: hidden; }
-        .game-status { text-align: center; font-size: 18px; font-weight: bold; color: var(--text-hanzi); margin-bottom: 8px; }
-        .game-controls { display: flex; gap: 8px; border-top: 1px solid #eee; padding-top: 12px; }
+        .game-status { text-align: center; font-size: 16px; font-weight: bold; color: var(--text-hanzi); margin-bottom: 8px; }
+        .game-controls { display: flex; gap: 8px; border-top: 1px solid #f3e6e8; padding-top: 12px; }
         
-        .game-btn { flex: 1; padding: 10px; border-radius: 15px; border: none; font-family: var(--font-ui); font-size: 15px; cursor: pointer; color: var(--btn-modal-text); }
-        .game-btn.btn-close { background-color: var(--btn-modal-close); }
-        .game-btn.btn-shuffle { background-color: var(--btn-modal-shuffle); }
-        .game-btn.btn-retry { background-color: var(--btn-modal-retry); }
+        .game-btn { flex: 1; padding: 10px; border-radius: 12px; border: none; font-family: var(--font-ui); font-size: 14px; cursor: pointer; color: var(--btn-modal-text); font-weight: bold; }
+        .game-btn.btn-close { background-color: var(--btn-modal-close); color: #784754; }
+        .game-btn.btn-shuffle { background-color: var(--btn-modal-shuffle); color: #5a3c44; }
+        .game-btn.btn-retry { background-color: var(--btn-modal-retry); color: #6e463b; }
         body.theme-bw .game-btn.btn-retry { color: white; }
         
-        .game-pinyin { font-size: 14px; color: #888; margin-top: 3px; font-family: 'Noto Sans SC', sans-serif; font-weight: 500; }
+        .game-pinyin { font-size: 13px; color: #8a716c; margin-top: 3px; font-family: 'Noto Sans SC', sans-serif; font-weight: 500; }
     </style>
 </head>
 <body>
 
     <div id="book-select-screen" class="book-select-screen">
-        <div class="book-title">🎀 스마트 중국어 단어장 🎀<br><span style="font-size: 16px; color: var(--text-accent); font-family: var(--font-ui); font-weight: 500;">공부할 책을 선택해 주세요!</span></div>
+        <div class="book-title">🎀 스마트 중국어 단어장 🎀<br><span style="font-size: 14px; color: var(--text-accent); font-family: var(--font-ui); font-weight: 500;">공부할 책을 선택해 주세요!</span></div>
         <div class="book-grid" id="book-list-grid"></div>
     </div>
 
     <div id="main-app" class="main-app-container">
         <div class="top-utility-bar">
-            <button class="home-btn" onclick="goBackToBooks()">📔 책 선택</button>
+            <button class="home-btn" onclick="goBackToBooks()">📔책 선택</button>
             <div class="theme-switcher-container">
                 <button id="theme-pink-btn" class="theme-btn active" onclick="changeTheme('pink')">🩷 PINK</button>
                 <button id="theme-bw-btn" class="theme-btn" onclick="changeTheme('bw')">🖤 BLACK</button>
@@ -229,14 +231,14 @@
         <div class="modal-content" style="height: auto; max-width: 360px; text-align: center;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 0 5px;">
                 <div class="game-status" id="pinyin-status" style="margin: 0;">문제: 0 / 0</div>
-                <div id="pinyin-hearts" style="font-size: 20px; letter-spacing: 2px;">❤️❤️❤️❤️❤️</div>
+                <div id="pinyin-hearts" style="font-size: 18px; letter-spacing: 2px;">❤️❤️❤️❤️❤️</div>
             </div>
             <div style="margin: 20px 0;">
                 <div id="pinyin-q-hanzi" style="font-family: 'Noto Sans SC', sans-serif; font-size: 52px; font-weight: 700; color: var(--text-hanzi);">汉字</div>
-                <div id="pinyin-q-meaning" style="font-size: 18px; color: #e65100; margin-top: 8px; font-weight: bold; min-height: 25px;"></div>
+                <div id="pinyin-q-meaning" style="font-size: 16px; color: var(--text-darkaccent); margin-top: 8px; font-weight: bold; min-height: 25px;"></div>
             </div>
-            <input type="text" id="pinyin-input" class="search-box" style="text-align: center; font-size: 20px; width: 100%; box-sizing: border-box; font-family: 'Noto Sans SC', sans-serif;" placeholder="예: ni3 hao3" onkeydown="if(event.key==='Enter') checkPinyin()">
-            <div id="pinyin-feedback" style="font-size: 18px; font-weight: bold; margin: 12px 0; min-height: 45px; line-height: 1.4; font-family: 'Noto Sans SC', sans-serif;"></div>
+            <input type="text" id="pinyin-input" class="search-box" style="text-align: center; font-size: 18px; width: 100%; box-sizing: border-box; font-family: 'Noto Sans SC', sans-serif;" placeholder="예: ni3 hao3" onkeydown="if(event.key==='Enter') checkPinyin()">
+            <div id="pinyin-feedback" style="font-size: 16px; font-weight: bold; margin: 12px 0; min-height: 45px; line-height: 1.4; font-family: 'Noto Sans SC', sans-serif;"></div>
             <div class="game-controls">
                 <button class="game-btn btn-close" onclick="closePinyinModal()">❌ 종료</button>
                 <button class="game-btn btn-retry" id="pinyin-action-btn" onclick="checkPinyin()">✔️ 확인</button>
@@ -245,13 +247,12 @@
     </div>
 
     <script>
-        // ⚙️ 책의 속성에 대단원 타입을 구분하는 'type' 필드를 추가했습니다.
+        // 📚 요청에 맞추어 딱 필요한 2개의 책 목록 구조로 최적화했습니다.
         const BOOK_DATA = [
-            { title: "📘 스마트 중국어 1", url: "https://docs.google.com/spreadsheets/d/18D1sxEjb7qD4DudFmrZziQDZ0HK-F1V-8Z3V-9WxoDw/gviz/tq?tqx=out:csv", type: "lesson" },
-            { title: "📕 HSK 단어장", url: "https://docs.google.com/spreadsheets/d/1zSUNaMz8rFvFfIx-YzgcIA-sNU1N3ZQRvAX-NbXzPfU/gviz/tq?tqx=out:csv", type: "HSK" },
+            { title: "📘 스마트 중국어 (1권)", url: "https://docs.google.com/spreadsheets/d/18D1sxEjb7qD4DudFmrZziQDZ0HK-F1V-8Z3V-9WxoDw/gviz/tq?tqx=out:csv", type: "lesson" },
+            { title: "📙 HSK 단어장", url: "https://docs.google.com/spreadsheets/d/1zSUNaMz8rFvFfIx-YzgcIA-sNU1N3ZQRvAX-NbXzPfU/gviz/tq?tqx=out:csv", type: "hsk" }
         ];
 
-        // image_6008c7.png 기준 일반 교재 매핑 데이터 
         const CHAPTER_MAP = {
             "1": "1과", "2": "2과", "3": "3과", "4": "4과", "5": "5과",
             "6": "1~5과", "7": "7과", "8": "8과", "9": "9과", "10": "10과",
@@ -259,7 +260,7 @@
         };
 
         let SPREADSHEET_URL = ''; 
-        let currentBookType = 'lesson'; // 현재 활성화된 책의 타입 ('lesson' 또는 'hsk')
+        let currentBookType = 'lesson'; 
         let totalWordData = [], currentFilteredData = [], currentIndex = 0, gameRemainingData = [];
         let autoplayInterval = null;
         let pinyinTestData = [], pinyinCurrentIdx = 0, pinyinIsAnswered = false, pinyinLives = 5;
@@ -319,7 +320,6 @@
             }
             SPREADSHEET_URL = url;
             
-            // 현재 누른 책의 타입을 글로벌 변수에 저장
             const matchedBook = BOOK_DATA.find(b => b.url === url);
             currentBookType = matchedBook ? matchedBook.type : 'lesson';
 
@@ -356,16 +356,13 @@
                     return a.localeCompare(b);
                 });
 
-                // 🔄 책 종류(일반 교재 vs HSK)에 따른 드롭다운 맞춤형 매핑 규칙
                 uniqueChapters.forEach(ch => {
                     const opt = document.createElement('option');
                     opt.value = ch;
                     
                     if (currentBookType === 'hsk') {
-                        // HSK 단어장인 경우: '급'으로 표시
                         opt.textContent = isNaN(ch) ? `🏆 ${ch}` : `🏆 HSK ${ch}급`;
                     } else {
-                        // 일반 단어장인 경우: image_6008c7.png 규칙 매핑
                         if (CHAPTER_MAP[ch]) {
                             if (ch === '6' || ch === '12') opt.textContent = `🔄 ${CHAPTER_MAP[ch]}`;
                             else if (ch === '13') opt.textContent = `👀 ${CHAPTER_MAP[ch]}`;
@@ -429,7 +426,6 @@
             document.getElementById('pinyin').textContent = w.pinyin;
             document.getElementById('meaning').textContent = w.meaning;
             
-            // 🔄 카드 배지명 변환 기법 수정 (일반 교재와 HSK 분기 처리)
             if (currentBookType === 'hsk') {
                 document.getElementById('front-badge').textContent = isNaN(w.chapter) ? w.chapter : "HSK " + w.chapter + "급";
             } else {
@@ -565,7 +561,12 @@
                                 const nextBtn = document.createElement('button');
                                 nextBtn.textContent = "다음 라운드 ➡️";
                                 nextBtn.style.gridColumn = "span 2";
-                                nextBtn.style.background = "#b3e5fc";
+                                nextBtn.style.background = "var(--btn-nav-bg)";
+                                nextBtn.style.color = "var(--btn-nav-text)";
+                                nextBtn.style.padding = "10px";
+                                nextBtn.style.border = "none";
+                                nextBtn.style.borderRadius = "12px";
+                                nextBtn.style.fontWeight = "bold";
                                 nextBtn.onclick = startRound;
                                 g.appendChild(nextBtn);
                             } else if (gameRemainingData.length === 0) status.textContent = "🎉 모두 완료!";
@@ -612,11 +613,11 @@
                 document.getElementById('pinyin-q-hanzi').textContent = "통과 완료! 💯";
                 document.getElementById('pinyin-q-meaning').textContent = "학원 시험 걱정 끝!";
                 document.getElementById('pinyin-input').style.display = 'none';
-                document.getElementById('pinyin-feedback').innerHTML = `<span style="color:#2e7d32; font-size:20px;">하트를 남기고 살아남으셨습니다!</span>`;
+                document.getElementById('pinyin-feedback').innerHTML = `<span style="color:#8a4857; font-size:18px;">하트를 남기고 살아남으셨습니다!</span>`;
                 
                 const btn = document.getElementById('pinyin-action-btn');
                 btn.textContent = "🔄 한 판 더 하기";
-                btn.style.background = "#fff9c4";
+                btn.style.background = "var(--btn-modal-retry)";
                 pinyinIsAnswered = true;
                 btn.onclick = openPinyinModal;
                 return;
@@ -683,13 +684,13 @@
 
             if (userInputNormalized === correctAnswerNormalized) {
                 feedback.textContent = "정답입니다! 🎉";
-                feedback.style.color = "#2e7d32";
+                feedback.style.color = "#784754";
             } else {
                 pinyinLives--;
                 updatePinyinHeartsUI();
                 
                 if (pinyinLives <= 0) {
-                    feedback.innerHTML = `틀렸습니다. 😢 정답은 <span style="color:var(--text-hanzi); font-weight:700;">${w.pinyin}</span><br><br><strong style="color:#c62828; font-size:24px;">💀 GAME OVER 💀</strong><br><span style="font-size:16px; color:#555;">다시 도전해 보세요!</span>`;
+                    feedback.innerHTML = `틀렸습니다. 😢 정답은 <span style="color:var(--text-hanzi); font-weight:700;">${w.pinyin}</span><br><br><strong style="color:#784754; font-size:22px;">💀 GAME OVER 💀</strong><br><span style="font-size:14px; color:#66524e;">다시 도전해 보세요!</span>`;
                     input.disabled = true;
                     pinyinIsAnswered = true;
                     btn.textContent = "🔄 재도전하기";
@@ -698,7 +699,7 @@
                     return;
                 } else {
                     feedback.innerHTML = `틀렸습니다. 😢<br>정답: <span style="color: var(--text-hanzi); font-weight:700;">${w.pinyin}</span>`;
-                    feedback.style.color = "#c62828";
+                    feedback.style.color = "#8a4857";
                 }
             }
 
