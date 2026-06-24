@@ -4,15 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎀 스마트 중국어 🎀 단어장 🎀</title>
-    <!-- 폰트 깨짐 방지를 위해 Noto Sans KR(한국어 표준 고딕) 추가 -->
     <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Sans+SC:wght@500;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* 🎨 CSS 변수 정의 (기본값: 핑크 매직 테마) */
         :root {
             --bg-body: #ffeef2;
             --text-main: #5d4037;
-            --font-ui: 'Noto Sans KR', sans-serif; /* UI는 무조건 깔끔하고 정돈된 폰트 */
-            --font-card: 'Gaegu', cursive;        /* 카드 내부만 감성 폰트 */
+            --font-ui: 'Noto Sans KR', sans-serif;
+            --font-card: 'Gaegu', cursive;
             
             --bg-container: white;
             --border-main: #ffb6c1;
@@ -36,7 +34,6 @@
             --btn-modal-text: #5d4037;
         }
 
-        /* 📖 이북 리더기 테마 (Black & White) */
         body.theme-bw {
             --bg-body: #f4f4f4;
             --text-main: #111111;
@@ -67,17 +64,14 @@
 
         body { font-family: var(--font-ui); background-color: var(--bg-body); margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; flex-direction: column; padding: 15px; box-sizing: border-box; color: var(--text-main); transition: background-color 0.3s, color 0.3s; }
         
-        /* 📚 책 선택 화면 스타일 */
         .book-select-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; max-width: 380px; text-align: center; }
         .book-title { font-size: 28px; color: var(--text-hanzi); margin-bottom: 25px; font-weight: bold; font-family: var(--font-card); }
         .book-grid { display: flex; flex-direction: column; gap: 12px; width: 100%; }
         .book-card { background: var(--bg-container); border: 2px solid var(--border-main); padding: 18px; border-radius: 20px; font-size: 18px; font-weight: bold; color: var(--text-darkaccent); cursor: pointer; box-shadow: 0 6px 15px rgba(0,0,0,0.05); transition: transform 0.2s; text-align: center; }
         .book-card:hover { transform: scale(1.02); background-color: var(--bg-card-front); }
 
-        /* 🧩 메인 앱 정돈된 레이아웃 */
         .main-app-container { display: none; flex-direction: column; align-items: center; width: 100%; max-width: 380px; }
 
-        /* 🏢 1층: 다른 책 고르기 + 테마 스위치를 한 줄로 통합 */
         .top-utility-bar { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 12px; gap: 10px; }
         .home-btn { background-color: transparent; border: 1px solid var(--border-main); color: var(--text-darkaccent); padding: 6px 14px; border-radius: 15px; font-size: 14px; cursor: pointer; font-weight: 500; background-color: var(--bg-container); box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
         .theme-switcher-container { display: flex; background: var(--bg-container); padding: 3px; border-radius: 15px; border: 1px solid var(--border-main); box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
@@ -85,7 +79,6 @@
         .theme-btn.active { background-color: var(--text-accent); color: white; }
         body.theme-bw .theme-btn.active { background-color: #111111; color: #ffffff; }
 
-        /* 🎛️ 2층: 난잡하던 설정 옵션들을 하나의 단정한 대시보드 박스로 조립 */
         .dashboard-box { background-color: var(--bg-container); border: 2px solid var(--border-main); border-radius: 20px; padding: 12px; width: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 15px; }
         .dashboard-row { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 10px; }
         
@@ -101,7 +94,6 @@
         .pinyin-trigger-btn { background-color: var(--btn-pinyin-bg); color: var(--btn-pinyin-text); border: 1px solid var(--btn-pinyin-border); }
         .game-trigger-btn { background-color: var(--btn-game-bg); color: var(--btn-game-text); border: 1px solid var(--btn-game-border); }
         
-        /* 🎴 3층: 단어 카드 영역 */
         .card-container { width: 100%; height: 260px; perspective: 1000px; cursor: pointer; margin-bottom: 15px; position: relative; }
         .card { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; border-radius: 20px; border: 3px solid var(--border-card); box-shadow: 0 10px 20px var(--shadow-card); }
         .card.flipped { transform: rotateY(180deg); }
@@ -112,20 +104,17 @@
         .chapter-badge { position: absolute; top: 12px; left: 15px; background-color: var(--border-main); padding: 4px 10px; border-radius: 12px; font-size: 13px; color: var(--bg-container); font-weight: bold; }
         body.theme-bw .chapter-badge { color: white; background: #111; }
         
-        /* 단어 텍스트는 기존 예쁜 폰트 유지 */
         .hanzi { font-family: 'Noto Sans SC', sans-serif; font-size: 64px; font-weight: 700; color: var(--text-hanzi); }
         .pinyin { font-family: 'Noto Sans SC', sans-serif; font-size: 22px; font-weight: 400; color: #555; margin-top: 5px; }
         body.theme-bw .pinyin { color: #333; }
         .meaning { font-family: var(--font-card); font-size: 32px; font-weight: bold; color: var(--text-meaning); }
         
-        /* 📊 진행 바 */
         .progress-container { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 12px; background-color: var(--bg-container); padding: 8px 16px; border-radius: 20px; cursor: pointer; border: 1px solid var(--border-main); box-shadow: 0 2px 6px rgba(0,0,0,0.02); width: 100%; box-sizing: border-box; }
         .progress-bar-bg { flex-grow: 1; max-width: 180px; height: 8px; background-color: #e0e0e0; border-radius: 4px; overflow: hidden; }
         .progress-bar-fill { height: 100%; background-color: var(--text-accent); width: 0%; transition: width 0.3s; }
         body.theme-bw .progress-bar-fill { background-color: #111; }
         .progress-text { font-size: 15px; color: var(--text-darkaccent); font-weight: bold; }
         
-        /* 🕹️ 하단 컨트롤 패널 */
         .controls { display: flex; gap: 6px; justify-content: center; width: 100%; }
         .controls button { padding: 12px 6px; font-size: 15px; font-family: var(--font-ui); font-weight: bold; border: none; border-radius: 20px; cursor: pointer; white-space: nowrap; flex: 1; box-shadow: 0 3px 6px rgba(0,0,0,0.05); }
         .nav-btn { background-color: var(--btn-nav-bg); color: var(--btn-nav-text); }
@@ -134,7 +123,6 @@
         body.theme-bw .autoplay-btn.active { background-color: #111111; color: #ffffff; }
         .shuffle-trigger-btn { background-color: var(--btn-shuffle-bg); color: var(--btn-shuffle-text); }
         
-        /* 모달 및 게임 레이아웃 생략 불가 디자인 통합 */
         .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); justify-content: center; align-items: center; }
         .modal-content { background-color: var(--bg-container); border-radius: 20px; border: 2px solid var(--border-main); width: 90%; max-width: 380px; padding: 20px; height: 75vh; display: flex; flex-direction: column; font-family: var(--font-ui); }
         .search-box { padding: 10px; margin-bottom: 10px; border: 1px solid var(--border-main); border-radius: 12px; font-family: var(--font-ui); font-size: 16px; background: var(--bg-container); color: var(--text-main); outline: none; }
@@ -160,16 +148,12 @@
 </head>
 <body>
 
-    <!-- 1️⃣ 처음 진입 시 보이는 책 선택 화면 -->
     <div id="book-select-screen" class="book-select-screen">
         <div class="book-title">🎀 스마트 중국어 단어장 🎀<br><span style="font-size: 16px; color: var(--text-accent); font-family: var(--font-ui); font-weight: 500;">공부할 책을 선택해 주세요!</span></div>
         <div class="book-grid" id="book-list-grid"></div>
     </div>
 
-    <!-- 2️⃣ 책을 선택하면 나타나는 메인 앱 영역 -->
     <div id="main-app" class="main-app-container">
-        
-        <!-- 🏢 1층: 유틸리티 상단 바 (왼쪽 책선택 / 오른쪽 테마변경) -->
         <div class="top-utility-bar">
             <button class="home-btn" onclick="goBackToBooks()">📚 책 선택</button>
             <div class="theme-switcher-container">
@@ -178,7 +162,6 @@
             </div>
         </div>
 
-        <!-- 🎛️ 2층: 통합형 대시보드 컨트롤 박스 -->
         <div class="dashboard-box">
             <div class="dashboard-row">
                 <div class="filter-group">
@@ -210,7 +193,6 @@
             </div>
         </div>
 
-        <!-- 🎴 3층: 카드 영역 -->
         <div class="card-container">
             <div class="card" id="card" onclick="flipCard()">
                 <div class="card-face card-front">
@@ -223,13 +205,11 @@
             </div>
         </div>
 
-        <!-- 📊 4층: 진행 바 -->
         <div class="progress-container" onclick="openWordListModal()">
             <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-bar-fill"></div></div>
             <div class="progress-text" id="progress-text">0 / 0</div>
         </div>
 
-        <!-- 🕹️ 5층: 제어 버튼 바 -->
         <div class="controls">
             <button class="nav-btn" onclick="prevCard()">👈 이전</button>
             <button class="autoplay-btn" id="autoplay-btn" onclick="toggleAutoplay()">⏱️ 자동 재생</button>
@@ -238,7 +218,7 @@
         </div>
     </div>
 
-    <!-- 모달 창 영역 (동일 로직 유지) -->
+    <!-- 모달 창 영역 -->
     <div id="word-list-modal" class="modal" onclick="if(event.target.id==='word-list-modal') this.style.display='none'">
         <div class="modal-content">
             <input type="text" id="search-input" class="search-box" placeholder="🔍 검색 (한자, 병음, 뜻 모두 가능)" oninput="renderWordList()">
@@ -289,6 +269,22 @@
         let autoplayInterval = null;
         let pinyinTestData = [], pinyinCurrentIdx = 0, pinyinIsAnswered = false, pinyinLives = 5;
 
+        // 🔊 [완전 해결] 브라우저 내장 Web Speech API 기반 음성 출력 함수
+        function playOnlineZhAudio(text) {
+            if (!text) return;
+            if ('speechSynthesis' in window) {
+                // 이전 음성 재생 중이었다면 강제 종료 후 새로고침 (밀림 방지)
+                window.speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'zh-CN'; // 중국어 대륙 발음 지정
+                utterance.rate = 0.85;    // 학습용 최적 속도 설정
+                window.speechSynthesis.speak(utterance);
+            } else {
+                console.log("음성 출력을 지원하지 않는 브라우저입니다.");
+            }
+        }
+
         function changeTheme(theme) {
             const pinkBtn = document.getElementById('theme-pink-btn');
             const bwBtn = document.getElementById('theme-bw-btn');
@@ -331,13 +327,6 @@
             if (autoplayInterval) { toggleAutoplay(); }
             document.getElementById('main-app').style.display = 'none';
             document.getElementById('book-select-screen').style.display = 'flex';
-        }
-
-        function playOnlineZhAudio(text) {
-            if (!text) return;
-            const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=zh-CN&client=tw-ob&ttsspeed=0.8&q=${encodeURIComponent(text)}`;
-            const audio = new Audio(audioUrl);
-            audio.play().catch(e => console.log("오디오 재생 실패:", e));
         }
 
         async function loadWordData() {
