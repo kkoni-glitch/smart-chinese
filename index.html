@@ -4,121 +4,227 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎀 스마트 중국어 🎀 단어장 🎀</title>
-    <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Noto+Sans+SC:wght=500;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght=400;700&family=Noto+Sans+SC:wght=500;700&family=Roboto:wght=400;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Gaegu', cursive; background-color: #ffeef2; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; flex-direction: column; padding: 20px; box-sizing: border-box; color: #5d4037; }
+        /* 🎨 CSS 변수 정의 (기본값: 핑크 매직 테마) */
+        :root {
+            --bg-body: #ffeef2;
+            --text-main: #5d4037;
+            --font-main: 'Gaegu', cursive;
+            
+            --bg-container: white;
+            --border-main: #ffb6c1;
+            --text-accent: #ff69b4;
+            --text-darkaccent: #c71585;
+            
+            --bg-card-front: #fff5f8;
+            --bg-card-back: #fffdeb;
+            --border-card: #b39ddb;
+            --shadow-card: rgba(179, 157, 219, 0.5);
+            --text-hanzi: #d81b60;
+            --text-meaning: #bf360c;
+            
+            --btn-pinyin-bg: #ffe0b2; --btn-pinyin-text: #e65100; --btn-pinyin-border: #ffb74d;
+            --btn-game-bg: #d1c4e9; --btn-game-text: #4a148c; --btn-game-border: #b39ddb;
+            --btn-nav-bg: #b3e5fc; --btn-nav-text: #01579b;
+            --btn-auto-bg: #ffe082; --btn-auto-text: #e65100; --btn-auto-active: #ffb300;
+            --btn-shuffle-bg: #b2dfdb; --btn-shuffle-text: #004d40;
+            
+            /* 모달 버튼 */
+            --btn-modal-close: #ffcdd2; --btn-modal-shuffle: #e1bee7; --btn-modal-retry: #fff9c4;
+            --btn-modal-text: #5d4037;
+        }
+
+        /* 📖 이북 리더기 테마 (Black & White) */
+        body.theme-bw {
+            --bg-body: #f4f4f4;
+            --text-main: #111111;
+            --font-main: 'Roboto', 'Noto Sans SC', sans-serif;
+            
+            --bg-container: #ffffff;
+            --border-main: #111111;
+            --text-accent: #333333;
+            --text-darkaccent: #111111;
+            
+            --bg-card-front: #ffffff;
+            --bg-card-back: #ffffff;
+            --border-card: #111111;
+            --shadow-card: rgba(0, 0, 0, 0.15);
+            --text-hanzi: #000000;
+            --text-meaning: #000000;
+            
+            --btn-pinyin-bg: #ffffff; --btn-pinyin-text: #111111; --btn-pinyin-border: #111111;
+            --btn-game-bg: #ffffff; --btn-game-text: #111111; --btn-game-border: #111111;
+            --btn-nav-bg: #e0e0e0; --btn-nav-text: #111111;
+            --btn-auto-bg: #e0e0e0; --btn-auto-text: #111111; --btn-auto-active: #111111;
+            --btn-shuffle-bg: #e0e0e0; --btn-shuffle-text: #111111;
+            
+            --btn-modal-close: #e0e0e0; --btn-modal-shuffle: #cccccc; --btn-modal-retry: #111111;
+            --btn-modal-text: #111111;
+        }
+
+        body { font-family: var(--font-main); background-color: var(--bg-body); margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; flex-direction: column; padding: 20px; box-sizing: border-box; color: var(--text-main); transition: background-color 0.3s, color 0.3s; }
         
+        /* 🌓 테마 선택 상단 바 */
+        .theme-switcher-container { display: flex; gap: 8px; margin-bottom: 25px; background: var(--bg-container); padding: 6px; border-radius: 30px; border: 2px solid var(--border-main); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .theme-btn { padding: 8px 16px; font-family: var(--font-main); font-size: 16px; font-weight: bold; border: none; border-radius: 20px; cursor: pointer; background: transparent; color: #888; transition: all 0.2s; }
+        .theme-btn.active { background: var(--border-main); color: var(--bg-body).theme-bw ? #fff : var(--text-main); color: white; background-color: #ff69b4; }
+        body.theme-bw .theme-btn.active { background-color: #111111; color: #ffffff; }
+
+        /* 📚 책 선택 화면 스타일 */
+        .book-select-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; max-width: 400px; text-align: center; }
+        .book-title { font-size: 32px; color: var(--text-hanzi); margin-bottom: 25px; font-weight: bold; }
+        .book-grid { display: flex; flex-direction: column; gap: 15px; width: 100%; }
+        .book-card { background: var(--bg-container); border: 3px solid var(--border-main); padding: 20px; border-radius: 25px; font-size: 22px; font-weight: bold; color: var(--text-darkaccent); cursor: pointer; box-shadow: 0 8px 20px rgba(0,0,0,0.05); transition: transform 0.2s, background-color 0.2s; font-family: var(--font-main); }
+        .book-card:hover { transform: scale(1.03); background-color: var(--bg-card-front); }
+
+        /* 메인 앱 컨텐츠 컨테이너 */
+        .main-app-container { display: none; flex-direction: column; align-items: center; width: 100%; }
+
         .header-container { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-bottom: 20px; width: 100%; max-width: 380px; }
-        .filter-container { display: flex; gap: 12px; align-items: center; justify-content: center; background-color: white; padding: 10px 25px; border-radius: 30px; box-shadow: 0 5px 15px rgba(255, 182, 193, 0.4); border: 2px solid #ffb6c1; width: 100%; box-sizing: border-box; }
-        .filter-label { font-size: 20px; font-weight: bold; color: #ff69b4; }
-        select { padding: 6px 15px; font-size: 18px; border-radius: 25px; border: 2px solid #ffb6c1; background-color: #fff0f5; cursor: pointer; font-family: 'Gaegu', cursive; color: #c71585; outline: none; }
+        .filter-container { display: flex; gap: 12px; align-items: center; justify-content: center; background-color: var(--bg-container); padding: 10px 25px; border-radius: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 2px solid var(--border-main); width: 100%; box-sizing: border-box; }
+        .filter-label { font-size: 20px; font-weight: bold; color: var(--text-accent); }
+        select { padding: 6px 15px; font-size: 18px; border-radius: 25px; border: 2px solid var(--border-main); background-color: var(--bg-card-front); cursor: pointer; font-family: var(--font-main); color: var(--text-darkaccent); outline: none; }
         
-        .toggle-group { display: flex; background: white; padding: 8px 20px; border-radius: 25px; font-size: 18px; font-weight: bold; border: 2px solid #ffb6c1; align-items: center; box-shadow: 0 5px 15px rgba(255, 182, 193, 0.3); cursor: pointer; color: #ff69b4; }
+        .toggle-group { display: flex; background: var(--bg-container); padding: 8px 20px; border-radius: 25px; font-size: 18px; font-weight: bold; border: 2px solid var(--border-main); align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); cursor: pointer; color: var(--text-accent); }
         
         .button-group-container { display: flex; gap: 10px; width: 100%; justify-content: center; }
-        .game-trigger-btn { background-color: #d1c4e9; color: #4a148c; border: 2px solid #b39ddb; padding: 10px 0; border-radius: 25px; cursor: pointer; font-family: 'Gaegu', cursive; font-size: 18px; font-weight: bold; flex: 1; text-align: center; }
-        .pinyin-trigger-btn { background-color: #ffe0b2; color: #e65100; border: 2px solid #ffb74d; padding: 10px 0; border-radius: 25px; cursor: pointer; font-family: 'Gaegu', cursive; font-size: 18px; font-weight: bold; flex: 1; text-align: center; }
+        .game-trigger-btn { background-color: var(--btn-game-bg); color: var(--btn-game-text); border: 2px solid var(--btn-game-border); padding: 10px 0; border-radius: 25px; cursor: pointer; font-family: var(--font-main); font-size: 18px; font-weight: bold; flex: 1; text-align: center; }
+        .pinyin-trigger-btn { background-color: var(--btn-pinyin-bg); color: var(--btn-pinyin-text); border: 2px solid var(--btn-pinyin-border); padding: 10px 0; border-radius: 25px; cursor: pointer; font-family: var(--font-main); font-size: 18px; font-weight: bold; flex: 1; text-align: center; }
         
         .card-container { width: 380px; height: 280px; perspective: 1000px; cursor: pointer; margin-bottom: 20px; position: relative; }
-        .card { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); position: relative; border-radius: 20px; border: 4px solid #b39ddb; box-shadow: 0 12px 25px rgba(179, 157, 219, 0.5); }
+        .card { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); position: relative; border-radius: 20px; border: 4px solid var(--border-card); box-shadow: 0 12px 25px var(--shadow-card); }
         .card.flipped { transform: rotateY(180deg); }
         .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 16px; background-color: white; padding: 25px; box-sizing: border-box; }
-        .card-front { z-index: 2; background-color: #fff5f8; }
-        .card-back { transform: rotateY(180deg); z-index: 1; background-color: #fffdeb; }
+        .card-front { z-index: 2; background-color: var(--bg-card-front); }
+        .card-back { transform: rotateY(180deg); z-index: 1; background-color: var(--bg-card-back); }
         .manual-speaker { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; z-index: 10; }
-        .chapter-badge { position: absolute; top: 15px; left: 20px; background-color: #ffb6c1; padding: 5px 12px; border-radius: 15px; font-size: 16px; color: white; font-weight: bold; }
-        .hanzi { font-family: 'Noto Sans SC', sans-serif; font-size: 68px; font-weight: 700; color: #d81b60; }
+        .chapter-badge { position: absolute; top: 15px; left: 20px; background-color: var(--border-main); padding: 5px 12px; border-radius: 15px; font-size: 16px; color: var(--bg-container); font-weight: bold; }
+        body.theme-bw .chapter-badge { color: white; background: #111; }
+        .hanzi { font-family: 'Noto Sans SC', sans-serif; font-size: 68px; font-weight: 700; color: var(--text-hanzi); }
         
         .pinyin { font-family: 'Noto Sans SC', sans-serif; font-size: 24px; font-weight: 400; color: #555; }
-        .meaning { font-size: 32px; font-weight: bold; color: #bf360c; }
+        body.theme-bw .pinyin { color: #333; }
+        .meaning { font-size: 32px; font-weight: bold; color: var(--text-meaning); }
         
-        .progress-container { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; background-color: rgba(255, 255, 255, 0.8); padding: 10px 20px; border-radius: 30px; cursor: pointer; border: 2px solid #ffb6c1; box-shadow: 0 4px 10px rgba(255,182,193,0.3); }
+        .progress-container { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; background-color: var(--bg-container); padding: 10px 20px; border-radius: 30px; cursor: pointer; border: 2px solid var(--border-main); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .progress-bar-bg { width: 150px; height: 10px; background-color: #e0e0e0; border-radius: 5px; overflow: hidden; }
-        .progress-bar-fill { height: 100%; background-color: #ff69b4; width: 0%; transition: width 0.3s; }
-        .progress-text { font-size: 18px; color: #c71585; font-weight: bold; }
+        .progress-bar-fill { height: 100%; background-color: var(--text-accent); width: 0%; transition: width 0.3s; }
+        body.theme-bw .progress-bar-fill { background-color: #111; }
+        .progress-text { font-size: 18px; color: var(--text-darkaccent); font-weight: bold; }
         
         .controls { display: flex; gap: 6px; justify-content: center; margin-bottom: 15px; width: 100%; max-width: 420px; }
-        button { padding: 12px 8px; font-size: 17px; font-family: 'Gaegu', cursive; font-weight: bold; border: none; border-radius: 30px; cursor: pointer; white-space: nowrap; flex: 1; }
-        .nav-btn { background-color: #b3e5fc; color: #01579b; }
-        .autoplay-btn { background-color: #ffe082; color: #e65100; }
-        .autoplay-btn.active { background-color: #ffb300; color: white; }
-        .shuffle-trigger-btn { background-color: #b2dfdb; color: #004d40; }
+        button { padding: 12px 8px; font-size: 17px; font-family: var(--font-main); font-weight: bold; border: none; border-radius: 30px; cursor: pointer; white-space: nowrap; flex: 1; }
+        .nav-btn { background-color: var(--btn-nav-bg); color: var(--btn-nav-text); }
+        .autoplay-btn { background-color: var(--btn-auto-bg); color: var(--btn-auto-text); }
+        .autoplay-btn.active { background-color: var(--btn-auto-active); color: white; }
+        body.theme-bw .autoplay-btn.active { background-color: #111111; color: #ffffff; }
+        .shuffle-trigger-btn { background-color: var(--btn-shuffle-bg); color: var(--btn-shuffle-text); }
         
         .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); justify-content: center; align-items: center; }
-        .modal-content { background-color: white; border-radius: 20px; border: 3px solid #ffb6c1; width: 90%; max-width: 460px; padding: 25px; height: 80vh; display: flex; flex-direction: column; }
-        .search-box { padding: 10px; margin-bottom: 10px; border: 2px solid #ffb6c1; border-radius: 15px; font-family: 'Gaegu', cursive; font-size: 18px; }
+        .modal-content { background-color: var(--bg-container); border-radius: 20px; border: 3px solid var(--border-main); width: 90%; max-width: 460px; padding: 25px; height: 80vh; display: flex; flex-direction: column; }
+        .search-box { padding: 10px; margin-bottom: 10px; border: 2px solid var(--border-main); border-radius: 15px; font-family: var(--font-main); font-size: 18px; background: var(--bg-container); color: var(--text-main); }
         .word-list-container { overflow-y: auto; flex-grow: 1; }
-        .word-list-item { display: flex; justify-content: space-between; padding: 12px 10px; border-bottom: 1px dashed #ffb6c1; cursor: pointer; align-items: center; font-family: 'Noto Sans SC', sans-serif; }
+        .word-list-item { display: flex; justify-content: space-between; padding: 12px 10px; border-bottom: 1px dashed var(--border-main); cursor: pointer; align-items: center; font-family: 'Noto Sans SC', sans-serif; color: var(--text-main); }
         
         .game-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; overflow-y: auto; flex-grow: 1; margin-bottom: 15px; }
-        .game-item { background-color: #fff5f8; border: 2px solid #ffb6c1; border-radius: 15px; padding: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; font-weight: bold; text-align: center; font-size: 24px; min-height: 70px; }
-        .game-item.selected { background-color: #ffe082; border-color: #ffb300; }
+        .game-item { background-color: var(--bg-card-front); border: 2px solid var(--border-main); border-radius: 15px; padding: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; font-weight: bold; text-align: center; font-size: 24px; min-height: 70px; color: var(--text-main); }
+        .game-item.selected { background-color: var(--btn-auto-bg); border-color: var(--btn-auto-active); }
+        body.theme-bw .game-item.selected { background-color: #111111; color: white; }
         .game-item.matched { visibility: hidden; }
-        .game-status { text-align: center; font-size: 20px; font-weight: bold; color: #d81b60; margin-bottom: 10px; }
+        .game-status { text-align: center; font-size: 20px; font-weight: bold; color: var(--text-hanzi); margin-bottom: 10px; }
         .game-controls { display: flex; gap: 10px; border-top: 2px solid #eee; padding-top: 15px; }
-        .game-btn { flex: 1; padding: 12px; border-radius: 20px; border: none; font-family: 'Gaegu', cursive; font-size: 18px; cursor: pointer; }
+        
+        .game-btn { flex: 1; padding: 12px; border-radius: 20px; border: none; font-family: var(--font-main); font-size: 18px; cursor: pointer; color: var(--btn-modal-text); }
+        .game-btn.btn-close { background-color: var(--btn-modal-close); }
+        .game-btn.btn-shuffle { background-color: var(--btn-modal-shuffle); }
+        .game-btn.btn-retry { background-color: var(--btn-modal-retry); }
+        body.theme-bw .game-btn.btn-retry { color: white; }
         
         .game-pinyin { font-size: 16px; color: #888; margin-top: 5px; font-family: 'Noto Sans SC', sans-serif; font-weight: 500; letter-spacing: 0.5px; }
+        
+        /* 홈으로 이동하는 버튼 스타일 */
+        .home-btn { background-color: var(--border-main); color: var(--bg-container); padding: 5px 15px; border-radius: 20px; font-size: 16px; cursor: pointer; margin-bottom: 10px; font-weight: bold; border: 2px solid var(--bg-container); box-shadow: 0 4px 6px rgba(0,0,0,0.1); font-family: var(--font-main); }
+        body.theme-bw .home-btn { color: white; background-color: #111; }
     </style>
 </head>
 <body>
-    <div class="header-container">
-        <div class="filter-container">
-            <span class="filter-label">📂 단어 범위 선택:</span>
-            <select id="chapter-select" onchange="changeCategory()">
-                <option value="all">🌟 전체 보기</option>
-                <option value="1">🌸 1과</option>
-                <option value="2">🌸 2과</option>
-                <option value="3">🌸 3과</option>
-                <option value="4">🌸 4과</option>
-                <option value="5">🌸 5과</option>
-                <option value="6">🔄 1~5 복습</option>
-                <option value="7">🌸 7과</option>
-                <option value="8">🌸 8과</option>
-                <option value="9">🌸 9과</option>
-                <option value="10">🌸 10과</option>
-                <option value="11">🌸 11과</option>
-                <option value="12">🔄 7~11 복습</option>
-                <option value="unknown">🖤 모르는 단어</option>
-                <option value="13">👀 프린트</option>
-            </select>
-        </div>
-        
-        <label class="toggle-group"><input type="checkbox" id="auto-tts" checked> 🔊 자동 발음 켜기</label>
-        
-        <div class="button-group-container">
-            <button class="pinyin-trigger-btn" onclick="openPinyinModal()">✍️ 병음 테스트</button>
-            <button class="game-trigger-btn" onclick="openGameModal()">🧩 매칭 게임</button>
-        </div>
+
+    <!-- 🌓 상단 테마 선택 스위치 (상시 노출) -->
+    <div class="theme-switcher-container">
+        <button id="theme-pink-btn" class="theme-btn active" onclick="changeTheme('pink')">🌸 핑크 랜드</button>
+        <button id="theme-bw-btn" class="theme-btn" onclick="changeTheme('bw')">📖 이북 리더기</button>
     </div>
 
-    <div class="card-container">
-        <div class="card" id="card" onclick="flipCard()">
-            <div class="card-face card-front">
-                <span class="manual-speaker" onclick="event.stopPropagation(); playCurrentWord()">🔊</span>
-                <span class="chapter-badge" id="front-badge">-과</span>
-                <div class="hanzi" id="hanzi">로딩 중..</div>
-                <div class="pinyin" id="pinyin"></div>
+    <!-- 1️⃣ 처음 진입 시 보이는 책 선택 화면 -->
+    <div id="book-select-screen" class="book-select-screen">
+        <div class="book-title">🎀 스마트 중국어 단어장 🎀<br><span style="font-size: 20px; color: var(--text-accent);">공부할 책을 선택해 주세요!</span></div>
+        <div class="book-grid" id="book-list-grid"></div>
+    </div>
+
+    <!-- 2️⃣ 책을 선택하면 나타나는 메인 앱 영역 -->
+    <div id="main-app" class="main-app-container">
+        <button class="home-btn" onclick="goBackToBooks()">📚 다른 책 고르기</button>
+
+        <div class="header-container">
+            <div class="filter-container">
+                <span class="filter-label">📂 단어 범위 선택:</span>
+                <select id="chapter-select" onchange="changeCategory()">
+                    <option value="all">🌟 전체 보기</option>
+                    <option value="1">🌸 1과</option>
+                    <option value="2">🌸 2과</option>
+                    <option value="3">🌸 3과</option>
+                    <option value="4">🌸 4과</option>
+                    <option value="5">🌸 5과</option>
+                    <option value="6">🔄 1~5 복습</option>
+                    <option value="7">🌸 7과</option>
+                    <option value="8">🌸 8과</option>
+                    <option value="9">🌸 9과</option>
+                    <option value="10">🌸 10과</option>
+                    <option value="11">🌸 11과</option>
+                    <option value="12">🔄 7~11 복습</option>
+                    <option value="unknown">🖤 모르는 단어</option>
+                    <option value="13">👀 프린트</option>
+                </select>
             </div>
-            <div class="card-face card-back"><div class="meaning" id="meaning">뜻</div></div>
+            
+            <label class="toggle-group"><input type="checkbox" id="auto-tts" checked> 🔊 자동 발음 켜기</label>
+            
+            <div class="button-group-container">
+                <button class="pinyin-trigger-btn" onclick="openPinyinModal()">✍️ 병음 테스트</button>
+                <button class="game-trigger-btn" onclick="openGameModal()">🧩 매칭 게임</button>
+            </div>
+        </div>
+
+        <div class="card-container">
+            <div class="card" id="card" onclick="flipCard()">
+                <div class="card-face card-front">
+                    <span class="manual-speaker" onclick="event.stopPropagation(); playCurrentWord()">🔊</span>
+                    <span class="chapter-badge" id="front-badge">-과</span>
+                    <div class="hanzi" id="hanzi">로딩 중..</div>
+                    <div class="pinyin" id="pinyin"></div>
+                </div>
+                <div class="card-face card-back"><div class="meaning" id="meaning">뜻</div></div>
+            </div>
+        </div>
+
+        <div class="progress-container" onclick="openWordListModal()">
+            <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-bar-fill"></div></div>
+            <div class="progress-text" id="progress-text">0 / 0</div>
+        </div>
+
+        <div class="controls">
+            <button class="nav-btn" onclick="prevCard()">👈 이전</button>
+            <button class="autoplay-btn" id="autoplay-btn" onclick="toggleAutoplay()">⏱️ 자동 재생</button>
+            <button class="shuffle-trigger-btn" onclick="shuffleMainCards()">🔀 카드 섞기</button>
+            <button class="nav-btn" onclick="nextCard()">다음 👉</button>
         </div>
     </div>
 
-    <div class="progress-container" onclick="openWordListModal()">
-        <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-bar-fill"></div></div>
-        <div class="progress-text" id="progress-text">0 / 0</div>
-    </div>
-
-    <div class="controls">
-        <button class="nav-btn" onclick="prevCard()">👈 이전</button>
-        <button class="autoplay-btn" id="autoplay-btn" onclick="toggleAutoplay()">⏱️ 자동 재생</button>
-        <button class="shuffle-trigger-btn" onclick="shuffleMainCards()">🔀 카드 섞기</button>
-        <button class="nav-btn" onclick="nextCard()">다음 👉</button>
-    </div>
-
+    <!-- 모달 창 영역 -->
     <div id="word-list-modal" class="modal" onclick="if(event.target.id==='word-list-modal') this.style.display='none'">
         <div class="modal-content">
-            <input type="text" id="search-input" class="search-box" placeholder="🔍 검색" oninput="renderWordList()">
+            <input type="text" id="search-input" class="search-box" placeholder="🔍 검색 (한자, 병음, 뜻 모두 가능)" oninput="renderWordList()">
             <div id="word-list-container" class="word-list-container"></div>
         </div>
     </div>
@@ -128,9 +234,9 @@
             <div class="game-status" id="game-status">남은 단어: 0</div>
             <div class="game-grid" id="game-grid-container"></div>
             <div class="game-controls">
-                <button class="game-btn" style="background-color: #ffcdd2;" onclick="document.getElementById('game-modal').style.display = 'none'">❌ 종료하기</button>
-                <button class="game-btn" style="background-color: #e1bee7;" onclick="shuffleGame()">🔀 섞기</button>
-                <button class="game-btn" style="background-color: #fff9c4;" onclick="openGameModal()">🔄 다시하기</button>
+                <button class="game-btn btn-close" onclick="document.getElementById('game-modal').style.display = 'none'">❌ 종료하기</button>
+                <button class="game-btn btn-shuffle" onclick="shuffleGame()">🔀 섞기</button>
+                <button class="game-btn btn-retry" onclick="openGameModal()">🔄 다시하기</button>
             </div>
         </div>
     </div>
@@ -142,25 +248,77 @@
                 <div id="pinyin-hearts" style="font-size: 22px; letter-spacing: 2px;">❤️❤️❤️❤️❤️</div>
             </div>
             <div style="margin: 25px 0;">
-                <div id="pinyin-q-hanzi" style="font-family: 'Noto Sans SC', sans-serif; font-size: 58px; font-weight: 700; color: #d81b60;">汉字</div>
+                <div id="pinyin-q-hanzi" style="font-family: 'Noto Sans SC', sans-serif; font-size: 58px; font-weight: 700; color: var(--text-hanzi);">汉字</div>
                 <div id="pinyin-q-meaning" style="font-size: 22px; color: #e65100; margin-top: 10px; font-weight: bold; min-height: 30px;"></div>
             </div>
             <input type="text" id="pinyin-input" class="search-box" style="text-align: center; font-size: 22px; width: 100%; box-sizing: border-box; font-family: 'Noto Sans SC', sans-serif; font-weight: 500;" placeholder="예: ni3 hao3 또는 nǐ hǎo" onkeydown="if(event.key==='Enter') checkPinyin()">
             <div id="pinyin-feedback" style="font-size: 20px; font-weight: bold; margin: 15px 0; min-height: 50px; line-height: 1.4; font-family: 'Noto Sans SC', sans-serif;"></div>
             <div class="game-controls">
-                <button class="game-btn" style="background-color: #ffcdd2;" onclick="closePinyinModal()">❌ 종료</button>
-                <button class="game-btn" id="pinyin-action-btn" style="background-color: #c8e6c9;" onclick="checkPinyin()">✔️ 확인</button>
+                <button class="game-btn btn-close" onclick="closePinyinModal()">❌ 종료</button>
+                <button class="game-btn btn-retry" id="pinyin-action-btn" onclick="checkPinyin()">✔️ 확인</button>
             </div>
         </div>
     </div>
 
     <script>
-        const SPREADSHEET_URL = 'https://docs.google.com/spreadsheets/d/18D1sxEjb7qD4DudFmrZziQDZ0HK-F1V-8Z3V-9WxoDw/gviz/tq?tqx=out:csv';
+        // 📋 책 데이터 정의 및 2권 고유 구글시트 주소 연동 완료
+        const BOOK_DATA = [
+            { title: "📘 스마트 중국어 (1권)", url: "https://docs.google.com/spreadsheets/d/18D1sxEjb7qD4DudFmrZziQDZ0HK-F1V-8Z3V-9WxoDw/gviz/tq?tqx=out:csv" },
+            { title: "📕 HSK 단어장 ", url: "https://docs.google.com/spreadsheets/d/1zSUNaMz8rFvFfIx-YzgcIA-sNU1N3ZQRvAX-NbXzPfU/gviz/tq?tqx=out:csv" },
+        
+        ];
+
+        let SPREADSHEET_URL = ''; 
         let totalWordData = [], currentFilteredData = [], currentIndex = 0, gameRemainingData = [];
         let autoplayInterval = null;
         let pinyinTestData = [], pinyinCurrentIdx = 0, pinyinIsAnswered = false, pinyinLives = 5;
 
-        /* 🌟 [속도 변경 완료] ttsspeed=0.8 파라미터를 추가하여 0.8배속으로 천천히 재생 */
+        // 🌓 테마 변경 처리 함수
+        function changeTheme(theme) {
+            const pinkBtn = document.getElementById('theme-pink-btn');
+            const bwBtn = document.getElementById('theme-bw-btn');
+            
+            if (theme === 'bw') {
+                document.body.classList.add('theme-bw');
+                bwBtn.classList.add('active');
+                pinkBtn.classList.remove('active');
+            } else {
+                document.body.classList.remove('theme-bw');
+                pinkBtn.classList.add('active');
+                bwBtn.classList.remove('active');
+            }
+        }
+
+        function initBookSelection() {
+            const grid = document.getElementById('book-list-grid');
+            grid.innerHTML = '';
+            BOOK_DATA.forEach(book => {
+                const card = document.createElement('div');
+                card.className = 'book-card';
+                card.textContent = book.title;
+                card.onclick = () => selectBook(book.url);
+                grid.appendChild(card);
+            });
+        }
+
+        async function selectBook(url) {
+            if(!url || url.includes("여기에_")) {
+                alert("아직 주소가 등록되지 않은 책입니다! 코드를 확인해 주세요.");
+                return;
+            }
+            SPREADSHEET_URL = url;
+            document.getElementById('book-select-screen').style.display = 'none';
+            document.getElementById('main-app').style.display = 'flex';
+            document.getElementById('hanzi').textContent = "로딩 중..";
+            await loadWordData();
+        }
+
+        function goBackToBooks() {
+            if (autoplayInterval) { toggleAutoplay(); }
+            document.getElementById('main-app').style.display = 'none';
+            document.getElementById('book-select-screen').style.display = 'flex';
+        }
+
         function playOnlineZhAudio(text) {
             if (!text) return;
             const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=zh-CN&client=tw-ob&ttsspeed=0.8&q=${encodeURIComponent(text)}`;
@@ -177,6 +335,7 @@
                     const row = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(s => s.replace(/"/g, '').trim());
                     return { id: i, chapter: row[1], hanzi: row[2], pinyin: row[3], meaning: row[4] };
                 });
+                document.getElementById('chapter-select').value = "all";
                 changeCategory();
             } catch (e) { 
                 console.error("데이터 로드 오류:", e);
@@ -200,6 +359,14 @@
         }
 
         function updateCardContent() {
+            if (currentFilteredData.length === 0) {
+                document.getElementById('hanzi').textContent = "단어 없음";
+                document.getElementById('pinyin').textContent = "";
+                document.getElementById('meaning').textContent = "범위를 확인하세요";
+                document.getElementById('progress-text').textContent = "0 / 0";
+                document.getElementById('progress-bar-fill').style.width = "0%";
+                return;
+            }
             const w = currentFilteredData[currentIndex];
             if (!w) return;
             document.getElementById('hanzi').textContent = w.hanzi;
@@ -219,11 +386,16 @@
         }
 
         function nextCard() { 
+            if (currentFilteredData.length === 0) return;
             currentIndex = (currentIndex + 1) % currentFilteredData.length; 
             updateCardContent(); 
             if (document.getElementById('auto-tts').checked) { playCurrentWord(); }
         }
-        function prevCard() { currentIndex = (currentIndex - 1 + currentFilteredData.length) % currentFilteredData.length; updateCardContent(); }
+        function prevCard() { 
+            if (currentFilteredData.length === 0) return;
+            currentIndex = (currentIndex - 1 + currentFilteredData.length) % currentFilteredData.length; 
+            updateCardContent(); 
+        }
         
         function toggleAutoplay() { 
             const btn = document.getElementById('autoplay-btn');
@@ -232,6 +404,7 @@
                 autoplayInterval = null; 
                 btn.classList.remove('active'); 
             } else { 
+                if (currentFilteredData.length === 0) return;
                 btn.classList.add('active');
                 if (document.getElementById('auto-tts').checked) { playCurrentWord(); }
                 autoplayInterval = setInterval(() => { 
@@ -248,12 +421,16 @@
             renderWordList();
         }
 
+        // 🔍 한자, 뜻, 병음 다차원 통합 검색 함수 구현 완료
         function renderWordList() {
             const container = document.getElementById('word-list-container');
             const query = document.getElementById('search-input').value.toLowerCase();
             container.innerHTML = '';
             currentFilteredData.forEach((w, idx) => {
-                if (w.hanzi.toLowerCase().includes(query) || w.meaning.toLowerCase().includes(query)) {
+                if (w.hanzi.toLowerCase().includes(query) || 
+                    w.meaning.toLowerCase().includes(query) || 
+                    w.pinyin.toLowerCase().includes(query)) {
+                    
                     const div = document.createElement('div');
                     div.className = 'word-list-item';
                     div.innerHTML = `<span>${w.hanzi} (${w.pinyin})</span><span>${w.meaning}</span>`;
@@ -376,7 +553,7 @@
             
             const btn = document.getElementById('pinyin-action-btn');
             btn.textContent = "✔️ 확인";
-            btn.style.background = "#c8e6c9";
+            btn.className = "game-btn btn-retry";
         }
 
         function numberedToToneMarks(str) {
@@ -429,16 +606,15 @@
                 updatePinyinHeartsUI();
                 
                 if (pinyinLives <= 0) {
-                    feedback.innerHTML = `틀렸습니다. 😢 정답은 <span style="color:#d81b60; font-weight:700;">${w.pinyin}</span><br><br><strong style="color:#c62828; font-size:24px;">💀 GAME OVER 💀</strong><br><span style="font-size:16px; color:#555;">다시 도전해 보세요!</span>`;
+                    feedback.innerHTML = `틀렸습니다. 😢 정답은 <span style="color:var(--text-hanzi); font-weight:700;">${w.pinyin}</span><br><br><strong style="color:#c62828; font-size:24px;">💀 GAME OVER 💀</strong><br><span style="font-size:16px; color:#555;">다시 도전해 보세요!</span>`;
                     input.disabled = true;
                     pinyinIsAnswered = true;
                     btn.textContent = "🔄 재도전하기";
-                    btn.style.background = "#ffcc80";
                     
                     playOnlineZhAudio(w.hanzi);
                     return;
                 } else {
-                    feedback.innerHTML = `틀렸습니다. 😢<br>정답: <span style="color: #d81b60; font-weight:700;">${w.pinyin}</span>`;
+                    feedback.innerHTML = `틀렸습니다. 😢<br>정답: <span style="color: var(--text-hanzi); font-weight:700;">${w.pinyin}</span>`;
                     feedback.style.color = "#c62828";
                 }
             }
@@ -448,10 +624,10 @@
             input.disabled = true;
             pinyinIsAnswered = true;
             btn.textContent = "➡️ 다음 문제";
-            btn.style.background = "#b3e5fc";
+            btn.className = "game-btn btn-close";
         }
         
-        loadWordData();
+        initBookSelection();
     </script>
 </body>
 </html>
