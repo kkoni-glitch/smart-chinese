@@ -157,10 +157,10 @@
 
     <div id="main-app" class="main-app-container">
         <div class="top-utility-bar">
-            <button class="home-btn" onclick="goBackToBooks()">📚 책 선택</button>
+            <button class="home-btn" onclick="goBackToBooks()">📔 책 선택</button>
             <div class="theme-switcher-container">
-                <button id="theme-pink-btn" class="theme-btn active" onclick="changeTheme('pink')">🌸 핑크</button>
-                <button id="theme-bw-btn" class="theme-btn" onclick="changeTheme('bw')">📖 흑백</button>
+                <button id="theme-pink-btn" class="theme-btn active" onclick="changeTheme('pink')">🩷 PINK</button>
+                <button id="theme-bw-btn" class="theme-btn" onclick="changeTheme('bw')">🖤 BLACK</button>
             </div>
         </div>
 
@@ -247,9 +247,8 @@
     <script>
         // ⚙️ 책의 속성에 대단원 타입을 구분하는 'type' 필드를 추가했습니다.
         const BOOK_DATA = [
-            { title: "📘 초급 중국어 (1권)", url: "https://docs.google.com/spreadsheets/d/18D1sxEjb7qD4DudFmrZziQDZ0HK-F1V-8Z3V-9WxoDw/gviz/tq?tqx=out:csv", type: "lesson" },
-            { title: "📕 중급 중국어 (2권)", url: "https://docs.google.com/spreadsheets/d/1zSUNaMz8rFvFfIx-YzgcIA-sNU1N3ZQRvAX-NbXzPfU/gviz/tq?tqx=out:csv", type: "lesson" },
-            { title: "📙 HSK 단어장 (3권)", url: "여기에_세번째_스프레드시트_CSV_주소를_넣으세요", type: "hsk" }
+            { title: "📘 스마트 중국어 1", url: "https://docs.google.com/spreadsheets/d/18D1sxEjb7qD4DudFmrZziQDZ0HK-F1V-8Z3V-9WxoDw/gviz/tq?tqx=out:csv", type: "lesson" },
+            { title: "📕 HSK 단어장", url: "https://docs.google.com/spreadsheets/d/1zSUNaMz8rFvFfIx-YzgcIA-sNU1N3ZQRvAX-NbXzPfU/gviz/tq?tqx=out:csv", type: "HSK" },
         ];
 
         // image_6008c7.png 기준 일반 교재 매핑 데이터 
