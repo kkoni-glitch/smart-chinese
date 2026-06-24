@@ -157,10 +157,10 @@
 
     <div id="main-app" class="main-app-container">
         <div class="top-utility-bar">
-            <button class="home-btn" onclick="goBackToBooks()">📔 책 선택</button>
+            <button class="home-btn" onclick="goBackToBooks()">📚 책 선택</button>
             <div class="theme-switcher-container">
-                <button id="theme-pink-btn" class="theme-btn active" onclick="changeTheme('pink')">🩷 PINK</button>
-                <button id="theme-bw-btn" class="theme-btn" onclick="changeTheme('bw')">🖤 BLACK</button>
+                <button id="theme-pink-btn" class="theme-btn active" onclick="changeTheme('pink')">🌸 핑크</button>
+                <button id="theme-bw-btn" class="theme-btn" onclick="changeTheme('bw')">📖 흑백</button>
             </div>
         </div>
 
@@ -168,23 +168,7 @@
             <div class="dashboard-row">
                 <div class="filter-group">
                     <span class="filter-label">📂 범위:</span>
-                    <select id="chapter-select" onchange="changeCategory()">
-                        <option value="all">🌟 전체 보기</option>
-                        <option value="1">🌸 1과</option>
-                        <option value="2">🌸 2과</option>
-                        <option value="3">🌸 3과</option>
-                        <option value="4">🌸 4과</option>
-                        <option value="5">🌸 5과</option>
-                        <option value="6">🔄 1~5 복습</option>
-                        <option value="7">🌸 7과</option>
-                        <option value="8">🌸 8과</option>
-                        <option value="9">🌸 9과</option>
-                        <option value="10">🌸 10과</option>
-                        <option value="11">🌸 11과</option>
-                        <option value="12">🔄 7~11 복습</option>
-                        <option value="unknown">🖤 모르는 단어</option>
-                        <option value="13">👀 프린트</option>
-                    </select>
+                    <select id="chapter-select" onchange="changeCategory()"></select>
                 </div>
                 <label class="toggle-group"><input type="checkbox" id="auto-tts" checked> 🔊 자동발음</label>
             </div>
@@ -198,10 +182,9 @@
         <div class="card-container">
             <div class="card" id="card" onclick="flipCard()">
                 <div class="card-face card-front">
-                    <!-- 🖤 모르는 단어 체크용 하트 버튼 컴백! -->
                     <span class="heart-btn" id="heart-btn" onclick="event.stopPropagation(); toggleUnknownWord()">🤍</span>
                     <span class="manual-speaker" onclick="event.stopPropagation(); playCurrentWord()">🔊</span>
-                    <span class="chapter-badge" id="front-badge">-과</span>
+                    <span class="chapter-badge" id="front-badge">-</span>
                     <div class="hanzi" id="hanzi">로딩 중..</div>
                     <div class="pinyin" id="pinyin"></div>
                 </div>
@@ -262,17 +245,26 @@
     </div>
 
     <script>
+        // ⚙️ 책의 속성에 대단원 타입을 구분하는 'type' 필드를 추가했습니다.
         const BOOK_DATA = [
-            { title: "📘 스마트 중국어 (1권)", url: "https://docs.google.com/spreadsheets/d/18D1sxEjb7qD4DudFmrZziQDZ0HK-F1V-8Z3V-9WxoDw/gviz/tq?tqx=out:csv" },
-            { title: "📕 HSK 단어장", url: "https://docs.google.com/spreadsheets/d/1zSUNaMz8rFvFfIx-YzgcIA-sNU1N3ZQRvAX-NbXzPfU/gviz/tq?tqx=out:csv" },
+            { title: "📘 초급 중국어 (1권)", url: "https://docs.google.com/spreadsheets/d/18D1sxEjb7qD4DudFmrZziQDZ0HK-F1V-8Z3V-9WxoDw/gviz/tq?tqx=out:csv", type: "lesson" },
+            { title: "📕 중급 중국어 (2권)", url: "https://docs.google.com/spreadsheets/d/1zSUNaMz8rFvFfIx-YzgcIA-sNU1N3ZQRvAX-NbXzPfU/gviz/tq?tqx=out:csv", type: "lesson" },
+            { title: "📙 HSK 단어장 (3권)", url: "여기에_세번째_스프레드시트_CSV_주소를_넣으세요", type: "hsk" }
         ];
 
+        // image_6008c7.png 기준 일반 교재 매핑 데이터 
+        const CHAPTER_MAP = {
+            "1": "1과", "2": "2과", "3": "3과", "4": "4과", "5": "5과",
+            "6": "1~5과", "7": "7과", "8": "8과", "9": "9과", "10": "10과",
+            "11": "11과", "12": "7~11과", "13": "프린트 단어"
+        };
+
         let SPREADSHEET_URL = ''; 
+        let currentBookType = 'lesson'; // 현재 활성화된 책의 타입 ('lesson' 또는 'hsk')
         let totalWordData = [], currentFilteredData = [], currentIndex = 0, gameRemainingData = [];
         let autoplayInterval = null;
         let pinyinTestData = [], pinyinCurrentIdx = 0, pinyinIsAnswered = false, pinyinLives = 5;
 
-        // 브라우저 내장 Web Speech API 기반 음성 출력 함수 (CORS 안 타는 최신 로직)
         function playOnlineZhAudio(text) {
             if (!text) return;
             if ('speechSynthesis' in window) {
@@ -284,7 +276,6 @@
             }
         }
 
-        // 💾 모르는 단어 로컬 저장소 연동 키 추출 함수 (책마다 따로 저장되도록 분리)
         function getStorageKey() {
             return 'unknown_words_' + btoa(SPREADSHEET_URL).replace(/=/g, '');
         }
@@ -328,6 +319,11 @@
                 return;
             }
             SPREADSHEET_URL = url;
+            
+            // 현재 누른 책의 타입을 글로벌 변수에 저장
+            const matchedBook = BOOK_DATA.find(b => b.url === url);
+            currentBookType = matchedBook ? matchedBook.type : 'lesson';
+
             document.getElementById('book-select-screen').style.display = 'none';
             document.getElementById('main-app').style.display = 'flex';
             document.getElementById('hanzi').textContent = "로딩 중..";
@@ -349,7 +345,45 @@
                     const row = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(s => s.replace(/"/g, '').trim());
                     return { id: i, chapter: row[1], hanzi: row[2], pinyin: row[3], meaning: row[4] };
                 });
-                document.getElementById('chapter-select').value = "all";
+
+                const select = document.getElementById('chapter-select');
+                select.innerHTML = '<option value="all">🌟 전체 보기</option>';
+
+                const rawChapters = totalWordData.map(w => w.chapter).filter(Boolean);
+                const uniqueChapters = [...new Set(rawChapters)];
+
+                uniqueChapters.sort((a, b) => {
+                    if (!isNaN(a) && !isNaN(b)) return parseInt(a) - parseInt(b);
+                    return a.localeCompare(b);
+                });
+
+                // 🔄 책 종류(일반 교재 vs HSK)에 따른 드롭다운 맞춤형 매핑 규칙
+                uniqueChapters.forEach(ch => {
+                    const opt = document.createElement('option');
+                    opt.value = ch;
+                    
+                    if (currentBookType === 'hsk') {
+                        // HSK 단어장인 경우: '급'으로 표시
+                        opt.textContent = isNaN(ch) ? `🏆 ${ch}` : `🏆 HSK ${ch}급`;
+                    } else {
+                        // 일반 단어장인 경우: image_6008c7.png 규칙 매핑
+                        if (CHAPTER_MAP[ch]) {
+                            if (ch === '6' || ch === '12') opt.textContent = `🔄 ${CHAPTER_MAP[ch]}`;
+                            else if (ch === '13') opt.textContent = `👀 ${CHAPTER_MAP[ch]}`;
+                            else opt.textContent = `🌸 ${CHAPTER_MAP[ch]}`;
+                        } else {
+                            opt.textContent = isNaN(ch) ? `👀 ${ch}` : `🌸 ${ch}과`;
+                        }
+                    }
+                    select.appendChild(opt);
+                });
+
+                const unknownOpt = document.createElement('option');
+                unknownOpt.value = "unknown";
+                unknownOpt.textContent = "🖤 모르는 단어";
+                select.appendChild(unknownOpt);
+
+                select.value = "all";
                 changeCategory();
             } catch (e) { 
                 console.error("데이터 로드 오류:", e);
@@ -387,6 +421,7 @@
                 document.getElementById('progress-text').textContent = "0 / 0";
                 document.getElementById('progress-bar-fill').style.width = "0%";
                 document.getElementById('heart-btn').textContent = "🤍";
+                document.getElementById('front-badge').textContent = "-";
                 return;
             }
             const w = currentFilteredData[currentIndex];
@@ -394,17 +429,22 @@
             document.getElementById('hanzi').textContent = w.hanzi;
             document.getElementById('pinyin').textContent = w.pinyin;
             document.getElementById('meaning').textContent = w.meaning;
-            document.getElementById('front-badge').textContent = w.chapter + "과";
+            
+            // 🔄 카드 배지명 변환 기법 수정 (일반 교재와 HSK 분기 처리)
+            if (currentBookType === 'hsk') {
+                document.getElementById('front-badge').textContent = isNaN(w.chapter) ? w.chapter : "HSK " + w.chapter + "급";
+            } else {
+                document.getElementById('front-badge').textContent = CHAPTER_MAP[w.chapter] || (isNaN(w.chapter) ? w.chapter : w.chapter + "과");
+            }
+            
             document.getElementById('progress-text').textContent = `${currentIndex + 1} / ${currentFilteredData.length}`;
             document.getElementById('progress-bar-fill').style.width = `${((currentIndex + 1) / currentFilteredData.length) * 100}%`;
             document.getElementById('card').classList.remove('flipped');
 
-            // 🖤 하트 상태 복구 토글 UI 적용
             const unknowns = getUnknownWords();
             document.getElementById('heart-btn').textContent = unknowns.includes(w.hanzi) ? "🖤" : "🤍";
         }
 
-        // 🖤 하트 클릭 시 모르는 단어 등록/해제 처리 함수
         function toggleUnknownWord() {
             if (currentFilteredData.length === 0) return;
             const w = currentFilteredData[currentIndex];
