@@ -324,19 +324,22 @@
             createVisualCalendarDOM();
         }
 
-       // 중복 생성되던 불필요한 버튼들을 싹 제거하고 위치를 바로잡은 정제 버전
-        // 요청하신 3단 세로 적층 레이아웃 완벽 반영 버전
+      // 메인 화면 3단 배열 및 모달창 글자 겹침 현상을 완벽하게 교정한 최종 안정화 버전
         function createDailyMissionDOM() {
-            if (document.getElementById('open-mission-btn')) return;
+            // 중복 생성 차단
+            if (document.getElementById('daily-mission-modal')) return;
 
             const selectEl = document.getElementById('chapter-select');
             if (selectEl && selectEl.parentNode) {
-                // 범위 행(부모) 자체를 감싸고 있는 메인 컨테이너 영역 확보
-                const mainContainer = selectEl.parentNode.parentNode;
-                const rangeRow = selectEl.parentNode; // 1번째 줄: 범위 행
+                const rangeRow = selectEl.parentNode; // 1번째 줄 (범위 행)
+
+                // 기존에 잘못 생성된 찌꺼기 컨테이너가 있다면 삭제
+                const oldWrapper = document.getElementById('daily-mission-menu-wrapper');
+                if (oldWrapper) oldWrapper.remove();
 
                 // [2번째 줄] 오늘의 학습 + 자동발음 가로 행 생성
                 const secondRow = document.createElement('div');
+                secondRow.id = 'daily-mission-menu-wrapper';
                 secondRow.style.display = 'flex';
                 secondRow.style.flexDirection = 'row';
                 secondRow.style.alignItems = 'center';
@@ -347,7 +350,7 @@
                 secondRow.style.margin = '12px auto 0 auto';
                 secondRow.style.boxSizing = 'border-box';
 
-                // 오늘의 학습 버튼
+                // 오늘의 학습 버튼 생성
                 const openBtn = document.createElement('button');
                 openBtn.id = 'open-mission-btn';
                 openBtn.className = 'btn-nav'; 
@@ -359,9 +362,8 @@
                 openBtn.style.fontWeight = 'bold';
                 openBtn.onclick = openDailyMissionModal;
 
-                // 자동 발음 체크박스
-                let ttsWrap = document.getElementById('auto-tts-wrapper') || document.createElement('label');
-                ttsWrap.id = 'auto-tts-wrapper';
+                // 자동 발음 체크박스 생성 및 동기화
+                const ttsWrap = document.createElement('label');
                 ttsWrap.style.display = 'flex';
                 ttsWrap.style.alignItems = 'center';
                 ttsWrap.style.gap = '6px';
@@ -374,19 +376,10 @@
                 secondRow.appendChild(openBtn);
                 secondRow.appendChild(ttsWrap);
 
-                // 범위 행(1번째 줄) 바로 아래에 2번째 줄 삽입
+                // 1번째 줄 바로 다음에 2번째 줄 안착
                 rangeRow.after(secondRow);
 
-                // [3번째 줄] 기존에 존재하던 병음 테스트, 매칭 게임 버튼 정렬하기
-                const thirdRow = document.createElement('div');
-                thirdRow.style.display = 'flex';
-                thirdRow.style.flexDirection = 'row';
-                thirdRow.style.gap = '12px';
-                thirdRow.style.width = '100%';
-                thirdRow.style.maxWidth = '400px';
-                thirdRow.style.margin = '12px auto 0 auto';
-                thirdRow.style.boxSizing = 'border-box';
-
+                // [3번째 줄] 기존 페이지 하단에 있던 병음 테스트 / 매칭 게임 버튼 정렬
                 const allButtons = document.querySelectorAll('button');
                 let pinyinBtn = null;
                 let gameBtn = null;
@@ -396,10 +389,20 @@
                     if (btn.textContent.includes('매칭 게임') && btn.id !== 'open-mission-btn') gameBtn = btn;
                 });
 
-                // 기존 버튼들이 존재하면 스타일을 가로형으로 다듬고 3번째 줄에 납치해옵니다.
                 if (pinyinBtn && gameBtn) {
+                    const thirdRow = document.createElement('div');
+                    thirdRow.style.display = 'flex';
+                    thirdRow.style.flexDirection = 'row';
+                    thirdRow.style.gap = '12px';
+                    thirdRow.style.width = '100%';
+                    thirdRow.style.maxWidth = '400px';
+                    thirdRow.style.margin = '12px auto 0 auto';
+                    thirdRow.style.boxSizing = 'border-box';
+
+                    // 원본 버튼 레이아웃 스타일 강제 초기화 및 적용
                     pinyinBtn.style.flex = '1';
                     pinyinBtn.style.margin = '0';
+                    pinyinBtn.style.display = 'block';
                     pinyinBtn.onclick = () => { 
                         closeDailyMissionModal(); 
                         isInsideDailyMission = false; 
@@ -408,22 +411,22 @@
 
                     gameBtn.style.flex = '1';
                     gameBtn.style.margin = '0';
+                    gameBtn.style.display = 'block';
                     gameBtn.onclick = () => { 
                         closeDailyMissionModal(); 
                         isInsideDailyMission = false; 
                         openGameModal(); 
                     };
 
+                    // 원래 위치에서 3번째 줄 영역으로 안전하게 이동(이동 시 찌꺼기 안 남음)
                     thirdRow.appendChild(pinyinBtn);
                     thirdRow.appendChild(gameBtn);
                     
-                    // 2번째 줄 바로 아래에 3번째 줄 최종 안착
                     secondRow.after(thirdRow);
                 }
             }
 
-            // 오늘의 학습 팝업 모달 구조 (기존 기능 유지)
-            if (document.getElementById('daily-mission-modal')) return;
+            // 팝업 모달창 생성 및 글자 겹침 방지 CSS 완벽 적용
             const modal = document.createElement('div');
             modal.id = 'daily-mission-modal';
             modal.style.position = 'fixed';
@@ -437,14 +440,14 @@
             modal.style.zIndex = '2000';
 
             modal.innerHTML = `
-                <div style="background:var(--bg-main); width:90%; max-width:420px; padding:24px; border-radius:24px; box-shadow:0 10px 30px rgba(0,0,0,0.2); position:relative; text-align:center; box-sizing:border-box; border:1px solid rgba(255,255,255,0.1);">
+                <div style="background:var(--bg-main, #fff); width:90%; max-width:420px; padding:24px; border-radius:24px; box-shadow:0 10px 30px rgba(0,0,0,0.2); position:relative; text-align:center; box-sizing:border-box;">
                     <button onclick="closeDailyMissionModal()" style="position:absolute; top:16px; right:16px; background:none; border:none; font-size:20px; cursor:pointer; color:var(--text-main);">❌</button>
                     <h3 style="color:var(--text-main); margin-top:10px; margin-bottom:4px; font-size:20px;">🎯 오늘의 숙제 (5단어)</h3>
                     <div id="dm-progress" style="font-size:14px; color:var(--text-main); opacity:0.7; margin-bottom:12px;">1 / 5</div>
                     
-                    <div id="dm-card" onclick="flipDailyCard()" style="width:100%; height:180px; background:var(--card-bg); border-radius:16px; display:flex; flex-direction:column; justify-content:center; align-items:center; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.05); margin-bottom:16px; position:relative; padding:15px; box-sizing:border-box;">
-                        <div id="dm-front" style="font-size:36px; font-weight:bold; color:var(--text-hanzi);">汉字</div>
-                        <div id="dm-back" style="display:none; font-size:16px; color:var(--text-main); line-height:1.5; white-space:pre-line;">뜻 / 병음</div>
+                    <div id="dm-card" onclick="flipDailyCard()" style="width:100%; min-height:180px; background:var(--card-bg, #f9f9f9); border-radius:16px; display:flex; flex-direction:column; justify-content:center; align-items:center; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.05); margin-bottom:16px; position:relative; padding:20px; box-sizing:border-box; gap:8px;">
+                        <div id="dm-front" style="font-size:42px; font-weight:bold; color:var(--text-hanzi, #000); line-height:1.2; z-index:2;">汉字</div>
+                        <div id="dm-back" style="display:none; font-size:18px; color:var(--text-main); line-height:1.4; white-space:pre-line; z-index:2; margin-top:5px;">뜻 / 병음</div>
                     </div>
 
                     <div style="display:flex; flex-direction:row; justify-content:space-between; gap:10px; margin-bottom:20px; width:100%;">
@@ -464,7 +467,6 @@
             `;
             document.body.appendChild(modal);
         }
-
         function createVisualCalendarDOM() {
             if (document.getElementById('visual-calendar-box')) return;
 
