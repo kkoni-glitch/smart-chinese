@@ -264,6 +264,14 @@
         let autoplayInterval = null;
         let pinyinTestData = [], pinyinCurrentIdx = 0, pinyinIsAnswered = false, pinyinLives = 5;
 
+        // 오늘의 미션 관련 변수
+        let dailyStudyWords = [];
+        let dailyCurrentIdx = 0;
+        let isInsideDailyMission = false;
+
+        // 달력 제어용 현재 날짜 객체
+        let calendarCurrentDate = new Date();
+
         function playOnlineZhAudio(text) {
             if (!text) return;
             if ('speechSynthesis' in window) {
@@ -286,6 +294,7 @@
             localStorage.setItem(getStorageKey(), JSON.stringify(arr));
         }
 
+        // 테마 변경 시 하단 캘린더의 색상 배열도 유기적으로 새로고침하도록 개선
         function changeTheme(theme) {
             const pinkBtn = document.getElementById('theme-pink-btn');
             const bwBtn = document.getElementById('theme-bw-btn');
@@ -298,6 +307,8 @@
                 pinkBtn.classList.add('active');
                 bwBtn.classList.remove('active');
             }
+            // 테마가 바뀔 때 달력을 다시 그려서 블랙/화이트 스타일을 즉시 반영합니다.
+            renderVisualCalendar();
         }
 
         function initBookSelection() {
@@ -310,6 +321,182 @@
                 card.onclick = () => selectBook(book.url);
                 grid.appendChild(card);
             });
+            
+            createDailyMissionDOM();
+            createVisualCalendarDOM();
+        }
+
+        function createDailyMissionDOM() {
+            if (document.getElementById('open-mission-btn')) return;
+
+            const selectEl = document.getElementById('chapter-select');
+            if (selectEl && selectEl.parentNode) {
+                const openBtn = document.createElement('button');
+                openBtn.id = 'open-mission-btn';
+                openBtn.innerHTML = '🔥 오늘의 학습';
+                openBtn.style.padding = '10px 16px';
+                openBtn.style.marginLeft = '8px';
+                openBtn.style.border = 'none';
+                openBtn.style.borderRadius = '12px';
+                openBtn.style.backgroundColor = '#ff4d6d';
+                openBtn.style.color = '#fff';
+                openBtn.style.fontWeight = 'bold';
+                openBtn.style.cursor = 'pointer';
+                openBtn.onclick = openDailyMissionModal;
+                selectEl.parentNode.insertBefore(openBtn, selectEl.nextSibling);
+            }
+
+            const modal = document.createElement('div');
+            modal.id = 'daily-mission-modal';
+            modal.style.position = 'fixed';
+            modal.style.top = '0'; modal.style.left = '0';
+            modal.style.width = '100vw'; modal.style.height = '100vh';
+            modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
+            modal.style.backdropFilter = 'blur(6px)';
+            modal.style.display = 'none';
+            modal.style.justifyContent = 'center';
+            modal.style.alignItems = 'center';
+            modal.style.zIndex = '2000';
+
+            modal.innerHTML = `
+                <div style="background:var(--bg-main, #fff0f3); width:90%; max-width:420px; padding:24px; border-radius:24px; box-shadow:0 10px 30px rgba(0,0,0,0.2); position:relative; text-align:center;">
+                    <button onclick="closeDailyMissionModal()" style="position:absolute; top:16px; right:16px; background:none; border:none; font-size:20px; cursor:pointer; color:var(--text-main);">❌</button>
+                    <h3 style="color:var(--text-main); margin-bottom:4px;">🎯 오늘의 숙제 (3단어)</h3>
+                    <div id="dm-progress" style="font-size:14px; color:#666; margin-bottom:12px;">1 / 3</div>
+                    
+                    <div id="dm-card" onclick="flipDailyCard()" style="width:100%; height:180px; background:var(--card-bg, #fff); border-radius:16px; display:flex; flex-direction:column; justify-content:center; align-items:center; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.05); margin-bottom:16px; position:relative; padding:15px; box-sizing:border-box;">
+                        <div id="dm-front" style="font-size:36px; font-weight:bold; color:var(--text-hanzi);">汉字</div>
+                        <div id="dm-back" style="display:none; font-size:16px; color:var(--text-main); line-height:1.5; white-space:pre-line;">뜻 / 병음</div>
+                    </div>
+
+                    <div style="display:flex; justify-content:space-between; gap:10px; margin-bottom:20px;">
+                        <button onclick="prevDailyCard()" style="flex:1; padding:10px; border:none; border-radius:10px; background:#ddd; cursor:pointer; font-weight:bold;">이전</button>
+                        <button onclick="playDailyVoice()" style="padding:10px 16px; border:none; border-radius:10px; background:#fff; border:1px solid #ccc; cursor:pointer;">🔊</button>
+                        <button onclick="nextDailyCard()" style="flex:1; padding:10px; border:none; border-radius:10px; background:var(--btn-nav-bg, #ffb3c1); color:var(--btn-nav-text); cursor:pointer; font-weight:bold;">다음</button>
+                    </div>
+
+                    <div id="dm-action-box" style="display:none; flex-direction:column; gap:10px; background:var(--card-bg, #fff); padding:16px; border-radius:16px; border:2px dashed #ff758f;">
+                        <p style="margin:0; font-size:14px; font-weight:bold; color:#c9184a;">✨ 모든 단어를 확인했습니다! 미션 시작! ✨</p>
+                        <div style="display:flex; gap:10px;">
+                            <button onclick="startDailyMissionGame()" style="flex:1; padding:12px; border:none; border-radius:10px; background:#ff4d6d; color:#fff; font-weight:bold; cursor:pointer;">🧩 매칭 게임</button>
+                            <button onclick="startDailyMissionPinyin()" style="flex:1; padding:12px; border:none; border-radius:10px; background:#ff758f; color:#fff; font-weight:bold; cursor:pointer;">✍️ 병음 테스트</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // 고정 색상을 제거하고 테마 전용 변수들(var--)로 전면 교체함
+        function createVisualCalendarDOM() {
+            if (document.getElementById('visual-calendar-box')) return;
+
+            const mainApp = document.getElementById('main-app');
+            if (mainApp) {
+                const calWrapper = document.createElement('div');
+                calWrapper.id = 'visual-calendar-box';
+                calWrapper.style.width = '100%';
+                calWrapper.style.maxWidth = '400px';
+                calWrapper.style.margin = '30px auto 10px auto';
+                calWrapper.style.padding = '16px';
+                calWrapper.style.background = 'var(--card-bg, #fff)';
+                calWrapper.style.borderRadius = '20px';
+                calWrapper.style.boxShadow = '0 4px 16px rgba(0,0,0,0.1)';
+                calWrapper.style.boxSizing = 'border-box';
+
+                calWrapper.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                        <button onclick="moveCalendarMonth(-1)" style="background:none; border:none; font-size:16px; cursor:pointer; color:var(--text-main, #c9184a); font-weight:bold;">◀</button>
+                        <h4 id="calendar-title" style="margin:0; color:var(--text-main); font-size:16px; font-weight:bold;">2026년 6월</h4>
+                        <button onclick="moveCalendarMonth(1)" style="background:none; border:none; font-size:16px; cursor:pointer; color:var(--text-main, #c9184a); font-weight:bold;">▶</button>
+                    </div>
+                    <div style="display:grid; grid-template-columns:repeat(7, 1fr); gap:6px; text-align:center; font-size:12px; font-weight:bold; color:var(--text-main); opacity:0.7; margin-bottom:6px;">
+                        <div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div>
+                    </div>
+                    <div id="calendar-cells-grid" style="display:grid; grid-template-columns:repeat(7, 1fr); gap:6px;"></div>
+                    <div id="calendar-streak-info" style="margin-top:12px; font-size:13px; font-weight:bold; color:var(--text-main); text-align:center;">🔥 연속 학습 스트릭: 0일째</div>
+                `;
+                mainApp.appendChild(calWrapper);
+            }
+        }
+
+        function renderVisualCalendar() {
+            const grid = document.getElementById('calendar-cells-grid');
+            const title = document.getElementById('calendar-title');
+            const streakInfo = document.getElementById('calendar-streak-info');
+            if (!grid || !title) return;
+
+            grid.innerHTML = '';
+            
+            const year = calendarCurrentDate.getFullYear();
+            const month = calendarCurrentDate.getMonth();
+            title.textContent = `${year}년 ${month + 1}월`;
+
+            const streakCount = localStorage.getItem('sc_total_streak') || 0;
+            if (streakInfo) streakInfo.textContent = `🔥 연속 학습 스트릭: ${streakCount}일째`;
+
+            const calendarHistory = JSON.parse(localStorage.getItem('sc_history_calendar')) || {};
+
+            const firstDayIndex = new Date(year, month, 1).getDay();
+            const lastDate = new Date(year, month + 1, 0).getDate();
+
+            // 블랙 테마 검증용 플래그
+            const isBlackTheme = document.body.classList.contains('theme-bw');
+
+            for (let i = 0; i < firstDayIndex; i++) {
+                const empty = document.createElement('div');
+                grid.appendChild(empty);
+            }
+
+            for (let day = 1; day <= lastDate; day++) {
+                const cell = document.createElement('div');
+                cell.style.height = '40px';
+                cell.style.display = 'flex';
+                cell.style.flexDirection = 'column';
+                cell.style.justifyContent = 'center';
+                cell.style.alignItems = 'center';
+                cell.style.borderRadius = '8px';
+                cell.style.fontSize = '12px';
+                cell.style.position = 'relative';
+                
+                // 테마에 따라 날짜 기본 빈 칸 색상 동적 가변
+                cell.style.background = isBlackTheme ? '#2a2a2a' : '#fcf0f2';
+
+                const numSpan = document.createElement('span');
+                numSpan.textContent = day;
+                numSpan.style.fontSize = '10px';
+                numSpan.style.color = isBlackTheme ? '#bbb' : '#777';
+                cell.appendChild(numSpan);
+
+                const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+                const todayObj = new Date();
+                if (todayObj.getFullYear() === year && todayObj.getMonth() === month && todayObj.getDate() === day) {
+                    cell.style.border = isBlackTheme ? '2px solid #ffffff' : '2px solid #ff4d6d';
+                }
+
+                if (calendarHistory[dateKey]) {
+                    // 도장 찍힌 날 바탕색 채우기
+                    cell.style.background = isBlackTheme ? '#444444' : '#ffe5ec';
+                    
+                    const stamp = document.createElement('span');
+                    stamp.textContent = '🔥';
+                    stamp.style.fontSize = '14px';
+                    stamp.style.marginTop = '-2px';
+                    cell.appendChild(stamp);
+
+                    const wordsText = calendarHistory[dateKey].map(w => w.hanzi).join(', ');
+                    cell.title = `🎯 공부한 단어: ${wordsText}`;
+                    cell.style.cursor = 'help';
+                }
+
+                grid.appendChild(cell);
+            }
+        }
+
+        function moveCalendarMonth(dir) {
+            calendarCurrentDate.setMonth(calendarCurrentDate.getMonth() + dir);
+            renderVisualCalendar();
         }
 
         async function selectBook(url) {
@@ -378,12 +565,116 @@
                 unknownOpt.textContent = "🖤 모르는 단어";
                 select.appendChild(unknownOpt);
 
-                select.value = "all";
+                setupDailyWords();
                 changeCategory();
+                renderVisualCalendar();
             } catch (e) { 
                 console.error("데이터 로드 오류:", e);
                 document.getElementById('hanzi').textContent = "오류 발생!"; 
             }
+        }
+
+        function setupDailyWords() {
+            const today = new Date().toLocaleDateString('ko-KR');
+            const savedDate = localStorage.getItem('sc_daily_date');
+            const savedWords = localStorage.getItem('sc_daily_words');
+
+            if (savedDate === today && savedWords) {
+                dailyStudyWords = JSON.parse(savedWords);
+                return;
+            }
+
+            let recentWordIds = JSON.parse(localStorage.getItem('sc_recent_word_ids')) || [];
+            let availableWords = totalWordData.filter(w => !recentWordIds.includes(w.id));
+
+            if (availableWords.length < 3) {
+                recentWordIds = [];
+                availableWords = [...totalWordData];
+            }
+
+            dailyStudyWords = [];
+            const tempPool = [...availableWords];
+            for (let i = 0; i < 3; i++) {
+                if (tempPool.length === 0) break;
+                const rIdx = Math.floor(Math.random() * tempPool.length);
+                const selected = tempPool.splice(rIdx, 1)[0];
+                dailyStudyWords.push(selected);
+                recentWordIds.push(selected.id);
+            }
+
+            localStorage.setItem('sc_daily_date', today);
+            localStorage.setItem('sc_daily_words', JSON.stringify(dailyStudyWords));
+            localStorage.setItem('sc_recent_word_ids', JSON.stringify(recentWordIds));
+            
+            localStorage.setItem('sc_matching_cleared', 'false');
+            localStorage.setItem('sc_pinyin_cleared', 'false');
+        }
+
+        function openDailyMissionModal() {
+            dailyCurrentIdx = 0;
+            isInsideDailyMission = true;
+            document.getElementById('daily-mission-modal').style.display = 'flex';
+            document.getElementById('dm-action-box').style.display = 'none';
+            updateDailyCardUI();
+        }
+
+        function closeDailyMissionModal() {
+            isInsideDailyMission = false;
+            document.getElementById('daily-mission-modal').style.display = 'none';
+        }
+
+        function flipDailyCard() {
+            const backEl = document.getElementById('dm-back');
+            backEl.style.display = (backEl.style.display === 'none') ? 'block' : 'none';
+        }
+
+        function updateDailyCardUI() {
+            if (dailyStudyWords.length === 0) return;
+            const w = dailyStudyWords[dailyCurrentIdx];
+            
+            document.getElementById('dm-front').textContent = w.hanzi;
+            document.getElementById('dm-back').textContent = `${w.pinyin}\n[ ${w.meaning} ]`;
+            document.getElementById('dm-back').style.display = 'none';
+            document.getElementById('dm-progress').textContent = `${dailyCurrentIdx + 1} / ${dailyStudyWords.length}`;
+
+            if (dailyCurrentIdx === 2) {
+                document.getElementById('dm-action-box').style.display = 'flex';
+            }
+        }
+
+        function nextDailyCard() {
+            if (dailyStudyWords.length === 0) return;
+            dailyCurrentIdx = (dailyCurrentIdx + 1) % dailyStudyWords.length;
+            updateDailyCardUI();
+        }
+
+        function prevDailyCard() {
+            if (dailyStudyWords.length === 0) return;
+            dailyCurrentIdx = (dailyCurrentIdx - 1 + dailyStudyWords.length) % dailyStudyWords.length;
+            updateDailyCardUI();
+        }
+
+        function playDailyVoice() {
+            if (dailyStudyWords.length === 0) return;
+            playOnlineZhAudio(dailyStudyWords[dailyCurrentIdx].hanzi);
+        }
+
+        function startDailyMissionGame() {
+            document.getElementById('game-modal').style.display = 'flex';
+            gameRemainingData = [...dailyStudyWords].sort(() => 0.5 - Math.random());
+            startRound();
+        }
+
+        function startDailyMissionPinyin() {
+            document.getElementById('pinyin-modal').style.display = 'flex';
+            pinyinTestData = [...dailyStudyWords].sort(() => 0.5 - Math.random());
+            pinyinCurrentIdx = 0;
+            pinyinLives = 5;
+            document.getElementById('pinyin-input').style.display = 'block';
+            const btn = document.getElementById('pinyin-action-btn');
+            btn.onclick = checkPinyin;
+            updatePinyinHeartsUI();
+            showPinyinQuestion();
         }
 
         function changeCategory() {
@@ -518,7 +809,11 @@
             });
         }
 
-        function openGameModal() { document.getElementById('game-modal').style.display = 'flex'; shuffleGame(); }
+        function openGameModal() { 
+            document.getElementById('game-modal').style.display = 'flex'; 
+            shuffleGame(); 
+        }
+
         function shuffleGame() {
             if (currentFilteredData.length === 0) { alert("선택된 범위에 단어가 없습니다!"); return; }
             gameRemainingData = [...currentFilteredData].sort(() => 0.5 - Math.random());
@@ -530,7 +825,7 @@
             const status = document.getElementById('game-status');
             g.innerHTML = '';
             status.textContent = `남은 단어: ${gameRemainingData.length}개`;
-            
+
             let currentSet = gameRemainingData.slice(0, 4);
             let pieces = [];
             currentSet.forEach(w => {
@@ -556,6 +851,7 @@
                             gameRemainingData = gameRemainingData.filter(w => w.id !== selectedItems[0].id);
                             status.textContent = `남은 단어: ${gameRemainingData.length}개`;
                             selectedItems = [];
+                            
                             if (document.querySelectorAll('.game-item:not(.matched)').length === 0 && gameRemainingData.length > 0) {
                                 const nextBtn = document.createElement('button');
                                 nextBtn.textContent = "다음 라운드 ➡️";
@@ -568,7 +864,13 @@
                                 nextBtn.style.fontWeight = "bold";
                                 nextBtn.onclick = startRound;
                                 g.appendChild(nextBtn);
-                            } else if (gameRemainingData.length === 0) status.textContent = "🎉 모두 완료!";
+                            } else if (gameRemainingData.length === 0) {
+                                status.textContent = "🎉 모두 완료!";
+                                if (isInsideDailyMission) {
+                                    localStorage.setItem('sc_matching_cleared', 'true');
+                                    checkDailyStudyComplete();
+                                }
+                            }
                         } else {
                             setTimeout(() => {
                                 selectedItems.forEach(i => i.div.classList.remove('selected'));
@@ -619,6 +921,11 @@
                 btn.style.background = "var(--btn-modal-retry)";
                 pinyinIsAnswered = true;
                 btn.onclick = openPinyinModal;
+
+                if (isInsideDailyMission) {
+                    localStorage.setItem('sc_pinyin_cleared', 'true');
+                    checkDailyStudyComplete();
+                }
                 return;
             }
 
@@ -709,8 +1016,37 @@
             btn.textContent = "➡️ 다음 문제";
             btn.className = "game-btn btn-close";
         }
+
+        function checkDailyStudyComplete() {
+            const matchingDone = localStorage.getItem('sc_matching_cleared') === 'true';
+            const pinyinDone = localStorage.getItem('sc_pinyin_cleared') === 'true';
+
+            if (matchingDone && pinyinDone) {
+                const todayObj = new Date();
+                const todayStr = `${todayObj.getFullYear()}-${String(todayObj.getMonth() + 1).padStart(2, '0')}-${String(todayObj.getDate()).padStart(2, '0')}`;
+                
+                let calendarHistory = JSON.parse(localStorage.getItem('sc_history_calendar')) || {};
+
+                if (!calendarHistory[todayStr]) {
+                    calendarHistory[todayStr] = dailyStudyWords; 
+                    localStorage.setItem('sc_history_calendar', JSON.stringify(calendarHistory));
+
+                    let streakCount = parseInt(localStorage.getItem('sc_total_streak')) || 0;
+                    streakCount += 1;
+                    localStorage.setItem('sc_total_streak', streakCount);
+
+                    alert(`🎉 미션 컴플리트! 오늘 달력에 불꽃 도장(🔥)이 쾅 찍혔습니다!`);
+                    
+                    closeDailyMissionModal();
+                    renderVisualCalendar();
+                }
+            }
+        }
         
         initBookSelection();
+    </script>
+</body>
+</html>
     </script>
 </body>
 </html>
