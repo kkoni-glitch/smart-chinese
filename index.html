@@ -325,73 +325,102 @@
         }
 
        // 중복 생성되던 불필요한 버튼들을 싹 제거하고 위치를 바로잡은 정제 버전
+        // 요청하신 3단 세로 적층 레이아웃 완벽 반영 버전
         function createDailyMissionDOM() {
-            // 1. 이미 '오늘의 학습' 버튼이 생성되어 있다면 중복 방지
             if (document.getElementById('open-mission-btn')) return;
 
             const selectEl = document.getElementById('chapter-select');
             if (selectEl && selectEl.parentNode) {
-                
-                // [범위] 셀렉트 박스 오른쪽에 '🔥 오늘의 학습' 버튼과 '🔊 자동 발음'만 깔끔하게 추가
-                const missionContainer = document.createElement('div');
-                missionContainer.style.display = 'inline-flex';
-                missionContainer.style.alignItems = 'center';
-                missionContainer.style.gap = '12px';
-                missionContainer.style.marginLeft = '10px';
+                // 범위 행(부모) 자체를 감싸고 있는 메인 컨테이너 영역 확보
+                const mainContainer = selectEl.parentNode.parentNode;
+                const rangeRow = selectEl.parentNode; // 1번째 줄: 범위 행
 
-                // '오늘의 학습' 버튼 생성
+                // [2번째 줄] 오늘의 학습 + 자동발음 가로 행 생성
+                const secondRow = document.createElement('div');
+                secondRow.style.display = 'flex';
+                secondRow.style.flexDirection = 'row';
+                secondRow.style.alignItems = 'center';
+                secondRow.style.justifyContent = 'flex-start';
+                secondRow.style.gap = '16px';
+                secondRow.style.width = '100%';
+                secondRow.style.maxWidth = '400px';
+                secondRow.style.margin = '12px auto 0 auto';
+                secondRow.style.boxSizing = 'border-box';
+
+                // 오늘의 학습 버튼
                 const openBtn = document.createElement('button');
                 openBtn.id = 'open-mission-btn';
                 openBtn.className = 'btn-nav'; 
                 openBtn.innerHTML = '🔥 오늘의 학습';
-                openBtn.style.padding = '8px 14px';
+                openBtn.style.padding = '10px 16px';
                 openBtn.style.border = 'none';
                 openBtn.style.borderRadius = '12px';
                 openBtn.style.cursor = 'pointer';
                 openBtn.style.fontWeight = 'bold';
                 openBtn.onclick = openDailyMissionModal;
 
-                // '자동 발음' 체크박스 생성 (이미 HTML에 없다면 생성)
-                let ttsWrap = document.getElementById('auto-tts-wrapper');
-                if (!ttsWrap) {
-                    ttsWrap = document.createElement('label');
-                    ttsWrap.id = 'auto-tts-wrapper';
-                    ttsWrap.style.display = 'flex';
-                    ttsWrap.style.alignItems = 'center';
-                    ttsWrap.style.gap = '4px';
-                    ttsWrap.style.fontSize = '14px';
-                    ttsWrap.style.fontWeight = 'bold';
-                    ttsWrap.style.color = 'var(--text-main)';
-                    ttsWrap.style.cursor = 'pointer';
-                    ttsWrap.innerHTML = `<input type="checkbox" id="auto-tts" checked style="width:16px; height:16px; cursor:pointer;"> 🔊 자동발음`;
-                }
+                // 자동 발음 체크박스
+                let ttsWrap = document.getElementById('auto-tts-wrapper') || document.createElement('label');
+                ttsWrap.id = 'auto-tts-wrapper';
+                ttsWrap.style.display = 'flex';
+                ttsWrap.style.alignItems = 'center';
+                ttsWrap.style.gap = '6px';
+                ttsWrap.style.fontSize = '14px';
+                ttsWrap.style.fontWeight = 'bold';
+                ttsWrap.style.color = 'var(--text-main)';
+                ttsWrap.style.cursor = 'pointer';
+                ttsWrap.innerHTML = `<input type="checkbox" id="auto-tts" checked style="width:16px; height:16px; cursor:pointer;"> 🔊 자동발음`;
 
-                missionContainer.appendChild(openBtn);
-                missionContainer.appendChild(ttsWrap);
+                secondRow.appendChild(openBtn);
+                secondRow.appendChild(ttsWrap);
 
-                // 범위 선택 행(부모) 내부의 가장 뒤쪽에 자연스럽게 붙여줍니다.
-                selectEl.parentNode.appendChild(missionContainer);
-            }
+                // 범위 행(1번째 줄) 바로 아래에 2번째 줄 삽입
+                rangeRow.after(secondRow);
 
-            // 2. 이미 밑에 존재하던 기존 [병음 테스트], [매칭 게임] 버튼 찾아서 기능 연결하기
-            // HTML 내 버튼들의 텍스트나 클래스명을 기준으로 매칭합니다.
-            const allButtons = document.querySelectorAll('button');
-            allButtons.forEach(btn => {
-                if (btn.textContent.includes('병음 테스트') && btn.id !== 'open-mission-btn') {
-                    btn.onclick = () => { 
+                // [3번째 줄] 기존에 존재하던 병음 테스트, 매칭 게임 버튼 정렬하기
+                const thirdRow = document.createElement('div');
+                thirdRow.style.display = 'flex';
+                thirdRow.style.flexDirection = 'row';
+                thirdRow.style.gap = '12px';
+                thirdRow.style.width = '100%';
+                thirdRow.style.maxWidth = '400px';
+                thirdRow.style.margin = '12px auto 0 auto';
+                thirdRow.style.boxSizing = 'border-box';
+
+                const allButtons = document.querySelectorAll('button');
+                let pinyinBtn = null;
+                let gameBtn = null;
+
+                allButtons.forEach(btn => {
+                    if (btn.textContent.includes('병음 테스트') && btn.id !== 'open-mission-btn') pinyinBtn = btn;
+                    if (btn.textContent.includes('매칭 게임') && btn.id !== 'open-mission-btn') gameBtn = btn;
+                });
+
+                // 기존 버튼들이 존재하면 스타일을 가로형으로 다듬고 3번째 줄에 납치해옵니다.
+                if (pinyinBtn && gameBtn) {
+                    pinyinBtn.style.flex = '1';
+                    pinyinBtn.style.margin = '0';
+                    pinyinBtn.onclick = () => { 
                         closeDailyMissionModal(); 
                         isInsideDailyMission = false; 
                         openPinyinModal(); 
                     };
-                }
-                if (btn.textContent.includes('매칭 게임') && btn.id !== 'open-mission-btn') {
-                    btn.onclick = () => { 
+
+                    gameBtn.style.flex = '1';
+                    gameBtn.style.margin = '0';
+                    gameBtn.onclick = () => { 
                         closeDailyMissionModal(); 
                         isInsideDailyMission = false; 
                         openGameModal(); 
                     };
+
+                    thirdRow.appendChild(pinyinBtn);
+                    thirdRow.appendChild(gameBtn);
+                    
+                    // 2번째 줄 바로 아래에 3번째 줄 최종 안착
+                    secondRow.after(thirdRow);
                 }
-            });
+            }
 
             // 오늘의 학습 팝업 모달 구조 (기존 기능 유지)
             if (document.getElementById('daily-mission-modal')) return;
