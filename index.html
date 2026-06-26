@@ -1,1106 +1,716 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎀 중국어 단어장 🎀</title>
-    <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Sans+SC:wght@500;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            /* 💕 화사하고 깔끔한 리얼 핑크 톤온톤 스펙트럼 💕 */
-            --bg-body: #fff5f7;          /* 화사하고 깨끗한 딸기우유빛 베이스 */
-            --text-main: #4a2830;         /* 가독성을 위한 깊은 버건디 초콜릿 */
-            --font-ui: 'Noto Sans KR', sans-serif;
-            --font-card: 'Gaegu', cursive;
-            
-            --bg-container: #ffffff;
-            --border-main: #ffccd5;       /* 부드러운 파스텔 달콤한 핑크 선 */
-            --text-accent: #ff758f;       /* 통통 튀는 러블리 핑크 */
-            --text-darkaccent: #c9184a;   /* 선명하고 확실한 포인트 진핑크 */
-            
-            --bg-card-front: #ffffff;
-            --bg-card-back: #fff0f3;
-            --border-card: #ffb3c1;
-            --shadow-card: rgba(201, 24, 74, 0.06); /* 은은한 핑크빛 그림자 */
-            --text-hanzi: #a4133c;        /* 눈에 확 들어오는 예쁜 루비 핑크 */
-            --text-meaning: #4a2830;      /* 뜻 화면도 정돈된 버건디 톤으로 고정 */
-            
-            /* 버튼 라인업 - 조잡함 ZERO, 완벽한 파스텔 핑크 톤온톤 */
-            --btn-pinyin-bg: #fff0f3; --btn-pinyin-text: #a4133c; --btn-pinyin-border: #ffccd5;
-            --btn-game-bg: #ffe5ec; --btn-game-text: #c9184a; --btn-game-border: #ffb3c1;
-            --btn-nav-bg: #ffe5ec; --btn-nav-text: #a4133c;
-            --btn-auto-bg: #fff5f7; --btn-auto-text: #ff758f; --btn-auto-active: #ff4d6d;
-            --btn-shuffle-bg: #ffccd5; --btn-shuffle-text: #800f2f;
-            
-            --btn-modal-close: #ffccd5; --btn-modal-shuffle: #ffe5ec; --btn-modal-retry: #fff0f3;
-            --btn-modal-text: #4a2830;
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎀 중국어 단어장 🎀</title>
+    <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Sans+SC:wght@500;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* 💕 화사하고 깔끔한 리얼 핑크 톤온톤 스펙트럼 💕 */
+            --bg-body: #fff5f7;          /* 화사하고 깨끗한 딸기우유빛 베이스 */
+            --text-main: #4a2830;         /* 가독성을 위한 깊은 버건디 초콜릿 */
+            --font-ui: 'Noto Sans KR', sans-serif;
+            --font-card: 'Gaegu', cursive;
+            
+            --bg-container: #ffffff;
+            --border-main: #ffccd5;       /* 부드러운 파스텔 달콤한 핑크 선 */
+            --text-accent: #ff758f;       /* 통통 튀는 러블리 핑크 */
+            --text-darkaccent: #c9184a;   /* 선명하고 확실한 포인트 진핑크 */
+            
+            --bg-card-front: #ffffff;
+            --bg-card-back: #fff0f3;
+            --border-card: #ffb3c1;
+            --shadow-card: rgba(201, 24, 74, 0.06); /* 은은한 핑크빛 그림자 */
+            --text-hanzi: #a4133c;        /* 눈에 확 들어오는 예쁜 루비 핑크 */
+            --text-meaning: #4a2830;      /* 뜻 화면도 정돈된 버건디 톤으로 고정 */
+            
+            /* 버튼 라인업 - 조잡함 ZERO, 완벽한 파스텔 핑크 톤온톤 */
+            --btn-pinyin-bg: #fff0f3; --btn-pinyin-text: #a4133c; --btn-pinyin-border: #ffccd5;
+            --btn-game-bg: #ffe5ec; --btn-game-text: #c9184a; --btn-game-border: #ffb3c1;
+            --btn-nav-bg: #ffe5ec; --btn-nav-text: #a4133c;
+            --btn-auto-bg: #fff5f7; --btn-auto-text: #ff758f; --btn-auto-active: #ff4d6d;
+            --btn-shuffle-bg: #ffccd5; --btn-shuffle-text: #800f2f;
+            
+            --btn-modal-close: #ffccd5; --btn-modal-shuffle: #ffe5ec; --btn-modal-retry: #fff0f3;
+            --btn-modal-text: #4a2830;
+        }
 
-        body.theme-bw {
-            --bg-body: #f4f4f4;
-            --text-main: #111111;
-            --font-ui: 'Noto Sans KR', sans-serif;
-            --font-card: 'Roboto', 'Noto Sans SC', sans-serif;
-            
-            --bg-container: #ffffff;
-            --border-main: #111111;
-            --text-accent: #333333;
-            --text-darkaccent: #111111;
-            
-            --bg-card-front: #ffffff;
-            --bg-card-back: #ffffff;
-            --border-card: #111111;
-            --shadow-card: rgba(0, 0, 0, 0.1);
-            --text-hanzi: #000000;
-            --text-meaning: #000000;
-            
-            --btn-pinyin-bg: #ffffff; --btn-pinyin-text: #111111; --btn-pinyin-border: #111111;
-            --btn-game-bg: #ffffff; --btn-game-text: #111111; --btn-game-border: #111111;
-            --btn-nav-bg: #e0e0e0; --btn-nav-text: #111111;
-            --btn-auto-bg: #e0e0e0; --btn-auto-text: #111111; --btn-auto-active: #111111;
-            --btn-shuffle-bg: #e0e0e0; --btn-shuffle-text: #111111;
-            
-            --btn-modal-close: #e0e0e0; --btn-modal-shuffle: #cccccc; --btn-modal-retry: #111111;
-            --btn-modal-text: #111111;
-        }
+        body.theme-bw {
+            --bg-body: #f4f4f4;
+            --text-main: #111111;
+            --font-ui: 'Noto Sans KR', sans-serif;
+            --font-card: 'Roboto', 'Noto Sans SC', sans-serif;
+            
+            --bg-container: #ffffff;
+            --border-main: #111111;
+            --text-accent: #333333;
+            --text-darkaccent: #111111;
+            
+            --bg-card-front: #ffffff;
+            --bg-card-back: #ffffff;
+            --border-card: #111111;
+            --shadow-card: rgba(0, 0, 0, 0.1);
+            --text-hanzi: #000000;
+            --text-meaning: #000000;
+            
+            --btn-pinyin-bg: #ffffff; --btn-pinyin-text: #111111; --btn-pinyin-border: #111111;
+            --btn-game-bg: #ffffff; --btn-game-text: #111111; --btn-game-border: #111111;
+            --btn-nav-bg: #e0e0e0; --btn-nav-text: #111111;
+            --btn-auto-bg: #e0e0e0; --btn-auto-text: #111111; --btn-auto-active: #111111;
+            --btn-shuffle-bg: #e0e0e0; --btn-shuffle-text: #111111;
+            
+            --btn-modal-close: #e0e0e0; --btn-modal-shuffle: #cccccc; --btn-modal-retry: #111111;
+            --btn-modal-text: #111111;
+        }
 
-        body { font-family: var(--font-ui); background-color: var(--bg-body); margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; flex-direction: column; padding: 15px; box-sizing: border-box; color: var(--text-main); transition: background-color 0.3s, color 0.3s; }
-        
-        .book-select-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; max-width: 380px; text-align: center; }
-        .book-title { font-size: 26px; color: var(--text-hanzi); margin-bottom: 25px; font-weight: bold; font-family: var(--font-card); }
-        .book-grid { display: flex; flex-direction: column; gap: 12px; width: 100%; }
-        .book-card { background: var(--bg-container); border: 1px solid var(--border-main); padding: 18px; border-radius: 16px; font-size: 16px; font-weight: bold; color: var(--text-darkaccent); cursor: pointer; box-shadow: 0 4px 10px rgba(201,24,74,0.02); transition: transform 0.2s, background-color 0.2s; text-align: center; }
-        .book-card:hover { transform: scale(1.01); background-color: var(--bg-card-back); }
+        body { font-family: var(--font-ui); background-color: var(--bg-body); margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; flex-direction: column; padding: 15px; box-sizing: border-box; color: var(--text-main); transition: background-color 0.3s, color 0.3s; }
+        
+        .book-select-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; max-width: 380px; text-align: center; }
+        .book-title { font-size: 26px; color: var(--text-hanzi); margin-bottom: 25px; font-weight: bold; font-family: var(--font-card); }
+        .book-grid { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+        .book-card { background: var(--bg-container); border: 1px solid var(--border-main); padding: 18px; border-radius: 16px; font-size: 16px; font-weight: bold; color: var(--text-darkaccent); cursor: pointer; box-shadow: 0 4px 10px rgba(201,24,74,0.02); transition: transform 0.2s, background-color 0.2s; text-align: center; }
+        .book-card:hover { transform: scale(1.01); background-color: var(--bg-card-back); }
 
-        .main-app-container { display: none; flex-direction: column; align-items: center; width: 100%; max-width: 380px; }
+        .main-app-container { display: none; flex-direction: column; align-items: center; width: 100%; max-width: 380px; }
 
-        .top-utility-bar { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 12px; gap: 10px; }
-        .home-btn { background-color: transparent; border: 1px solid var(--border-main); color: var(--text-darkaccent); padding: 6px 14px; border-radius: 12px; font-size: 13px; cursor: pointer; font-weight: 500; background-color: var(--bg-container); box-shadow: 0 2px 5px rgba(0,0,0,0.01); }
-        .theme-switcher-container { display: flex; background: var(--bg-container); padding: 3px; border-radius: 12px; border: 1px solid var(--border-main); box-shadow: 0 2px 5px rgba(0,0,0,0.01); }
-        .theme-btn { padding: 4px 12px; font-size: 12px; font-weight: bold; border: none; border-radius: 9px; cursor: pointer; background: transparent; color: #ccc; transition: all 0.2s; }
-        .theme-btn.active { background-color: var(--text-accent); color: white; }
-        body.theme-bw .theme-btn.active { background-color: #111111; color: #ffffff; }
+        .top-utility-bar { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 12px; gap: 10px; }
+        .home-btn { background-color: transparent; border: 1px solid var(--border-main); color: var(--text-darkaccent); padding: 6px 14px; border-radius: 12px; font-size: 13px; cursor: pointer; font-weight: 500; background-color: var(--bg-container); box-shadow: 0 2px 5px rgba(0,0,0,0.01); }
+        .theme-switcher-container { display: flex; background: var(--bg-container); padding: 3px; border-radius: 12px; border: 1px solid var(--border-main); box-shadow: 0 2px 5px rgba(0,0,0,0.01); }
+        .theme-btn { padding: 4px 12px; font-size: 12px; font-weight: bold; border: none; border-radius: 9px; cursor: pointer; background: transparent; color: #ccc; transition: all 0.2s; }
+        .theme-btn.active { background-color: var(--text-accent); color: white; }
+        body.theme-bw .theme-btn.active { background-color: #111111; color: #ffffff; }
 
-        .dashboard-box { background-color: var(--bg-container); border: 1px solid var(--border-main); border-radius: 16px; padding: 12px; width: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 4px 15px rgba(201,24,74,0.01); margin-bottom: 15px; }
-        .dashboard-row { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 10px; }
-        
-        .filter-group { display: flex; align-items: center; gap: 6px; flex-grow: 1; }
-        .filter-label { font-size: 13px; font-weight: bold; color: var(--text-darkaccent); white-space: nowrap; }
-        select { padding: 6px 12px; font-size: 14px; border-radius: 10px; border: 1px solid var(--border-main); background-color: var(--bg-card-back); cursor: pointer; color: var(--text-darkaccent); outline: none; flex-grow: 1; font-family: var(--font-ui); font-weight: 500; }
-        
-        .toggle-group { display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: bold; cursor: pointer; color: var(--text-accent); white-space: nowrap; padding: 6px; }
-        .toggle-group input { margin: 0; width: 15px; height: 15px; cursor: pointer; }
-        
-        .button-group-container { display: flex; gap: 8px; width: 100%; }
-        .pinyin-trigger-btn, .game-trigger-btn { padding: 10px 0; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: bold; flex: 1; text-align: center; font-family: var(--font-ui); border: 1px solid transparent; }
-        .pinyin-trigger-btn { background-color: var(--btn-pinyin-bg); color: var(--btn-pinyin-text); border-color: var(--btn-pinyin-border); }
-        .game-trigger-btn { background-color: var(--btn-game-bg); color: var(--btn-game-text); border-color: var(--btn-game-border); }
-        
-        .card-container { width: 100%; height: 260px; perspective: 1000px; cursor: pointer; margin-bottom: 15px; position: relative; }
-        .card { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; border-radius: 20px; border: 2px solid var(--border-card); box-shadow: 0 8px 20px var(--shadow-card); }
-        .card.flipped { transform: rotateY(180deg); }
-        .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 16px; background-color: white; padding: 20px; box-sizing: border-box; }
-        .card-front { z-index: 2; background-color: var(--bg-card-front); }
-        .card-back { transform: rotateY(180deg); z-index: 1; background-color: var(--bg-card-back); }
-        
-        .manual-speaker { position: absolute; top: 12px; right: 15px; font-size: 22px; cursor: pointer; z-index: 10; user-select: none; opacity: 0.8; }
-        .heart-btn { position: absolute; top: 12px; right: 48px; font-size: 22px; cursor: pointer; z-index: 10; user-select: none; }
-        .chapter-badge { position: absolute; top: 12px; left: 15px; background-color: var(--text-accent); padding: 4px 10px; border-radius: 10px; font-size: 12px; color: white; font-weight: bold; }
-        body.theme-bw .chapter-badge { color: white; background: #111; }
-        
-        .hanzi { font-family: 'Noto Sans SC', sans-serif; font-size: 64px; font-weight: 700; color: var(--text-hanzi); }
-        .pinyin { font-family: 'Noto Sans SC', sans-serif; font-size: 21px; font-weight: 400; color: #7d525b; margin-top: 5px; }
-        body.theme-bw .pinyin { color: #333; }
-        .meaning { font-family: var(--font-card); font-size: 32px; font-weight: bold; color: var(--text-meaning); }
-        
-        .progress-container { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 12px; background-color: var(--bg-container); padding: 8px 16px; border-radius: 14px; cursor: pointer; border: 1px solid var(--border-main); box-shadow: 0 2px 6px rgba(201,24,74,0.01); width: 100%; box-sizing: border-box; }
-        .progress-bar-bg { flex-grow: 1; max-width: 180px; height: 6px; background-color: #ffe5ec; border-radius: 4px; overflow: hidden; }
-        .progress-bar-fill { height: 100%; background-color: var(--text-accent); width: 0%; transition: width 0.3s; }
-        body.theme-bw .progress-bar-fill { background-color: #111; }
-        .progress-text { font-size: 14px; color: var(--text-darkaccent); font-weight: bold; }
-        
-        .controls { display: flex; gap: 6px; justify-content: center; width: 100%; }
-        .controls button { padding: 12px 6px; font-size: 14px; font-family: var(--font-ui); font-weight: bold; border: none; border-radius: 14px; cursor: pointer; white-space: nowrap; flex: 1; box-shadow: 0 2px 5px rgba(201,24,74,0.02); }
-        .nav-btn { background-color: var(--btn-nav-bg); color: var(--btn-nav-text); }
-        .autoplay-btn { background-color: var(--btn-auto-bg); color: var(--btn-auto-text); }
-        .autoplay-btn.active { background-color: var(--btn-auto-active); color: white; }
-        body.theme-bw .autoplay-btn.active { background-color: #111111; color: #ffffff; }
-        .shuffle-trigger-btn { background-color: var(--btn-shuffle-bg); color: var(--btn-shuffle-text); }
-        
-        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.2); justify-content: center; align-items: center; }
-        .modal-content { background-color: var(--bg-container); border-radius: 20px; border: 1px solid var(--border-main); width: 90%; max-width: 380px; padding: 20px; height: 75vh; display: flex; flex-direction: column; font-family: var(--font-ui); box-shadow: 0 10px 30px rgba(201,24,74,0.08); }
-        .search-box { padding: 10px; margin-bottom: 10px; border: 1px solid var(--border-main); border-radius: 10px; font-family: var(--font-ui); font-size: 15px; background: var(--bg-container); color: var(--text-main); outline: none; }
-        .word-list-container { overflow-y: auto; flex-grow: 1; }
-        .word-list-item { display: flex; justify-content: space-between; padding: 10px 6px; border-bottom: 1px dashed var(--border-main); cursor: pointer; align-items: center; font-family: 'Noto Sans SC', sans-serif; font-size: 14px; color: var(--text-main); }
-        
-        .game-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; overflow-y: auto; flex-grow: 1; margin-bottom: 12px; }
-        .game-item { background-color: var(--bg-card-back); border: 1px solid var(--border-main); border-radius: 12px; padding: 8px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; font-weight: bold; text-align: center; font-size: 18px; min-height: 60px; color: var(--text-main); font-family: var(--font-ui); }
-        .game-item.selected { background-color: var(--text-accent); color: white; border-color: var(--text-accent); }
-        body.theme-bw .game-item.selected { background-color: #111111; color: white; }
-        .game-item.matched { visibility: hidden; }
-        .game-status { text-align: center; font-size: 16px; font-weight: bold; color: var(--text-hanzi); margin-bottom: 8px; }
-        .game-controls { display: flex; gap: 8px; border-top: 1px solid #ffe5ec; padding-top: 12px; }
-        
-        .game-btn { flex: 1; padding: 10px; border-radius: 12px; border: none; font-family: var(--font-ui); font-size: 14px; cursor: pointer; color: var(--btn-modal-text); font-weight: bold; }
-        .game-btn.btn-close { background-color: var(--btn-modal-close); color: #a4133c; }
-        .game-btn.btn-shuffle { background-color: var(--btn-modal-shuffle); color: #c9184a; }
-        .game-btn.btn-retry { background-color: var(--btn-modal-retry); color: #a4133c; }
-        body.theme-bw .game-btn.btn-retry { color: white; }
-        
-        .game-pinyin { font-size: 13px; color: #a4133c; margin-top: 3px; font-family: 'Noto Sans SC', sans-serif; font-weight: 500; }
-    </style>
+        .dashboard-box { background-color: var(--bg-container); border: 1px solid var(--border-main); border-radius: 16px; padding: 12px; width: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 4px 15px rgba(201,24,74,0.01); margin-bottom: 15px; }
+        .dashboard-row { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 10px; }
+        
+        .filter-group { display: flex; align-items: center; gap: 6px; flex-grow: 1; }
+        .filter-label { font-size: 13px; font-weight: bold; color: var(--text-darkaccent); white-space: nowrap; }
+        select { padding: 6px 12px; font-size: 14px; border-radius: 10px; border: 1px solid var(--border-main); background-color: var(--bg-card-back); cursor: pointer; color: var(--text-darkaccent); outline: none; flex-grow: 1; font-family: var(--font-ui); font-weight: 500; }
+        
+        .toggle-group { display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: bold; cursor: pointer; color: var(--text-accent); white-space: nowrap; padding: 6px; }
+        .toggle-group input { margin: 0; width: 15px; height: 15px; cursor: pointer; }
+        
+        .button-group-container { display: flex; gap: 8px; width: 100%; }
+        .pinyin-trigger-btn, .game-trigger-btn { padding: 10px 0; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: bold; flex: 1; text-align: center; font-family: var(--font-ui); border: 1px solid transparent; }
+        .pinyin-trigger-btn { background-color: var(--btn-pinyin-bg); color: var(--btn-pinyin-text); border-color: var(--btn-pinyin-border); }
+        .game-trigger-btn { background-color: var(--btn-game-bg); color: var(--btn-game-text); border-color: var(--btn-game-border); }
+        
+        .card-container { width: 100%; height: 260px; perspective: 1000px; cursor: pointer; margin-bottom: 15px; position: relative; }
+        .card { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; border-radius: 20px; border: 2px solid var(--border-card); box-shadow: 0 8px 20px var(--shadow-card); }
+        .card.flipped { transform: rotateY(180deg); }
+        .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 16px; background-color: white; padding: 20px; box-sizing: border-box; }
+        .card-front { z-index: 2; background-color: var(--bg-card-front); }
+        .card-back { transform: rotateY(180deg); z-index: 1; background-color: var(--bg-card-back); }
+        
+        .manual-speaker { position: absolute; top: 12px; right: 15px; font-size: 22px; cursor: pointer; z-index: 10; user-select: none; opacity: 0.8; }
+        .heart-btn { position: absolute; top: 12px; right: 48px; font-size: 22px; cursor: pointer; z-index: 10; user-select: none; }
+        .chapter-badge { position: absolute; top: 12px; left: 15px; background-color: var(--text-accent); padding: 4px 10px; border-radius: 10px; font-size: 12px; color: white; font-weight: bold; }
+        body.theme-bw .chapter-badge { color: white; background: #111; }
+        
+        .hanzi { font-family: 'Noto Sans SC', sans-serif; font-size: 64px; font-weight: 700; color: var(--text-hanzi); }
+        .pinyin { font-family: 'Noto Sans SC', sans-serif; font-size: 21px; font-weight: 400; color: #7d525b; margin-top: 5px; }
+        body.theme-bw .pinyin { color: #333; }
+        .meaning { font-family: var(--font-card); font-size: 32px; font-weight: bold; color: var(--text-meaning); }
+        
+        .progress-container { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 12px; background-color: var(--bg-container); padding: 8px 16px; border-radius: 14px; cursor: pointer; border: 1px solid var(--border-main); box-shadow: 0 2px 6px rgba(201,24,74,0.01); width: 100%; box-sizing: border-box; }
+        .progress-bar-bg { flex-grow: 1; max-width: 180px; height: 6px; background-color: #ffe5ec; border-radius: 4px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; background-color: var(--text-accent); width: 0%; transition: width 0.3s; }
+        body.theme-bw .progress-bar-fill { background-color: #111; }
+        .progress-text { font-size: 14px; color: var(--text-darkaccent); font-weight: bold; }
+        
+        .controls { display: flex; gap: 6px; justify-content: center; width: 100%; }
+        .controls button { padding: 12px 6px; font-size: 14px; font-family: var(--font-ui); font-weight: bold; border: none; border-radius: 14px; cursor: pointer; white-space: nowrap; flex: 1; box-shadow: 0 2px 5px rgba(201,24,74,0.02); }
+        .nav-btn { background-color: var(--btn-nav-bg); color: var(--btn-nav-text); }
+        .autoplay-btn { background-color: var(--btn-auto-bg); color: var(--btn-auto-text); }
+        .autoplay-btn.active { background-color: var(--btn-auto-active); color: white; }
+        body.theme-bw .autoplay-btn.active { background-color: #111111; color: #ffffff; }
+        .shuffle-trigger-btn { background-color: var(--btn-shuffle-bg); color: var(--btn-shuffle-text); }
+        
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.2); justify-content: center; align-items: center; }
+        .modal-content { background-color: var(--bg-container); border-radius: 20px; border: 1px solid var(--border-main); width: 90%; max-width: 380px; padding: 20px; height: 75vh; display: flex; flex-direction: column; font-family: var(--font-ui); box-shadow: 0 10px 30px rgba(201,24,74,0.08); }
+        .search-box { padding: 10px; margin-bottom: 10px; border: 1px solid var(--border-main); border-radius: 10px; font-family: var(--font-ui); font-size: 15px; background: var(--bg-container); color: var(--text-main); outline: none; }
+        .word-list-container { overflow-y: auto; flex-grow: 1; }
+        .word-list-item { display: flex; justify-content: space-between; padding: 10px 6px; border-bottom: 1px dashed var(--border-main); cursor: pointer; align-items: center; font-family: 'Noto Sans SC', sans-serif; font-size: 14px; color: var(--text-main); }
+        
+        .game-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; overflow-y: auto; flex-grow: 1; margin-bottom: 12px; }
+        .game-item { background-color: var(--bg-card-back); border: 1px solid var(--border-main); border-radius: 12px; padding: 8px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; font-weight: bold; text-align: center; font-size: 18px; min-height: 60px; color: var(--text-main); font-family: var(--font-ui); }
+        .game-item.selected { background-color: var(--text-accent); color: white; border-color: var(--text-accent); }
+        body.theme-bw .game-item.selected { background-color: #111111; color: white; }
+        .game-item.matched { visibility: hidden; }
+        .game-status { text-align: center; font-size: 16px; font-weight: bold; color: var(--text-hanzi); margin-bottom: 8px; }
+        .game-controls { display: flex; gap: 8px; border-top: 1px solid #ffe5ec; padding-top: 12px; }
+        
+        .game-btn { flex: 1; padding: 10px; border-radius: 12px; border: none; font-family: var(--font-ui); font-size: 14px; cursor: pointer; color: var(--btn-modal-text); font-weight: bold; }
+        .game-btn.btn-close { background-color: var(--btn-modal-close); color: #a4133c; }
+        .game-btn.btn-shuffle { background-color: var(--btn-modal-shuffle); color: #c9184a; }
+        .game-btn.btn-retry { background-color: var(--btn-modal-retry); color: #a4133c; }
+        body.theme-bw .game-btn.btn-retry { color: white; }
+        
+        .game-pinyin { font-size: 13px; color: #a4133c; margin-top: 3px; font-family: 'Noto Sans SC', sans-serif; font-weight: 500; }
+    </style>
 </head>
 <body>
 
-    <div id="book-select-screen" class="book-select-screen">
-        <div class="book-title">🎀 중국어 단어장 🎀<br><span style="font-size: 14px; color: var(--text-accent); font-family: var(--font-ui); font-weight: 500;">공부할 책을 선택해 주세요!</span></div>
-        <div class="book-grid" id="book-list-grid"></div>
-    </div>
-
-    <div id="main-app" class="main-app-container">
-        <div class="top-utility-bar">
-            <button class="home-btn" onclick="goBackToBooks()">📔 책 선택</button>
-            <div class="theme-switcher-container">
-                <button id="theme-pink-btn" class="theme-btn active" onclick="changeTheme('pink')">🩷 PINK</button>
-                <button id="theme-bw-btn" class="theme-btn" onclick="changeTheme('bw')">🖤 BLACK</button>
-            </div>
-        </div>
-
-        <div class="dashboard-box">
-            <div class="dashboard-row">
-                <div class="filter-group">
-                    <span class="filter-label">📂 범위:</span>
-                    <select id="chapter-select" onchange="changeCategory()"></select>
-                </div>
-                <label class="toggle-group"><input type="checkbox" id="auto-tts" checked> 🔊 자동발음</label>
-            </div>
-            
-            <div class="button-group-container">
-                <button class="pinyin-trigger-btn" onclick="openPinyinModal()">✍️ 병음 테스트</button>
-                <button class="game-trigger-btn" onclick="openGameModal()">🧩 매칭 게임</button>
-            </div>
-        </div>
-
-        <div class="card-container">
-            <div class="card" id="card" onclick="flipCard()">
-                <div class="card-face card-front">
-                    <span class="heart-btn" id="heart-btn" onclick="event.stopPropagation(); toggleUnknownWord()">🤍</span>
-                    <span class="manual-speaker" onclick="event.stopPropagation(); playCurrentWord()">🔊</span>
-                    <span class="chapter-badge" id="front-badge">-</span>
-                    <div class="hanzi" id="hanzi">로딩 중..</div>
-                    <div class="pinyin" id="pinyin"></div>
-                </div>
-                <div class="card-face card-back"><div class="meaning" id="meaning">뜻</div></div>
-            </div>
-        </div>
-
-        <div class="progress-container" onclick="openWordListModal()">
-            <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-bar-fill"></div></div>
-            <div class="progress-text" id="progress-text">0 / 0</div>
-        </div>
-
-        <div class="controls">
-            <button class="nav-btn" onclick="prevCard()">👈 이전</button>
-            <button class="autoplay-btn" id="autoplay-btn" onclick="toggleAutoplay()">⏱️ 자동 재생</button>
-            <button class="shuffle-trigger-btn" onclick="shuffleMainCards()">🔀 카드 섞기</button>
-            <button class="nav-btn" onclick="nextCard()">다음 👉</button>
-        </div>
-    </div>
-
-    <!-- 모달 창 영역 -->
-    <div id="word-list-modal" class="modal" onclick="if(event.target.id==='word-list-modal') this.style.display='none'">
-        <div class="modal-content">
-            <input type="text" id="search-input" class="search-box" placeholder="🔍 검색 (한자, 병음, 뜻 모두 가능)" oninput="renderWordList()">
-            <div id="word-list-container" class="word-list-container"></div>
-        </div>
-    </div>
-
-    <div id="game-modal" class="modal">
-        <div class="modal-content">
-            <div class="game-status" id="game-status">남은 단어: 0</div>
-            <div class="game-grid" id="game-grid-container"></div>
-            <div class="game-controls">
-                <button class="game-btn btn-close" onclick="document.getElementById('game-modal').style.display = 'none'">❌ 종료</button>
-                <button class="game-btn btn-shuffle" onclick="shuffleGame()">🔀 섞기</button>
-                <button class="game-btn btn-retry" onclick="openGameModal()">🔄 다시하기</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="pinyin-modal" class="modal">
-        <div class="modal-content" style="height: auto; max-width: 360px; text-align: center;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 0 5px;">
-                <div class="game-status" id="pinyin-status" style="margin: 0;">문제: 0 / 0</div>
-                <div id="pinyin-hearts" style="font-size: 18px; letter-spacing: 2px;">❤️❤️❤️❤️❤️</div>
-            </div>
-            <div style="margin: 20px 0;">
-                <div id="pinyin-q-hanzi" style="font-family: 'Noto Sans SC', sans-serif; font-size: 52px; font-weight: 700; color: var(--text-hanzi);">汉字</div>
-                <div id="pinyin-q-meaning" style="font-size: 16px; color: var(--text-darkaccent); margin-top: 8px; font-weight: bold; min-height: 25px;"></div>
-            </div>
-            <input type="text" id="pinyin-input" class="search-box" style="text-align: center; font-size: 18px; width: 100%; box-sizing: border-box; font-family: 'Noto Sans SC', sans-serif;" placeholder="예: ni3 hao3" onkeydown="if(event.key==='Enter') checkPinyin()">
-            <div id="pinyin-feedback" style="font-size: 16px; font-weight: bold; margin: 12px 0; min-height: 45px; line-height: 1.4; font-family: 'Noto Sans SC', sans-serif;"></div>
-            <div class="game-controls">
-                <button class="game-btn btn-close" onclick="closePinyinModal()">❌ 종료</button>
-                <button class="game-btn btn-retry" id="pinyin-action-btn" onclick="checkPinyin()">✔️ 확인</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-     const BOOK_DATA = [
-            { title: "📘 스마트 중국어 1", url: "https://docs.google.com/spreadsheets/d/18D1sxEjb7qD4DudFmrZziQDZ0HK-F1V-8Z3V-9WxoDw/gviz/tq?tqx=out:csv", type: "lesson" },
-            { title: "📙 HSK 단어장", url: "https://docs.google.com/spreadsheets/d/1zSUNaMz8rFvFfIx-YzgcIA-sNU1N3ZQRvAX-NbXzPfU/gviz/tq?tqx=out:csv", type: "hsk" }
-        ];
-
-        const CHAPTER_MAP = {
-            "1": "1과", "2": "2과", "3": "3과", "4": "4과", "5": "5과",
-            "6": "1~5과", "7": "7과", "8": "8과", "9": "9과", "10": "10과",
-            "11": "11과", "12": "7~11과", "13": "프린트 단어"
-        };
-
-        let SPREADSHEET_URL = ''; 
-        let currentBookType = 'lesson'; 
-        let totalWordData = [], currentFilteredData = [], currentIndex = 0, gameRemainingData = [];
-        let autoplayInterval = null;
-        let pinyinTestData = [], pinyinCurrentIdx = 0, pinyinIsAnswered = false, pinyinLives = 5;
-
-        // 오늘의 미션 관련 변수 (5개 기준)
-        let dailyStudyWords = [];
-        let dailyCurrentIdx = 0;
-        let isInsideDailyMission = false;
-
-        // 달력 제어용 현재 날짜 객체
-        let calendarCurrentDate = new Date();
-
-        function playOnlineZhAudio(text) {
-            if (!text) return;
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'zh-CN'; 
-                utterance.rate = 0.85;    
-                window.speechSynthesis.speak(utterance);
-            }
-        }
-
-        function getStorageKey() {
-            return 'unknown_words_' + btoa(SPREADSHEET_URL).replace(/=/g, '');
-        }
-        function getUnknownWords() {
-            const data = localStorage.getItem(getStorageKey());
-            return data ? JSON.parse(data) : [];
-        }
-        function saveUnknownWords(arr) {
-            localStorage.setItem(getStorageKey(), JSON.stringify(arr));
-        }
-
-        function changeTheme(theme) {
-            const pinkBtn = document.getElementById('theme-pink-btn');
-            const bwBtn = document.getElementById('theme-bw-btn');
-            if (theme === 'bw') {
-                document.body.classList.add('theme-bw');
-                bwBtn.classList.add('active');
-                pinkBtn.classList.remove('active');
-            } else {
-                document.body.classList.remove('theme-bw');
-                pinkBtn.classList.add('active');
-                bwBtn.classList.remove('active');
-            }
-            renderVisualCalendar();
-        }
-
-        function initBookSelection() {
-            const grid = document.getElementById('book-list-grid');
-            grid.innerHTML = '';
-            BOOK_DATA.forEach(book => {
-                const card = document.createElement('div');
-                card.className = 'book-card';
-                card.textContent = book.title;
-                card.onclick = () => selectBook(book.url);
-                grid.appendChild(card);
-            });
-            
-            createDailyMissionDOM();
-            createVisualCalendarDOM();
-        }
-
-     // 기존 틀(컨테이너) 내부를 파괴하지 않고 자연스럽게 삽입하는 최종 수정본
-        function createDailyMissionDOM() {
-            // 중복 생성 원천 차단
-            if (document.getElementById('open-mission-btn')) return;
-
-            const selectEl = document.getElementById('chapter-select');
-            if (selectEl && selectEl.parentNode) {
-                // 1. 기존 화면에 있던 '병음 테스트'와 '매칭 게임' 버튼을 정확히 찾아냅니다.
-                const allButtons = document.querySelectorAll('button');
-                let pinyinBtn = null;
-                let gameBtn = null;
-
-                allButtons.forEach(btn => {
-                    if (btn.textContent.includes('병음 테스트') && btn.id !== 'open-mission-btn') pinyinBtn = btn;
-                    if (btn.textContent.includes('매칭 게임') && btn.id !== 'open-mission-btn') gameBtn = btn;
-                });
-
-                // 기존 버튼들이 들어있는 부모 박스(기존 틀)를 기준으로 잡습니다.
-                if (pinyinBtn && pinyinBtn.parentNode) {
-                    const existingBox = pinyinBtn.parentNode; 
-
-                    // 2. 기존 틀 '내부' 맨 위에 얹어질 가로 정렬용 한 줄(Row) 생성
-                    const upperRow = document.createElement('div');
-                    upperRow.id = 'daily-mission-upper-row';
-                    upperRow.style.display = 'flex';
-                    upperRow.style.flexDirection = 'row';
-                    upperRow.style.alignItems = 'center';
-                    upperRow.style.justifyContent = 'flex-start';
-                    upperRow.style.gap = '16px';
-                    upperRow.style.width = '100%';
-                    upperRow.style.marginBottom = '12px'; // 기존 버튼들과의 세로 간격
-                    upperRow.style.boxSizing = 'border-box';
-
-                    // 오늘의 학습 버튼 (기존 내비게이션 버튼 스타일 클래스 적용)
-                    const openBtn = document.createElement('button');
-                    openBtn.id = 'open-mission-btn';
-                    openBtn.className = 'btn-nav'; 
-                    openBtn.innerHTML = '🔥 오늘의 학습';
-                    openBtn.style.padding = '10px 16px';
-                    openBtn.style.margin = '0';
-                    openBtn.style.border = 'none';
-                    openBtn.style.borderRadius = '12px';
-                    openBtn.style.cursor = 'pointer';
-                    openBtn.style.fontWeight = 'bold';
-                    openBtn.onclick = openDailyMissionModal;
-
-                    // 자동 발음 체크박스
-                    const ttsWrap = document.createElement('label');
-                    ttsWrap.id = 'auto-tts-wrapper';
-                    ttsWrap.style.display = 'flex';
-                    ttsWrap.style.alignItems = 'center';
-                    ttsWrap.style.gap = '6px';
-                    ttsWrap.style.fontSize = '14px';
-                    ttsWrap.style.fontWeight = 'bold';
-                    ttsWrap.style.color = 'var(--text-main)';
-                    ttsWrap.style.cursor = 'pointer';
-                    ttsWrap.innerHTML = `<input type="checkbox" id="auto-tts" checked style="width:16px; height:16px; cursor:pointer;"> 🔊 자동발음`;
-
-                    upperRow.appendChild(openBtn);
-                    upperRow.appendChild(ttsWrap);
-
-                    // 기존 버튼들 바로 윗 공간에 자연스럽게 끼워 넣습니다.
-                    existingBox.insertBefore(upperRow, pinyinBtn);
-
-                    // 3. 기존 하단 버튼들의 클릭 이벤트 리스너 연동 고정
-                    pinyinBtn.onclick = () => { 
-                        closeDailyMissionModal(); 
-                        isInsideDailyMission = false; 
-                        openPinyinModal(); 
-                    };
-                    gameBtn.onclick = () => { 
-                        closeDailyMissionModal(); 
-                        isInsideDailyMission = false; 
-                        openGameModal(); 
-                    };
-                }
-            }
-
-            // 4. 모달창 팝업 내부 글자 겹침 현상 완전 해결 (기존 카드 테마 클래스 유연하게 적용)
-            if (document.getElementById('daily-mission-modal')) return;
-            const modal = document.createElement('div');
-            modal.id = 'daily-mission-modal';
-            modal.style.position = 'fixed';
-            modal.style.top = '0'; modal.style.left = '0';
-            modal.style.width = '100vw'; modal.style.height = '100vh';
-            modal.style.backgroundColor = 'rgba(0,0,0,0.6)';
-            modal.style.backdropFilter = 'blur(6px)';
-            modal.style.display = 'none';
-            modal.style.justifyContent = 'center';
-            modal.style.alignItems = 'center';
-            modal.style.zIndex = '2000';
-
-            modal.innerHTML = `
-                <div style="background:var(--bg-main, #fff); width:90%; max-width:420px; padding:24px; border-radius:24px; box-shadow:0 10px 30px rgba(0,0,0,0.2); position:relative; text-align:center; box-sizing:border-box;">
-                    <button onclick="closeDailyMissionModal()" style="position:absolute; top:16px; right:16px; background:none; border:none; font-size:20px; cursor:pointer; color:var(--text-main);">❌</button>
-                    <h3 style="color:var(--text-main); margin-top:10px; margin-bottom:4px; font-size:20px;">🎯 오늘의 숙제 (5단어)</h3>
-                    <div id="dm-progress" style="font-size:14px; color:var(--text-main); opacity:0.7; margin-bottom:12px;">1 / 5</div>
-                    
-                    <div id="dm-card" onclick="flipDailyCard()" style="width:100%; min-height:180px; background:var(--card-bg, #f9f9f9); border-radius:16px; display:flex; flex-direction:column; justify-content:center; align-items:center; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.05); margin-bottom:16px; position:relative; padding:20px; box-sizing:border-box; gap:10px;">
-                        <div id="dm-front" style="font-size:42px; font-weight:bold; color:var(--text-hanzi, #000); line-height:1.2; white-space:nowrap;">汉字</div>
-                        <div id="dm-back" style="display:none; font-size:18px; color:var(--text-main); line-height:1.4; white-space:pre-line; margin-top:5px;">뜻 / 병음</div>
-                    </div>
-
-                    <div style="display:flex; flex-direction:row; justify-content:space-between; gap:10px; margin-bottom:20px; width:100%;">
-                        <button onclick="prevDailyCard()" style="flex:1; padding:12px; border:none; border-radius:10px; background:var(--card-bg); color:var(--text-main); border:1px solid rgba(0,0,0,0.1); cursor:pointer; font-weight:bold;">이전</button>
-                        <button onclick="playDailyVoice()" style="padding:12px 16px; border:none; border-radius:10px; background:var(--card-bg); color:var(--text-main); border:1px solid rgba(0,0,0,0.1); cursor:pointer;">🔊</button>
-                        <button onclick="nextDailyCard()" style="flex:1; padding:12px; border:none; border-radius:10px; background:var(--btn-nav-bg); color:var(--btn-nav-text); cursor:pointer; font-weight:bold;">다음</button>
-                    </div>
-
-                    <div id="dm-action-box" style="display:none; flex-direction:column; gap:12px; background:var(--card-bg); padding:16px; border-radius:16px; border:2px dashed var(--btn-nav-bg); box-sizing:border-box; width:100%;">
-                        <p style="margin:0; font-size:14px; font-weight:bold; color:var(--text-main);">✨ 5개 단어 확인 완료! 테스트를 시작하세요! ✨</p>
-                        <div style="display:flex; flex-direction:row; gap:10px; width:100%;">
-                            <button onclick="closeDailyMissionModal(); setTimeout(startDailyMissionGame, 50);" class="btn-nav" style="flex:1; padding:12px 6px; border:none; border-radius:10px; font-weight:bold; cursor:pointer; font-size:13px;">🧩 미션 매칭 게임</button>
-                            <button onclick="closeDailyMissionModal(); setTimeout(startDailyMissionPinyin, 50);" class="btn-nav" style="flex:1; padding:12px 6px; border:none; border-radius:10px; font-weight:bold; cursor:pointer; font-size:13px;">✍️ 미션 병음 테스트</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(modal);
-        }
-        function createVisualCalendarDOM() {
-            if (document.getElementById('visual-calendar-box')) return;
-
-            const mainApp = document.getElementById('main-app');
-            if (mainApp) {
-                const calWrapper = document.createElement('div');
-                calWrapper.id = 'visual-calendar-box';
-                calWrapper.style.width = '100%';
-                calWrapper.style.maxWidth = '400px';
-                calWrapper.style.margin = '30px auto 10px auto';
-                calWrapper.style.padding = '16px';
-                calWrapper.style.background = 'var(--card-bg, #fff)';
-                calWrapper.style.borderRadius = '20px';
-                calWrapper.style.boxShadow = '0 4px 16px rgba(0,0,0,0.1)';
-                calWrapper.style.boxSizing = 'border-box';
-
-                calWrapper.innerHTML = `
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                        <button onclick="moveCalendarMonth(-1)" style="background:none; border:none; font-size:16px; cursor:pointer; color:var(--text-main, #c9184a); font-weight:bold;">◀</button>
-                        <h4 id="calendar-title" style="margin:0; color:var(--text-main); font-size:16px; font-weight:bold;">2026년 6월</h4>
-                        <button onclick="moveCalendarMonth(1)" style="background:none; border:none; font-size:16px; cursor:pointer; color:var(--text-main, #c9184a); font-weight:bold;">▶</button>
-                    </div>
-                    <div style="display:grid; grid-template-columns:repeat(7, 1fr); gap:6px; text-align:center; font-size:12px; font-weight:bold; color:var(--text-main); opacity:0.7; margin-bottom:6px;">
-                        <div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div>
-                    </div>
-                    <div id="calendar-cells-grid" style="display:grid; grid-template-columns:repeat(7, 1fr); gap:6px;"></div>
-                    <div id="calendar-streak-info" style="margin-top:12px; font-size:13px; font-weight:bold; color:var(--text-main); text-align:center;">🔥 연속 학습 스트릭: 0일째</div>
-                `;
-                mainApp.appendChild(calWrapper);
-            }
-        }
-
-        function renderVisualCalendar() {
-            const grid = document.getElementById('calendar-cells-grid');
-            const title = document.getElementById('calendar-title');
-            const streakInfo = document.getElementById('calendar-streak-info');
-            if (!grid || !title) return;
-
-            grid.innerHTML = '';
-            
-            const year = calendarCurrentDate.getFullYear();
-            const month = calendarCurrentDate.getMonth();
-            title.textContent = `${year}년 ${month + 1}월`;
-
-            const streakCount = localStorage.getItem('sc_total_streak') || 0;
-            if (streakInfo) streakInfo.textContent = `🔥 연속 학습 스트릭: ${streakCount}일째`;
-
-            const calendarHistory = JSON.parse(localStorage.getItem('sc_history_calendar')) || {};
-
-            const firstDayIndex = new Date(year, month, 1).getDay();
-            const lastDate = new Date(year, month + 1, 0).getDate();
-
-            const isBlackTheme = document.body.classList.contains('theme-bw');
-
-            for (let i = 0; i < firstDayIndex; i++) {
-                const empty = document.createElement('div');
-                grid.appendChild(empty);
-            }
-
-            for (let day = 1; day <= lastDate; day++) {
-                const cell = document.createElement('div');
-                cell.style.height = '40px';
-                cell.style.display = 'flex';
-                cell.style.flexDirection = 'column';
-                cell.style.justifyContent = 'center';
-                cell.style.alignItems = 'center';
-                cell.style.borderRadius = '8px';
-                cell.style.fontSize = '12px';
-                cell.style.position = 'relative';
-                
-                cell.style.background = isBlackTheme ? '#2a2a2a' : '#fcf0f2';
-
-                const numSpan = document.createElement('span');
-                numSpan.textContent = day;
-                numSpan.style.fontSize = '10px';
-                numSpan.style.color = isBlackTheme ? '#bbb' : '#777';
-                cell.appendChild(numSpan);
-
-                const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-
-                const todayObj = new Date();
-                if (todayObj.getFullYear() === year && todayObj.getMonth() === month && todayObj.getDate() === day) {
-                    cell.style.border = isBlackTheme ? '2px solid #ffffff' : '2px solid #ff4d6d';
-                }
-
-                if (calendarHistory[dateKey]) {
-                    cell.style.background = isBlackTheme ? '#444444' : '#ffe5ec';
-                    
-                    const stamp = document.createElement('span');
-                    stamp.textContent = '🔥';
-                    stamp.style.fontSize = '14px';
-                    stamp.style.marginTop = '-2px';
-                    cell.appendChild(stamp);
-
-                    const wordsText = calendarHistory[dateKey].map(w => w.hanzi).join(', ');
-                    cell.title = `🎯 공부한 단어: ${wordsText}`;
-                    cell.style.cursor = 'help';
-                }
-
-                grid.appendChild(cell);
-            }
-        }
-
-        function moveCalendarMonth(dir) {
-            calendarCurrentDate.setMonth(calendarCurrentDate.getMonth() + dir);
-            renderVisualCalendar();
-        }
-
-        async function selectBook(url) {
-            if(!url || url.includes("여기에_")) {
-                alert("아직 주소가 등록되지 않은 책입니다!");
-                return;
-            }
-            SPREADSHEET_URL = url;
-            
-            const matchedBook = BOOK_DATA.find(b => b.url === url);
-            currentBookType = matchedBook ? matchedBook.type : 'lesson';
-
-            document.getElementById('book-select-screen').style.display = 'none';
-            document.getElementById('main-app').style.display = 'flex';
-            document.getElementById('hanzi').textContent = "로딩 중..";
-            await loadWordData();
-        }
-
-        function goBackToBooks() {
-            if (autoplayInterval) { toggleAutoplay(); }
-            document.getElementById('main-app').style.display = 'none';
-            document.getElementById('book-select-screen').style.display = 'flex';
-        }
-
-        async function loadWordData() {
-            try {
-                const res = await fetch(SPREADSHEET_URL);
-                const text = await res.text();
-                const lines = text.split('\n').slice(1); 
-                totalWordData = lines.filter(l => l.trim()).map((line, i) => {
-                    const row = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(s => s.replace(/"/g, '').trim());
-                    return { id: i, chapter: row[1], hanzi: row[2], pinyin: row[3], meaning: row[4] };
-                });
-
-                const select = document.getElementById('chapter-select');
-                select.innerHTML = '<option value="all">🌟 전체 보기</option>';
-
-                const rawChapters = totalWordData.map(w => w.chapter).filter(Boolean);
-                const uniqueChapters = [...new Set(rawChapters)];
-
-                uniqueChapters.sort((a, b) => {
-                    if (!isNaN(a) && !isNaN(b)) return parseInt(a) - parseInt(b);
-                    return a.localeCompare(b);
-                });
-
-                uniqueChapters.forEach(ch => {
-                    const opt = document.createElement('option');
-                    opt.value = ch;
-                    
-                    if (currentBookType === 'hsk') {
-                        opt.textContent = isNaN(ch) ? `🏆 ${ch}` : `🏆 HSK ${ch}급`;
-                    } else {
-                        if (CHAPTER_MAP[ch]) {
-                            if (ch === '6' || ch === '12') opt.textContent = `🔄 ${CHAPTER_MAP[ch]}`;
-                            else if (ch === '13') opt.textContent = `👀 ${CHAPTER_MAP[ch]}`;
-                            else opt.textContent = `🌸 ${CHAPTER_MAP[ch]}`;
-                        } else {
-                            opt.textContent = isNaN(ch) ? `👀 ${ch}` : `🌸 ${ch}과`;
-                        }
-                    }
-                    select.appendChild(opt);
-                });
-
-                const unknownOpt = document.createElement('option');
-                unknownOpt.value = "unknown";
-                unknownOpt.textContent = "🖤 모르는 단어";
-                select.appendChild(unknownOpt);
-
-                setupDailyWords();
-                changeCategory();
-                renderVisualCalendar();
-            } catch (e) { 
-                console.error("데이터 로드 오류:", e);
-                document.getElementById('hanzi').textContent = "오류 발생!"; 
-            }
-        }
-
-        function setupDailyWords() {
-            const today = new Date().toLocaleDateString('ko-KR');
-            const savedDate = localStorage.getItem('sc_daily_date');
-            const savedWords = localStorage.getItem('sc_daily_words');
-
-            if (savedDate === today && savedWords) {
-                dailyStudyWords = JSON.parse(savedWords);
-                return;
-            }
-
-            let recentWordIds = JSON.parse(localStorage.getItem('sc_recent_word_ids')) || [];
-            let availableWords = totalWordData.filter(w => !recentWordIds.includes(w.id));
-
-            if (availableWords.length < 5) {
-                recentWordIds = [];
-                availableWords = [...totalWordData];
-            }
-
-            dailyStudyWords = [];
-            const tempPool = [...availableWords];
-            for (let i = 0; i < 5; i++) {
-                if (tempPool.length === 0) break;
-                const rIdx = Math.floor(Math.random() * tempPool.length);
-                const selected = tempPool.splice(rIdx, 1)[0];
-                dailyStudyWords.push(selected);
-                recentWordIds.push(selected.id);
-            }
-
-            localStorage.setItem('sc_daily_date', today);
-            localStorage.setItem('sc_daily_words', JSON.stringify(dailyStudyWords));
-            localStorage.setItem('sc_recent_word_ids', JSON.stringify(recentWordIds));
-            
-            localStorage.setItem('sc_matching_cleared', 'false');
-            localStorage.setItem('sc_pinyin_cleared', 'false');
-        }
-
-        function openDailyMissionModal() {
-            dailyCurrentIdx = 0;
-            isInsideDailyMission = true;
-            document.getElementById('daily-mission-modal').style.display = 'flex';
-            document.getElementById('dm-action-box').style.display = 'none';
-            updateDailyCardUI();
-        }
-
-        function closeDailyMissionModal() {
-            isInsideDailyMission = false;
-            document.getElementById('daily-mission-modal').style.display = 'none';
-        }
-
-        function flipDailyCard() {
-            const backEl = document.getElementById('dm-back');
-            backEl.style.display = (backEl.style.display === 'none') ? 'block' : 'none';
-        }
-
-        function updateDailyCardUI() {
-            if (dailyStudyWords.length === 0) return;
-            const w = dailyStudyWords[dailyCurrentIdx];
-            
-            document.getElementById('dm-front').textContent = w.hanzi;
-            document.getElementById('dm-back').textContent = `${w.pinyin}\n[ ${w.meaning} ]`;
-            document.getElementById('dm-back').style.display = 'none';
-            document.getElementById('dm-progress').textContent = `${dailyCurrentIdx + 1} / ${dailyStudyWords.length}`;
-
-            if (dailyCurrentIdx === 4) {
-                document.getElementById('dm-action-box').style.display = 'flex';
-            }
-        }
-
-        function nextDailyCard() {
-            if (dailyStudyWords.length === 0) return;
-            dailyCurrentIdx = (dailyCurrentIdx + 1) % dailyStudyWords.length;
-            updateDailyCardUI();
-        }
-
-        function prevDailyCard() {
-            if (dailyStudyWords.length === 0) return;
-            dailyCurrentIdx = (dailyCurrentIdx - 1 + dailyStudyWords.length) % dailyStudyWords.length;
-            updateDailyCardUI();
-        }
-
-        function playDailyVoice() {
-            if (dailyStudyWords.length === 0) return;
-            playOnlineZhAudio(dailyStudyWords[dailyCurrentIdx].hanzi);
-        }
-
-        function startDailyMissionGame() {
-            isInsideDailyMission = true;
-            document.getElementById('game-modal').style.display = 'flex';
-            gameRemainingData = [...dailyStudyWords].sort(() => 0.5 - Math.random());
-            startRound();
-        }
-
-        function startDailyMissionPinyin() {
-            isInsideDailyMission = true;
-            document.getElementById('pinyin-modal').style.display = 'flex';
-            pinyinTestData = [...dailyStudyWords].sort(() => 0.5 - Math.random());
-            pinyinCurrentIdx = 0;
-            pinyinLives = 5;
-            document.getElementById('pinyin-input').style.display = 'block';
-            const btn = document.getElementById('pinyin-action-btn');
-            btn.onclick = checkPinyin;
-            updatePinyinHeartsUI();
-            showPinyinQuestion();
-        }
-
-        function changeCategory() {
-            const val = document.getElementById('chapter-select').value;
-            if (val === "unknown") {
-                const unknowns = getUnknownWords();
-                currentFilteredData = totalWordData.filter(w => unknowns.includes(w.hanzi));
-            } else if (val === "all") {
-                currentFilteredData = [...totalWordData];
-            } else {
-                currentFilteredData = totalWordData.filter(w => w.chapter === val);
-            }
-            currentIndex = 0;
-            updateCardContent();
-        }
-
-        function shuffleMainCards() {
-            if (currentFilteredData.length === 0) { alert("선택된 범위에 단어가 없습니다!"); return; }
-            currentFilteredData.sort(() => 0.5 - Math.random());
-            currentIndex = 0; 
-            updateCardContent();
-            if (document.getElementById('auto-tts').checked) { playCurrentWord(); }
-        }
-
-        function updateCardContent() {
-            if (currentFilteredData.length === 0) {
-                document.getElementById('hanzi').textContent = "단어 없음";
-                document.getElementById('pinyin').textContent = "";
-                document.getElementById('meaning').textContent = "범위를 확인하세요";
-                document.getElementById('progress-text').textContent = "0 / 0";
-                document.getElementById('progress-bar-fill').style.width = "0%";
-                document.getElementById('heart-btn').textContent = "🤍";
-                document.getElementById('front-badge').textContent = "-";
-                return;
-            }
-            const w = currentFilteredData[currentIndex];
-            if (!w) return;
-            document.getElementById('hanzi').textContent = w.hanzi;
-            document.getElementById('pinyin').textContent = w.pinyin;
-            document.getElementById('meaning').textContent = w.meaning;
-            
-            if (currentBookType === 'hsk') {
-                document.getElementById('front-badge').textContent = isNaN(w.chapter) ? w.chapter : "HSK " + w.chapter + "급";
-            } else {
-                document.getElementById('front-badge').textContent = CHAPTER_MAP[w.chapter] || (isNaN(w.chapter) ? w.chapter : w.chapter + "과");
-            }
-            
-            document.getElementById('progress-text').textContent = `${currentIndex + 1} / ${currentFilteredData.length}`;
-            document.getElementById('progress-bar-fill').style.width = `${((currentIndex + 1) / currentFilteredData.length) * 100}%`;
-            document.getElementById('card').classList.remove('flipped');
-
-            const unknowns = getUnknownWords();
-            document.getElementById('heart-btn').textContent = unknowns.includes(w.hanzi) ? "🖤" : "🤍";
-        }
-
-        function toggleUnknownWord() {
-            if (currentFilteredData.length === 0) return;
-            const w = currentFilteredData[currentIndex];
-            if (!w) return;
-
-            let unknowns = getUnknownWords();
-            const heartBtn = document.getElementById('heart-btn');
-
-            if (unknowns.includes(w.hanzi)) {
-                unknowns = unknowns.filter(h => h !== w.hanzi);
-                heartBtn.textContent = "🤍";
-            } else {
-                unknowns.push(w.hanzi);
-                heartBtn.textContent = "🖤";
-            }
-            saveUnknownWords(unknowns);
-        }
-
-        function flipCard() { document.getElementById('card').classList.toggle('flipped'); }
-        
-        function playCurrentWord() {
-            const w = currentFilteredData[currentIndex];
-            if (w) { playOnlineZhAudio(w.hanzi); }
-        }
-
-        function nextCard() { 
-            if (currentFilteredData.length === 0) return;
-            currentIndex = (currentIndex + 1) % currentFilteredData.length; 
-            updateCardContent(); 
-            if (document.getElementById('auto-tts').checked) { playCurrentWord(); }
-        }
-        function prevCard() { 
-            if (currentFilteredData.length === 0) return;
-            currentIndex = (currentIndex - 1 + currentFilteredData.length) % currentFilteredData.length; 
-            updateCardContent(); 
-        }
-        
-        function toggleAutoplay() { 
-            const btn = document.getElementById('autoplay-btn');
-            if (autoplayInterval) { 
-                clearInterval(autoplayInterval); 
-                autoplayInterval = null; 
-                btn.classList.remove('active'); 
-            } else { 
-                if (currentFilteredData.length === 0) return;
-                btn.classList.add('active');
-                if (document.getElementById('auto-tts').checked) { playCurrentWord(); }
-                autoplayInterval = setInterval(() => { 
-                    if (!document.getElementById('card').classList.contains('flipped')) {
-                        document.getElementById('card').classList.add('flipped');
-                    } else { nextCard(); } 
-                }, 2000); 
-            } 
-        }
-
-        function openWordListModal() {
-            document.getElementById('word-list-modal').style.display = 'flex';
-            document.getElementById('search-input').value = '';
-            renderWordList();
-        }
-
-        function renderWordList() {
-            const container = document.getElementById('word-list-container');
-            const query = document.getElementById('search-input').value.toLowerCase();
-            container.innerHTML = '';
-            currentFilteredData.forEach((w, idx) => {
-                if (w.hanzi.toLowerCase().includes(query) || 
-                    w.meaning.toLowerCase().includes(query) || 
-                    w.pinyin.toLowerCase().includes(query)) {
-                    
-                    const div = document.createElement('div');
-                    div.className = 'word-list-item';
-                    div.innerHTML = `<span>${w.hanzi} (${w.pinyin})</span><span>${w.meaning}</span>`;
-                    div.onclick = () => { currentIndex = idx; updateCardContent(); document.getElementById('word-list-modal').style.display = 'none'; };
-                    container.appendChild(div);
-                }
-            });
-        }
-
-        function openGameModal() { 
-            document.getElementById('game-modal').style.display = 'flex'; 
-            shuffleGame(); 
-        }
-
-        function shuffleGame() {
-            let pool = isInsideDailyMission ? dailyStudyWords : currentFilteredData;
-            if (pool.length === 0) { alert("선택된 범위에 단어가 없습니다!"); return; }
-            gameRemainingData = [...pool].sort(() => 0.5 - Math.random());
-            startRound(); 
-        }
-
-        function startRound() {
-            const g = document.getElementById('game-grid-container');
-            const status = document.getElementById('game-status');
-            g.innerHTML = '';
-            status.textContent = `남은 단어: ${gameRemainingData.length}개`;
-
-            let currentSet = gameRemainingData.slice(0, 4);
-            let pieces = [];
-            currentSet.forEach(w => {
-                pieces.push({ id: w.id, text: `<div>${w.hanzi}</div><div class="game-pinyin">${w.pinyin}</div>`, type: 'h' });
-                pieces.push({ id: w.id, text: `<div>${w.meaning}</div>`, type: 'm' });
-            });
-            pieces.sort(() => 0.5 - Math.random());
-
-            let selectedItems = [];
-            pieces.forEach(p => {
-                const div = document.createElement('div');
-                div.className = 'game-item';
-                div.innerHTML = p.text;
-                div.onclick = () => {
-                    if (div.classList.contains('matched') || div.classList.contains('selected')) return;
-                    div.classList.add('selected');
-                    selectedItems.push({ div, id: p.id, type: p.type });
-                    
-                    if (selectedItems.length === 2) {
-                        if (selectedItems[0].id === selectedItems[1].id && selectedItems[0].type !== selectedItems[1].type) {
-                            selectedItems[0].div.classList.add('matched');
-                            selectedItems[1].div.classList.add('matched');
-                            gameRemainingData = gameRemainingData.filter(w => w.id !== selectedItems[0].id);
-                            status.textContent = `남은 단어: ${gameRemainingData.length}개`;
-                            selectedItems = [];
-                            
-                            if (document.querySelectorAll('.game-item:not(.matched)').length === 0 && gameRemainingData.length > 0) {
-                                const nextBtn = document.createElement('button');
-                                nextBtn.textContent = "다음 라운드 ➡️";
-                                nextBtn.style.gridColumn = "span 2";
-                                nextBtn.style.background = "var(--btn-nav-bg)";
-                                nextBtn.style.color = "var(--btn-nav-text)";
-                                nextBtn.style.padding = "10px";
-                                nextBtn.style.border = "none";
-                                nextBtn.style.borderRadius = "12px";
-                                nextBtn.style.fontWeight = "bold";
-                                nextBtn.onclick = startRound;
-                                g.appendChild(nextBtn);
-                            } else if (gameRemainingData.length === 0) {
-                                status.textContent = "🎉 모두 완료!";
-                                if (isInsideDailyMission) {
-                                    localStorage.setItem('sc_matching_cleared', 'true');
-                                    checkDailyStudyComplete();
-                                }
-                            }
-                        } else {
-                            setTimeout(() => {
-                                selectedItems.forEach(i => i.div.classList.remove('selected'));
-                                selectedItems = [];
-                            }, 500);
-                        }
-                    }
-                };
-                g.appendChild(div);
-            });
-        }
-
-        function openPinyinModal() {
-            let pool = isInsideDailyMission ? dailyStudyWords : currentFilteredData;
-            if (pool.length === 0) { alert("선택된 범위에 단어가 없습니다!"); return; }
-            document.getElementById('pinyin-modal').style.display = 'flex';
-            pinyinTestData = [...pool].sort(() => 0.5 - Math.random());
-            pinyinCurrentIdx = 0;
-            pinyinLives = 5; 
-            
-            document.getElementById('pinyin-input').style.display = 'block';
-            const btn = document.getElementById('pinyin-action-btn');
-            btn.onclick = checkPinyin;
-            
-            updatePinyinHeartsUI();
-            showPinyinQuestion();
-        }
-
-        function closePinyinModal() { document.getElementById('pinyin-modal').style.display = 'none'; }
-
-        function updatePinyinHeartsUI() {
-            let heartStr = "";
-            for (let i = 0; i < 5; i++) { heartStr += (i < pinyinLives) ? "❤️" : "💔"; } 
-            document.getElementById('pinyin-hearts').textContent = heartStr;
-        }
-
-        function showPinyinQuestion() {
-            if (pinyinLives <= 0) return; 
-            
-            if (pinyinCurrentIdx >= pinyinTestData.length) {
-                document.getElementById('pinyin-status').textContent = "🎉 미션 클리어!";
-                document.getElementById('pinyin-q-hanzi').textContent = "통과 완료! 💯";
-                document.getElementById('pinyin-q-meaning').textContent = "학원 시험 걱정 끝!";
-                document.getElementById('pinyin-input').style.display = 'none';
-                document.getElementById('pinyin-feedback').innerHTML = `<span style="color:#a4133c; font-size:18px;">하트를 남기고 살아남으셨습니다!</span>`;
-                
-                const btn = document.getElementById('pinyin-action-btn');
-                btn.textContent = "🔄 한 판 더 하기";
-                btn.style.background = "var(--btn-modal-retry)";
-                pinyinIsAnswered = true;
-                btn.onclick = openPinyinModal;
-
-                if (isInsideDailyMission) {
-                    localStorage.setItem('sc_pinyin_cleared', 'true');
-                    checkDailyStudyComplete();
-                }
-                return;
-            }
-
-            pinyinIsAnswered = false;
-            const w = pinyinTestData[pinyinCurrentIdx];
-            document.getElementById('pinyin-status').textContent = `문제: ${pinyinCurrentIdx + 1} / ${pinyinTestData.length}`;
-            document.getElementById('pinyin-q-hanzi').textContent = w.hanzi;
-            document.getElementById('pinyin-q-meaning').textContent = "";
-            
-            const input = document.getElementById('pinyin-input');
-            input.value = '';
-            input.disabled = false;
-            input.focus();
-            document.getElementById('pinyin-feedback').textContent = '';
-            
-            const btn = document.getElementById('pinyin-action-btn');
-            btn.textContent = "✔️ 확인";
-            btn.className = "game-btn btn-retry";
-        }
-
-        function numberedToToneMarks(str) {
-            str = str.replace(/v/g, 'ü');
-            const toneChars = {
-                'a': ['ā', 'á', 'ǎ', 'à'], 'o': ['ō', 'ó', 'ǒ', 'ò'], 'e': ['ē', 'é', 'ě', 'è'],
-                'i': ['ī', 'í', 'ǐ', 'ì'], 'u': ['ū', 'ú', 'ǔ', 'ù'], 'ü': ['ǖ', 'ǘ', 'ǚ', 'ǜ']
-            };
-            return str.toLowerCase().replace(/([a-zü]+)([1-4])/g, function(match, word, toneNum) {
-                let toneIdx = parseInt(toneNum) - 1;
-                let replaced = false;
-                if (word.includes('a')) { word = word.replace('a', toneChars['a'][toneIdx]); replaced = true; }
-                if (!replaced && word.includes('o')) { word = word.replace('o', toneChars['o'][toneIdx]); replaced = true; }
-                if (!replaced && word.includes('e')) { word = word.replace('e', toneChars['e'][toneIdx]); replaced = true; }
-                if (!replaced && word.includes('ui')) { word = word.replace('i', toneChars['i'][toneIdx]); replaced = true; }
-                if (!replaced && word.includes('iu')) { word = word.replace('u', toneChars['u'][toneIdx]); replaced = true; }
-                if (!replaced) {
-                    for (let v of ['i', 'u', 'ü']) {
-                        if (word.includes(v)) { word = word.replace(v, toneChars[v][toneIdx]); break; }
-                    }
-                }
-                return word;
-            });
-        }
-
-        function checkPinyin() {
-            const btn = document.getElementById('pinyin-action-btn');
-            if (pinyinLives <= 0) { openPinyinModal(); return; }
-
-            if (pinyinIsAnswered) {
-                pinyinCurrentIdx++;
-                showPinyinQuestion();
-                return;
-            }
-
-            const w = pinyinTestData[pinyinCurrentIdx];
-            const input = document.getElementById('pinyin-input');
-            const feedback = document.getElementById('pinyin-feedback');
-            
-            document.getElementById('pinyin-q-meaning').textContent = `Meaning: ${w.meaning}`;
-
-            let userInputNormalized = numberedToToneMarks(input.value.trim().toLowerCase()).replace(/\s+/g, '').normalize("NFC");
-            let correctAnswerNormalized = w.pinyin.toLowerCase().replace(/\s+/g, '').replace(/v/g, 'ü').normalize("NFC");
-
-            if (userInputNormalized === correctAnswerNormalized) {
-                feedback.textContent = "정답입니다! 🎉";
-                feedback.style.color = "#c9184a";
-            } else {
-                pinyinLives--;
-                updatePinyinHeartsUI();
-                
-                if (pinyinLives <= 0) {
-                    feedback.innerHTML = `틀렸습니다. 😢 정답은 <span style="color:var(--text-hanzi); font-weight:700;">${w.pinyin}</span><br><br><strong style="color:#a4133c; font-size:22px;">💀 GAME OVER 💀</strong><br><span style="font-size:14px; color:#4a2830;">다시 도전해 보세요!</span>`;
-                    input.disabled = true;
-                    pinyinIsAnswered = true;
-                    btn.textContent = "🔄 재도전하기";
-                    
-                    playOnlineZhAudio(w.hanzi);
-                    return;
-                } else {
-                    feedback.innerHTML = `틀렸습니다. 😢<br>정답: <span style="color: var(--text-hanzi); font-weight:700;">${w.pinyin}</span>`;
-                    feedback.style.color = "#a4133c";
-                }
-            }
-
-            playOnlineZhAudio(w.hanzi);
-
-            input.disabled = true;
-            pinyinIsAnswered = true;
-            btn.textContent = "➡️ 다음 문제";
-            btn.className = "game-btn btn-close";
-        }
-
-        function checkDailyStudyComplete() {
-            const matchingDone = localStorage.getItem('sc_matching_cleared') === 'true';
-            const pinyinDone = localStorage.getItem('sc_pinyin_cleared') === 'true';
-
-            if (matchingDone && pinyinDone) {
-                const todayObj = new Date();
-                const todayStr = `${todayObj.getFullYear()}-${String(todayObj.getMonth() + 1).padStart(2, '0')}-${String(todayObj.getDate()).padStart(2, '0')}`;
-                
-                let calendarHistory = JSON.parse(localStorage.getItem('sc_history_calendar')) || {};
-
-                if (!calendarHistory[todayStr]) {
-                    calendarHistory[todayStr] = dailyStudyWords; 
-                    localStorage.setItem('sc_history_calendar', JSON.stringify(calendarHistory));
-
-                    let streakCount = parseInt(localStorage.getItem('sc_total_streak')) || 0;
-                    streakCount += 1;
-                    localStorage.setItem('sc_total_streak', streakCount);
-
-                    alert(`🎉 미션 컴플리트! 오늘 달력에 불꽃 도장(🔥)이 쾅 찍혔습니다!`);
-                    
-                    closeDailyMissionModal();
-                    renderVisualCalendar();
-                }
-            }
-        }
-        
-        initBookSelection();
-    </script>
+    <div id="book-select-screen" class="book-select-screen">
+        <div class="book-title">🎀 중국어 단어장 🎀<br><span style="font-size: 14px; color: var(--text-accent); font-family: var(--font-ui); font-weight: 500;">공부할 책을 선택해 주세요!</span></div>
+        <div class="book-grid" id="book-list-grid"></div>
+    </div>
+
+    <div id="main-app" class="main-app-container">
+        <div class="top-utility-bar">
+            <button class="home-btn" onclick="goBackToBooks()">📔 책 선택</button>
+            <div class="theme-switcher-container">
+                <button id="theme-pink-btn" class="theme-btn active" onclick="changeTheme('pink')">🩷 PINK</button>
+                <button id="theme-bw-btn" class="theme-btn" onclick="changeTheme('bw')">🖤 BLACK</button>
+            </div>
+        </div>
+
+        <div class="dashboard-box">
+            <div class="dashboard-row">
+                <div class="filter-group">
+                    <span class="filter-label">📂 범위:</span>
+                    <select id="chapter-select" onchange="changeCategory()"></select>
+                </div>
+                <label class="toggle-group"><input type="checkbox" id="auto-tts" checked> 🔊 자동발음</label>
+            </div>
+            
+            <div class="button-group-container">
+                <button class="pinyin-trigger-btn" onclick="openPinyinModal()">✍️ 병음 테스트</button>
+                <button class="game-trigger-btn" onclick="openGameModal()">🧩 매칭 게임</button>
+            </div>
+        </div>
+
+        <div class="card-container">
+            <div class="card" id="card" onclick="flipCard()">
+                <div class="card-face card-front">
+                    <span class="heart-btn" id="heart-btn" onclick="event.stopPropagation(); toggleUnknownWord()">🤍</span>
+                    <span class="manual-speaker" onclick="event.stopPropagation(); playCurrentWord()">🔊</span>
+                    <span class="chapter-badge" id="front-badge">-</span>
+                    <div class="hanzi" id="hanzi">로딩 중..</div>
+                    <div class="pinyin" id="pinyin"></div>
+                </div>
+                <div class="card-face card-back"><div class="meaning" id="meaning">뜻</div></div>
+            </div>
+        </div>
+
+        <div class="progress-container" onclick="openWordListModal()">
+            <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-bar-fill"></div></div>
+            <div class="progress-text" id="progress-text">0 / 0</div>
+        </div>
+
+        <div class="controls">
+            <button class="nav-btn" onclick="prevCard()">👈 이전</button>
+            <button class="autoplay-btn" id="autoplay-btn" onclick="toggleAutoplay()">⏱️ 자동 재생</button>
+            <button class="shuffle-trigger-btn" onclick="shuffleMainCards()">🔀 카드 섞기</button>
+            <button class="nav-btn" onclick="nextCard()">다음 👉</button>
+        </div>
+    </div>
+
+    <!-- 모달 창 영역 -->
+    <div id="word-list-modal" class="modal" onclick="if(event.target.id==='word-list-modal') this.style.display='none'">
+        <div class="modal-content">
+            <input type="text" id="search-input" class="search-box" placeholder="🔍 검색 (한자, 병음, 뜻 모두 가능)" oninput="renderWordList()">
+            <div id="word-list-container" class="word-list-container"></div>
+        </div>
+    </div>
+
+    <div id="game-modal" class="modal">
+        <div class="modal-content">
+            <div class="game-status" id="game-status">남은 단어: 0</div>
+            <div class="game-grid" id="game-grid-container"></div>
+            <div class="game-controls">
+                <button class="game-btn btn-close" onclick="document.getElementById('game-modal').style.display = 'none'">❌ 종료</button>
+                <button class="game-btn btn-shuffle" onclick="shuffleGame()">🔀 섞기</button>
+                <button class="game-btn btn-retry" onclick="openGameModal()">🔄 다시하기</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="pinyin-modal" class="modal">
+        <div class="modal-content" style="height: auto; max-width: 360px; text-align: center;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 0 5px;">
+                <div class="game-status" id="pinyin-status" style="margin: 0;">문제: 0 / 0</div>
+                <div id="pinyin-hearts" style="font-size: 18px; letter-spacing: 2px;">❤️❤️❤️❤️❤️</div>
+            </div>
+            <div style="margin: 20px 0;">
+                <div id="pinyin-q-hanzi" style="font-family: 'Noto Sans SC', sans-serif; font-size: 52px; font-weight: 700; color: var(--text-hanzi);">汉字</div>
+                <div id="pinyin-q-meaning" style="font-size: 16px; color: var(--text-darkaccent); margin-top: 8px; font-weight: bold; min-height: 25px;"></div>
+            </div>
+            <input type="text" id="pinyin-input" class="search-box" style="text-align: center; font-size: 18px; width: 100%; box-sizing: border-box; font-family: 'Noto Sans SC', sans-serif;" placeholder="예: ni3 hao3" onkeydown="if(event.key==='Enter') checkPinyin()">
+            <div id="pinyin-feedback" style="font-size: 16px; font-weight: bold; margin: 12px 0; min-height: 45px; line-height: 1.4; font-family: 'Noto Sans SC', sans-serif;"></div>
+            <div class="game-controls">
+                <button class="game-btn btn-close" onclick="closePinyinModal()">❌ 종료</button>
+                <button class="game-btn btn-retry" id="pinyin-action-btn" onclick="checkPinyin()">✔️ 확인</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const BOOK_DATA = [
+            { title: "📘 스마트 중국어 1", url: "https://docs.google.com/spreadsheets/d/18D1sxEjb7qD4DudFmrZziQDZ0HK-F1V-8Z3V-9WxoDw/gviz/tq?tqx=out:csv", type: "lesson" },
+            { title: "📙 HSK 단어장", url: "https://docs.google.com/spreadsheets/d/1zSUNaMz8rFvFfIx-YzgcIA-sNU1N3ZQRvAX-NbXzPfU/gviz/tq?tqx=out:csv", type: "hsk" }
+        ];
+
+        const CHAPTER_MAP = {
+            "1": "1과", "2": "2과", "3": "3과", "4": "4과", "5": "5과",
+            "6": "1~5과", "7": "7과", "8": "8과", "9": "9과", "10": "10과",
+            "11": "11과", "12": "7~11과", "13": "프린트 단어"
+        };
+
+        let SPREADSHEET_URL = ''; 
+        let currentBookType = 'lesson'; 
+        let totalWordData = [], currentFilteredData = [], currentIndex = 0, gameRemainingData = [];
+        let autoplayInterval = null;
+        let pinyinTestData = [], pinyinCurrentIdx = 0, pinyinIsAnswered = false, pinyinLives = 5;
+
+        function playOnlineZhAudio(text) {
+            if (!text) return;
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'zh-CN'; 
+                utterance.rate = 0.85;    
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function getStorageKey() {
+            return 'unknown_words_' + btoa(SPREADSHEET_URL).replace(/=/g, '');
+        }
+        function getUnknownWords() {
+            const data = localStorage.getItem(getStorageKey());
+            return data ? JSON.parse(data) : [];
+        }
+        function saveUnknownWords(arr) {
+            localStorage.setItem(getStorageKey(), JSON.stringify(arr));
+        }
+
+        function changeTheme(theme) {
+            const pinkBtn = document.getElementById('theme-pink-btn');
+            const bwBtn = document.getElementById('theme-bw-btn');
+            if (theme === 'bw') {
+                document.body.classList.add('theme-bw');
+                bwBtn.classList.add('active');
+                pinkBtn.classList.remove('active');
+            } else {
+                document.body.classList.remove('theme-bw');
+                pinkBtn.classList.add('active');
+                bwBtn.classList.remove('active');
+            }
+        }
+
+        function initBookSelection() {
+            const grid = document.getElementById('book-list-grid');
+            grid.innerHTML = '';
+            BOOK_DATA.forEach(book => {
+                const card = document.createElement('div');
+                card.className = 'book-card';
+                card.textContent = book.title;
+                card.onclick = () => selectBook(book.url);
+                grid.appendChild(card);
+            });
+        }
+
+        async function selectBook(url) {
+            if(!url || url.includes("여기에_")) {
+                alert("아직 주소가 등록되지 않은 책입니다!");
+                return;
+            }
+            SPREADSHEET_URL = url;
+            
+            const matchedBook = BOOK_DATA.find(b => b.url === url);
+            currentBookType = matchedBook ? matchedBook.type : 'lesson';
+
+            document.getElementById('book-select-screen').style.display = 'none';
+            document.getElementById('main-app').style.display = 'flex';
+            document.getElementById('hanzi').textContent = "로딩 중..";
+            await loadWordData();
+        }
+
+        function goBackToBooks() {
+            if (autoplayInterval) { toggleAutoplay(); }
+            document.getElementById('main-app').style.display = 'none';
+            document.getElementById('book-select-screen').style.display = 'flex';
+        }
+
+        async function loadWordData() {
+            try {
+                const res = await fetch(SPREADSHEET_URL);
+                const text = await res.text();
+                const lines = text.split('\n').slice(1); 
+                totalWordData = lines.filter(l => l.trim()).map((line, i) => {
+                    const row = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(s => s.replace(/"/g, '').trim());
+                    return { id: i, chapter: row[1], hanzi: row[2], pinyin: row[3], meaning: row[4] };
+                });
+
+                const select = document.getElementById('chapter-select');
+                select.innerHTML = '<option value="all">🌟 전체 보기</option>';
+
+                const rawChapters = totalWordData.map(w => w.chapter).filter(Boolean);
+                const uniqueChapters = [...new Set(rawChapters)];
+
+                uniqueChapters.sort((a, b) => {
+                    if (!isNaN(a) && !isNaN(b)) return parseInt(a) - parseInt(b);
+                    return a.localeCompare(b);
+                });
+
+                uniqueChapters.forEach(ch => {
+                    const opt = document.createElement('option');
+                    opt.value = ch;
+                    
+                    if (currentBookType === 'hsk') {
+                        opt.textContent = isNaN(ch) ? `🏆 ${ch}` : `🏆 HSK ${ch}급`;
+                    } else {
+                        if (CHAPTER_MAP[ch]) {
+                            if (ch === '6' || ch === '12') opt.textContent = `🔄 ${CHAPTER_MAP[ch]}`;
+                            else if (ch === '13') opt.textContent = `👀 ${CHAPTER_MAP[ch]}`;
+                            else opt.textContent = `🌸 ${CHAPTER_MAP[ch]}`;
+                        } else {
+                            opt.textContent = isNaN(ch) ? `👀 ${ch}` : `🌸 ${ch}과`;
+                        }
+                    }
+                    select.appendChild(opt);
+                });
+
+                const unknownOpt = document.createElement('option');
+                unknownOpt.value = "unknown";
+                unknownOpt.textContent = "🖤 모르는 단어";
+                select.appendChild(unknownOpt);
+
+                select.value = "all";
+                changeCategory();
+            } catch (e) { 
+                console.error("데이터 로드 오류:", e);
+                document.getElementById('hanzi').textContent = "오류 발생!"; 
+            }
+        }
+
+        function changeCategory() {
+            const val = document.getElementById('chapter-select').value;
+            if (val === "unknown") {
+                const unknowns = getUnknownWords();
+                currentFilteredData = totalWordData.filter(w => unknowns.includes(w.hanzi));
+            } else if (val === "all") {
+                currentFilteredData = [...totalWordData];
+            } else {
+                currentFilteredData = totalWordData.filter(w => w.chapter === val);
+            }
+            currentIndex = 0;
+            updateCardContent();
+        }
+
+        function shuffleMainCards() {
+            if (currentFilteredData.length === 0) { alert("선택된 범위에 단어가 없습니다!"); return; }
+            currentFilteredData.sort(() => 0.5 - Math.random());
+            currentIndex = 0; 
+            updateCardContent();
+            if (document.getElementById('auto-tts').checked) { playCurrentWord(); }
+        }
+
+        function updateCardContent() {
+            if (currentFilteredData.length === 0) {
+                document.getElementById('hanzi').textContent = "단어 없음";
+                document.getElementById('pinyin').textContent = "";
+                document.getElementById('meaning').textContent = "범위를 확인하세요";
+                document.getElementById('progress-text').textContent = "0 / 0";
+                document.getElementById('progress-bar-fill').style.width = "0%";
+                document.getElementById('heart-btn').textContent = "🤍";
+                document.getElementById('front-badge').textContent = "-";
+                return;
+            }
+            const w = currentFilteredData[currentIndex];
+            if (!w) return;
+            document.getElementById('hanzi').textContent = w.hanzi;
+            document.getElementById('pinyin').textContent = w.pinyin;
+            document.getElementById('meaning').textContent = w.meaning;
+            
+            if (currentBookType === 'hsk') {
+                document.getElementById('front-badge').textContent = isNaN(w.chapter) ? w.chapter : "HSK " + w.chapter + "급";
+            } else {
+                document.getElementById('front-badge').textContent = CHAPTER_MAP[w.chapter] || (isNaN(w.chapter) ? w.chapter : w.chapter + "과");
+            }
+            
+            document.getElementById('progress-text').textContent = `${currentIndex + 1} / ${currentFilteredData.length}`;
+            document.getElementById('progress-bar-fill').style.width = `${((currentIndex + 1) / currentFilteredData.length) * 100}%`;
+            document.getElementById('card').classList.remove('flipped');
+
+            const unknowns = getUnknownWords();
+            document.getElementById('heart-btn').textContent = unknowns.includes(w.hanzi) ? "🖤" : "🤍";
+        }
+
+        function toggleUnknownWord() {
+            if (currentFilteredData.length === 0) return;
+            const w = currentFilteredData[currentIndex];
+            if (!w) return;
+
+            let unknowns = getUnknownWords();
+            const heartBtn = document.getElementById('heart-btn');
+
+            if (unknowns.includes(w.hanzi)) {
+                unknowns = unknowns.filter(h => h !== w.hanzi);
+                heartBtn.textContent = "🤍";
+            } else {
+                unknowns.push(w.hanzi);
+                heartBtn.textContent = "🖤";
+            }
+            saveUnknownWords(unknowns);
+        }
+
+        function flipCard() { document.getElementById('card').classList.toggle('flipped'); }
+        
+        function playCurrentWord() {
+            const w = currentFilteredData[currentIndex];
+            if (w) { playOnlineZhAudio(w.hanzi); }
+        }
+
+        function nextCard() { 
+            if (currentFilteredData.length === 0) return;
+            currentIndex = (currentIndex + 1) % currentFilteredData.length; 
+            updateCardContent(); 
+            if (document.getElementById('auto-tts').checked) { playCurrentWord(); }
+        }
+        function prevCard() { 
+            if (currentFilteredData.length === 0) return;
+            currentIndex = (currentIndex - 1 + currentFilteredData.length) % currentFilteredData.length; 
+            updateCardContent(); 
+        }
+        
+        function toggleAutoplay() { 
+            const btn = document.getElementById('autoplay-btn');
+            if (autoplayInterval) { 
+                clearInterval(autoplayInterval); 
+                autoplayInterval = null; 
+                btn.classList.remove('active'); 
+            } else { 
+                if (currentFilteredData.length === 0) return;
+                btn.classList.add('active');
+                if (document.getElementById('auto-tts').checked) { playCurrentWord(); }
+                autoplayInterval = setInterval(() => { 
+                    if (!document.getElementById('card').classList.contains('flipped')) {
+                        document.getElementById('card').classList.add('flipped');
+                    } else { nextCard(); } 
+                }, 2000); 
+            } 
+        }
+
+        function openWordListModal() {
+            document.getElementById('word-list-modal').style.display = 'flex';
+            document.getElementById('search-input').value = '';
+            renderWordList();
+        }
+
+        function renderWordList() {
+            const container = document.getElementById('word-list-container');
+            const query = document.getElementById('search-input').value.toLowerCase();
+            container.innerHTML = '';
+            currentFilteredData.forEach((w, idx) => {
+                if (w.hanzi.toLowerCase().includes(query) || 
+                    w.meaning.toLowerCase().includes(query) || 
+                    w.pinyin.toLowerCase().includes(query)) {
+                    
+                    const div = document.createElement('div');
+                    div.className = 'word-list-item';
+                    div.innerHTML = `<span>${w.hanzi} (${w.pinyin})</span><span>${w.meaning}</span>`;
+                    div.onclick = () => { currentIndex = idx; updateCardContent(); document.getElementById('word-list-modal').style.display = 'none'; };
+                    container.appendChild(div);
+                }
+            });
+        }
+
+        function openGameModal() { document.getElementById('game-modal').style.display = 'flex'; shuffleGame(); }
+        function shuffleGame() {
+            if (currentFilteredData.length === 0) { alert("선택된 범위에 단어가 없습니다!"); return; }
+            gameRemainingData = [...currentFilteredData].sort(() => 0.5 - Math.random());
+            startRound(); 
+        }
+
+        function startRound() {
+            const g = document.getElementById('game-grid-container');
+            const status = document.getElementById('game-status');
+            g.innerHTML = '';
+            status.textContent = `남은 단어: ${gameRemainingData.length}개`;
+              let currentSet = gameRemainingData.slice(0, 4);
+            let pieces = [];
+            currentSet.forEach(w => {
+                pieces.push({ id: w.id, text: `<div>${w.hanzi}</div><div class="game-pinyin">${w.pinyin}</div>`, type: 'h' });
+                pieces.push({ id: w.id, text: `<div>${w.meaning}</div>`, type: 'm' });
+            });
+            pieces.sort(() => 0.5 - Math.random());
+
+            let selectedItems = [];
+            pieces.forEach(p => {
+                const div = document.createElement('div');
+                div.className = 'game-item';
+                div.innerHTML = p.text;
+                div.onclick = () => {
+                    if (div.classList.contains('matched') || div.classList.contains('selected')) return;
+                    div.classList.add('selected');
+                    selectedItems.push({ div, id: p.id, type: p.type });
+                    
+                    if (selectedItems.length === 2) {
+                        if (selectedItems[0].id === selectedItems[1].id && selectedItems[0].type !== selectedItems[1].type) {
+                            selectedItems[0].div.classList.add('matched');
+                            selectedItems[1].div.classList.add('matched');
+                            gameRemainingData = gameRemainingData.filter(w => w.id !== selectedItems[0].id);
+                            status.textContent = `남은 단어: ${gameRemainingData.length}개`;
+                            selectedItems = [];
+                            if (document.querySelectorAll('.game-item:not(.matched)').length === 0 && gameRemainingData.length > 0) {
+                                const nextBtn = document.createElement('button');
+                                nextBtn.textContent = "다음 라운드 ➡️";
+                                nextBtn.style.gridColumn = "span 2";
+                                nextBtn.style.background = "var(--btn-nav-bg)";
+                                nextBtn.style.color = "var(--btn-nav-text)";
+                                nextBtn.style.padding = "10px";
+                                nextBtn.style.border = "none";
+                                nextBtn.style.borderRadius = "12px";
+                                nextBtn.style.fontWeight = "bold";
+                                nextBtn.onclick = startRound;
+                                g.appendChild(nextBtn);
+                            } else if (gameRemainingData.length === 0) status.textContent = "🎉 모두 완료!";
+                        } else {
+                            setTimeout(() => {
+                                selectedItems.forEach(i => i.div.classList.remove('selected'));
+                                selectedItems = [];
+                            }, 500);
+                        }
+                    }
+                };
+                g.appendChild(div);
+            });
+        }
+
+        function openPinyinModal() {
+            if (currentFilteredData.length === 0) { alert("선택된 범위에 단어가 없습니다!"); return; }
+            document.getElementById('pinyin-modal').style.display = 'flex';
+            pinyinTestData = [...currentFilteredData].sort(() => 0.5 - Math.random());
+            pinyinCurrentIdx = 0;
+            pinyinLives = 5; 
+            
+            document.getElementById('pinyin-input').style.display = 'block';
+            const btn = document.getElementById('pinyin-action-btn');
+            btn.onclick = checkPinyin;
+            
+            updatePinyinHeartsUI();
+            showPinyinQuestion();
+        }
+
+        function closePinyinModal() { document.getElementById('pinyin-modal').style.display = 'none'; }
+
+        function updatePinyinHeartsUI() {
+            let heartStr = "";
+            for (let i = 0; i < 5; i++) { heartStr += (i < pinyinLives) ? "❤️" : "💔"; } 
+            document.getElementById('pinyin-hearts').textContent = heartStr;
+        }
+
+        function showPinyinQuestion() {
+            if (pinyinLives <= 0) return; 
+            
+            if (pinyinCurrentIdx >= pinyinTestData.length) {
+                document.getElementById('pinyin-status').textContent = "🎉 미션 클리어!";
+                document.getElementById('pinyin-q-hanzi').textContent = "통과 완료! 💯";
+                document.getElementById('pinyin-q-meaning').textContent = "학원 시험 걱정 끝!";
+                document.getElementById('pinyin-input').style.display = 'none';
+                document.getElementById('pinyin-feedback').innerHTML = `<span style="color:#a4133c; font-size:18px;">하트를 남기고 살아남으셨습니다!</span>`;
+                
+                const btn = document.getElementById('pinyin-action-btn');
+                btn.textContent = "🔄 한 판 더 하기";
+                btn.style.background = "var(--btn-modal-retry)";
+                pinyinIsAnswered = true;
+                btn.onclick = openPinyinModal;
+                return;
+            }
+
+            pinyinIsAnswered = false;
+            const w = pinyinTestData[pinyinCurrentIdx];
+            document.getElementById('pinyin-status').textContent = `문제: ${pinyinCurrentIdx + 1} / ${pinyinTestData.length}`;
+            document.getElementById('pinyin-q-hanzi').textContent = w.hanzi;
+            document.getElementById('pinyin-q-meaning').textContent = "";
+            
+            const input = document.getElementById('pinyin-input');
+            input.value = '';
+            input.disabled = false;
+            input.focus();
+            document.getElementById('pinyin-feedback').textContent = '';
+            
+            const btn = document.getElementById('pinyin-action-btn');
+            btn.textContent = "✔️ 확인";
+            btn.className = "game-btn btn-retry";
+        }
+
+        function numberedToToneMarks(str) {
+            str = str.replace(/v/g, 'ü');
+            const toneChars = {
+                'a': ['ā', 'á', 'ǎ', 'à'], 'o': ['ō', 'ó', 'ǒ', 'ò'], 'e': ['ē', 'é', 'ě', 'è'],
+                'i': ['ī', 'í', 'ǐ', 'ì'], 'u': ['ū', 'ú', 'ǔ', 'ù'], 'ü': ['ǖ', 'ǘ', 'ǚ', 'ǜ']
+            };
+            return str.toLowerCase().replace(/([a-zü]+)([1-4])/g, function(match, word, toneNum) {
+                let toneIdx = parseInt(toneNum) - 1;
+                let replaced = false;
+                if (word.includes('a')) { word = word.replace('a', toneChars['a'][toneIdx]); replaced = true; }
+                if (!replaced && word.includes('o')) { word = word.replace('o', toneChars['o'][toneIdx]); replaced = true; }
+                if (!replaced && word.includes('e')) { word = word.replace('e', toneChars['e'][toneIdx]); replaced = true; }
+                if (!replaced && word.includes('ui')) { word = word.replace('i', toneChars['i'][toneIdx]); replaced = true; }
+                if (!replaced && word.includes('iu')) { word = word.replace('u', toneChars['u'][toneIdx]); replaced = true; }
+                if (!replaced) {
+                    for (let v of ['i', 'u', 'ü']) {
+                        if (word.includes(v)) { word = word.replace(v, toneChars[v][toneIdx]); break; }
+                    }
+                }
+                return word;
+            });
+        }
+
+        function checkPinyin() {
+            const btn = document.getElementById('pinyin-action-btn');
+            if (pinyinLives <= 0) { openPinyinModal(); return; }
+
+            if (pinyinIsAnswered) {
+                pinyinCurrentIdx++;
+                showPinyinQuestion();
+                return;
+            }
+
+            const w = pinyinTestData[pinyinCurrentIdx];
+            const input = document.getElementById('pinyin-input');
+            const feedback = document.getElementById('pinyin-feedback');
+            
+            document.getElementById('pinyin-q-meaning').textContent = `Meaning: ${w.meaning}`;
+
+            let userInputNormalized = numberedToToneMarks(input.value.trim().toLowerCase()).replace(/\s+/g, '').normalize("NFC");
+            let correctAnswerNormalized = w.pinyin.toLowerCase().replace(/\s+/g, '').replace(/v/g, 'ü').normalize("NFC");
+
+            if (userInputNormalized === correctAnswerNormalized) {
+                feedback.textContent = "정답입니다! 🎉";
+                feedback.style.color = "#c9184a";
+            } else {
+                pinyinLives--;
+                updatePinyinHeartsUI();
+                
+                if (pinyinLives <= 0) {
+                    feedback.innerHTML = `틀렸습니다. 😢 정답은 <span style="color:var(--text-hanzi); font-weight:700;">${w.pinyin}</span><br><br><strong style="color:#a4133c; font-size:22px;">💀 GAME OVER 💀</strong><br><span style="font-size:14px; color:#4a2830;">다시 도전해 보세요!</span>`;
+                    input.disabled = true;
+                    pinyinIsAnswered = true;
+                    btn.textContent = "🔄 재도전하기";
+                    
+                    playOnlineZhAudio(w.hanzi);
+                    return;
+                } else {
+                    feedback.innerHTML = `틀렸습니다. 😢<br>정답: <span style="color: var(--text-hanzi); font-weight:700;">${w.pinyin}</span>`;
+                    feedback.style.color = "#a4133c";
+                }
+            }
+
+            playOnlineZhAudio(w.hanzi);
+
+            input.disabled = true;
+            pinyinIsAnswered = true;
+            btn.textContent = "➡️ 다음 문제";
+            btn.className = "game-btn btn-close";
+        }
+        
+        initBookSelection();
+    </script>
 </body>
 </html>
+           
