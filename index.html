@@ -247,7 +247,7 @@
     </div>
 
     <script>
-        const BOOK_DATA = [
+       const BOOK_DATA = [
             { title: "📘 스마트 중국어 1", url: "https://docs.google.com/spreadsheets/d/18D1sxEjb7qD4DudFmrZziQDZ0HK-F1V-8Z3V-9WxoDw/gviz/tq?tqx=out:csv", type: "lesson" },
             { title: "📙 HSK 단어장", url: "https://docs.google.com/spreadsheets/d/1zSUNaMz8rFvFfIx-YzgcIA-sNU1N3ZQRvAX-NbXzPfU/gviz/tq?tqx=out:csv", type: "hsk" }
         ];
@@ -264,7 +264,7 @@
         let autoplayInterval = null;
         let pinyinTestData = [], pinyinCurrentIdx = 0, pinyinIsAnswered = false, pinyinLives = 5;
 
-        // 오늘의 미션 관련 변수
+        // 오늘의 미션 관련 변수 (5개 기준 수정 완료)
         let dailyStudyWords = [];
         let dailyCurrentIdx = 0;
         let isInsideDailyMission = false;
@@ -294,7 +294,6 @@
             localStorage.setItem(getStorageKey(), JSON.stringify(arr));
         }
 
-        // 테마 변경 시 하단 캘린더의 색상 배열도 유기적으로 새로고침하도록 개선
         function changeTheme(theme) {
             const pinkBtn = document.getElementById('theme-pink-btn');
             const bwBtn = document.getElementById('theme-bw-btn');
@@ -307,7 +306,6 @@
                 pinkBtn.classList.add('active');
                 bwBtn.classList.remove('active');
             }
-            // 테마가 바뀔 때 달력을 다시 그려서 블랙/화이트 스타일을 즉시 반영합니다.
             renderVisualCalendar();
         }
 
@@ -326,6 +324,7 @@
             createVisualCalendarDOM();
         }
 
+        // 1. 오늘의 학습 팝업 모달창 생성 (버튼 가로 정렬 및 구조 전면 보정)
         function createDailyMissionDOM() {
             if (document.getElementById('open-mission-btn')) return;
 
@@ -359,27 +358,27 @@
             modal.style.zIndex = '2000';
 
             modal.innerHTML = `
-                <div style="background:var(--bg-main, #fff0f3); width:90%; max-width:420px; padding:24px; border-radius:24px; box-shadow:0 10px 30px rgba(0,0,0,0.2); position:relative; text-align:center;">
+                <div style="background:var(--bg-main, #fff0f3); width:90%; max-width:420px; padding:24px; border-radius:24px; box-shadow:0 10px 30px rgba(0,0,0,0.2); position:relative; text-align:center; box-sizing:border-box;">
                     <button onclick="closeDailyMissionModal()" style="position:absolute; top:16px; right:16px; background:none; border:none; font-size:20px; cursor:pointer; color:var(--text-main);">❌</button>
-                    <h3 style="color:var(--text-main); margin-bottom:4px;">🎯 오늘의 숙제 (3단어)</h3>
-                    <div id="dm-progress" style="font-size:14px; color:#666; margin-bottom:12px;">1 / 3</div>
+                    <h3 style="color:var(--text-main); margin-bottom:4px; font-size:20px;">🎯 오늘의 숙제 (5단어)</h3>
+                    <div id="dm-progress" style="font-size:14px; color:#666; margin-bottom:12px;">1 / 5</div>
                     
                     <div id="dm-card" onclick="flipDailyCard()" style="width:100%; height:180px; background:var(--card-bg, #fff); border-radius:16px; display:flex; flex-direction:column; justify-content:center; align-items:center; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.05); margin-bottom:16px; position:relative; padding:15px; box-sizing:border-box;">
                         <div id="dm-front" style="font-size:36px; font-weight:bold; color:var(--text-hanzi);">汉字</div>
                         <div id="dm-back" style="display:none; font-size:16px; color:var(--text-main); line-height:1.5; white-space:pre-line;">뜻 / 병음</div>
                     </div>
 
-                    <div style="display:flex; justify-content:space-between; gap:10px; margin-bottom:20px;">
-                        <button onclick="prevDailyCard()" style="flex:1; padding:10px; border:none; border-radius:10px; background:#ddd; cursor:pointer; font-weight:bold;">이전</button>
-                        <button onclick="playDailyVoice()" style="padding:10px 16px; border:none; border-radius:10px; background:#fff; border:1px solid #ccc; cursor:pointer;">🔊</button>
-                        <button onclick="nextDailyCard()" style="flex:1; padding:10px; border:none; border-radius:10px; background:var(--btn-nav-bg, #ffb3c1); color:var(--btn-nav-text); cursor:pointer; font-weight:bold;">다음</button>
+                    <div style="display:flex; flex-direction:row; justify-content:space-between; gap:10px; margin-bottom:20px; width:100%;">
+                        <button onclick="prevDailyCard()" style="flex:1; padding:12px; border:none; border-radius:10px; background:#ddd; cursor:pointer; font-weight:bold;">이전</button>
+                        <button onclick="playDailyVoice()" style="padding:12px 16px; border:none; border-radius:10px; background:#fff; border:1px solid #ccc; cursor:pointer;">🔊</button>
+                        <button onclick="nextDailyCard()" style="flex:1; padding:12px; border:none; border-radius:10px; background:var(--btn-nav-bg, #ffb3c1); color:var(--btn-nav-text); cursor:pointer; font-weight:bold;">다음</button>
                     </div>
 
-                    <div id="dm-action-box" style="display:none; flex-direction:column; gap:10px; background:var(--card-bg, #fff); padding:16px; border-radius:16px; border:2px dashed #ff758f;">
+                    <div id="dm-action-box" style="display:none; flex-direction:column; gap:12px; background:var(--card-bg, #fff); padding:16px; border-radius:16px; border:2px dashed #ff758f; box-sizing:border-box; width:100%;">
                         <p style="margin:0; font-size:14px; font-weight:bold; color:#c9184a;">✨ 모든 단어를 확인했습니다! 미션 시작! ✨</p>
-                        <div style="display:flex; gap:10px;">
-                            <button onclick="startDailyMissionGame()" style="flex:1; padding:12px; border:none; border-radius:10px; background:#ff4d6d; color:#fff; font-weight:bold; cursor:pointer;">🧩 매칭 게임</button>
-                            <button onclick="startDailyMissionPinyin()" style="flex:1; padding:12px; border:none; border-radius:10px; background:#ff758f; color:#fff; font-weight:bold; cursor:pointer;">✍️ 병음 테스트</button>
+                        <div style="display:flex; flex-direction:row; gap:10px; width:100%;">
+                            <button onclick="startDailyMissionGame()" style="flex:1; padding:12px 6px; border:none; border-radius:10px; background:#ff4d6d; color:#fff; font-weight:bold; cursor:pointer; font-size:13px;">🧩 매칭 게임</button>
+                            <button onclick="startDailyMissionPinyin()" style="flex:1; padding:12px 6px; border:none; border-radius:10px; background:#ff758f; color:#fff; font-weight:bold; cursor:pointer; font-size:13px;">✍️ 병음 테스트</button>
                         </div>
                     </div>
                 </div>
@@ -387,7 +386,6 @@
             document.body.appendChild(modal);
         }
 
-        // 고정 색상을 제거하고 테마 전용 변수들(var--)로 전면 교체함
         function createVisualCalendarDOM() {
             if (document.getElementById('visual-calendar-box')) return;
 
@@ -440,7 +438,6 @@
             const firstDayIndex = new Date(year, month, 1).getDay();
             const lastDate = new Date(year, month + 1, 0).getDate();
 
-            // 블랙 테마 검증용 플래그
             const isBlackTheme = document.body.classList.contains('theme-bw');
 
             for (let i = 0; i < firstDayIndex; i++) {
@@ -459,7 +456,6 @@
                 cell.style.fontSize = '12px';
                 cell.style.position = 'relative';
                 
-                // 테마에 따라 날짜 기본 빈 칸 색상 동적 가변
                 cell.style.background = isBlackTheme ? '#2a2a2a' : '#fcf0f2';
 
                 const numSpan = document.createElement('span');
@@ -476,7 +472,6 @@
                 }
 
                 if (calendarHistory[dateKey]) {
-                    // 도장 찍힌 날 바탕색 채우기
                     cell.style.background = isBlackTheme ? '#444444' : '#ffe5ec';
                     
                     const stamp = document.createElement('span');
@@ -574,6 +569,7 @@
             }
         }
 
+        // 오늘의 학습 단어 개수 수동 조건 보정 (5개 세팅)
         function setupDailyWords() {
             const today = new Date().toLocaleDateString('ko-KR');
             const savedDate = localStorage.getItem('sc_daily_date');
@@ -587,14 +583,15 @@
             let recentWordIds = JSON.parse(localStorage.getItem('sc_recent_word_ids')) || [];
             let availableWords = totalWordData.filter(w => !recentWordIds.includes(w.id));
 
-            if (availableWords.length < 3) {
+            // 5개 미만인 경우 리셋 조건 보정
+            if (availableWords.length < 5) {
                 recentWordIds = [];
                 availableWords = [...totalWordData];
             }
 
             dailyStudyWords = [];
             const tempPool = [...availableWords];
-            for (let i = 0; i < 3; i++) {
+            for (let i = 0; i < 5; i++) {
                 if (tempPool.length === 0) break;
                 const rIdx = Math.floor(Math.random() * tempPool.length);
                 const selected = tempPool.splice(rIdx, 1)[0];
@@ -637,7 +634,8 @@
             document.getElementById('dm-back').style.display = 'none';
             document.getElementById('dm-progress').textContent = `${dailyCurrentIdx + 1} / ${dailyStudyWords.length}`;
 
-            if (dailyCurrentIdx === 2) {
+            // 5번째 단어(인덱스 4)를 확인하면 하단 미션 박스가 출력되도록 변경
+            if (dailyCurrentIdx === 4) {
                 document.getElementById('dm-action-box').style.display = 'flex';
             }
         }
@@ -1017,6 +1015,7 @@
             btn.className = "game-btn btn-close";
         }
 
+        // 오늘의 학습 완료 체크 (5개 단어 클리어 기준 정상 연동)
         function checkDailyStudyComplete() {
             const matchingDone = localStorage.getItem('sc_matching_cleared') === 'true';
             const pinyinDone = localStorage.getItem('sc_pinyin_cleared') === 'true';
@@ -1044,6 +1043,9 @@
         }
         
         initBookSelection();
+    </script>
+</body>
+</html>
     </script>
 </body>
 </html>
