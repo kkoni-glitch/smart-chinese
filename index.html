@@ -324,62 +324,14 @@
             createVisualCalendarDOM();
         }
 
-      // 메인 화면 3단 배열 및 모달창 글자 겹침 현상을 완벽하게 교정한 최종 안정화 버전
+     // 기존 틀(컨테이너) 내부를 파괴하지 않고 자연스럽게 삽입하는 최종 수정본
         function createDailyMissionDOM() {
-            // 중복 생성 차단
-            if (document.getElementById('daily-mission-modal')) return;
+            // 중복 생성 원천 차단
+            if (document.getElementById('open-mission-btn')) return;
 
             const selectEl = document.getElementById('chapter-select');
             if (selectEl && selectEl.parentNode) {
-                const rangeRow = selectEl.parentNode; // 1번째 줄 (범위 행)
-
-                // 기존에 잘못 생성된 찌꺼기 컨테이너가 있다면 삭제
-                const oldWrapper = document.getElementById('daily-mission-menu-wrapper');
-                if (oldWrapper) oldWrapper.remove();
-
-                // [2번째 줄] 오늘의 학습 + 자동발음 가로 행 생성
-                const secondRow = document.createElement('div');
-                secondRow.id = 'daily-mission-menu-wrapper';
-                secondRow.style.display = 'flex';
-                secondRow.style.flexDirection = 'row';
-                secondRow.style.alignItems = 'center';
-                secondRow.style.justifyContent = 'flex-start';
-                secondRow.style.gap = '16px';
-                secondRow.style.width = '100%';
-                secondRow.style.maxWidth = '400px';
-                secondRow.style.margin = '12px auto 0 auto';
-                secondRow.style.boxSizing = 'border-box';
-
-                // 오늘의 학습 버튼 생성
-                const openBtn = document.createElement('button');
-                openBtn.id = 'open-mission-btn';
-                openBtn.className = 'btn-nav'; 
-                openBtn.innerHTML = '🔥 오늘의 학습';
-                openBtn.style.padding = '10px 16px';
-                openBtn.style.border = 'none';
-                openBtn.style.borderRadius = '12px';
-                openBtn.style.cursor = 'pointer';
-                openBtn.style.fontWeight = 'bold';
-                openBtn.onclick = openDailyMissionModal;
-
-                // 자동 발음 체크박스 생성 및 동기화
-                const ttsWrap = document.createElement('label');
-                ttsWrap.style.display = 'flex';
-                ttsWrap.style.alignItems = 'center';
-                ttsWrap.style.gap = '6px';
-                ttsWrap.style.fontSize = '14px';
-                ttsWrap.style.fontWeight = 'bold';
-                ttsWrap.style.color = 'var(--text-main)';
-                ttsWrap.style.cursor = 'pointer';
-                ttsWrap.innerHTML = `<input type="checkbox" id="auto-tts" checked style="width:16px; height:16px; cursor:pointer;"> 🔊 자동발음`;
-
-                secondRow.appendChild(openBtn);
-                secondRow.appendChild(ttsWrap);
-
-                // 1번째 줄 바로 다음에 2번째 줄 안착
-                rangeRow.after(secondRow);
-
-                // [3번째 줄] 기존 페이지 하단에 있던 병음 테스트 / 매칭 게임 버튼 정렬
+                // 1. 기존 화면에 있던 '병음 테스트'와 '매칭 게임' 버튼을 정확히 찾아냅니다.
                 const allButtons = document.querySelectorAll('button');
                 let pinyinBtn = null;
                 let gameBtn = null;
@@ -389,44 +341,69 @@
                     if (btn.textContent.includes('매칭 게임') && btn.id !== 'open-mission-btn') gameBtn = btn;
                 });
 
-                if (pinyinBtn && gameBtn) {
-                    const thirdRow = document.createElement('div');
-                    thirdRow.style.display = 'flex';
-                    thirdRow.style.flexDirection = 'row';
-                    thirdRow.style.gap = '12px';
-                    thirdRow.style.width = '100%';
-                    thirdRow.style.maxWidth = '400px';
-                    thirdRow.style.margin = '12px auto 0 auto';
-                    thirdRow.style.boxSizing = 'border-box';
+                // 기존 버튼들이 들어있는 부모 박스(기존 틀)를 기준으로 잡습니다.
+                if (pinyinBtn && pinyinBtn.parentNode) {
+                    const existingBox = pinyinBtn.parentNode; 
 
-                    // 원본 버튼 레이아웃 스타일 강제 초기화 및 적용
-                    pinyinBtn.style.flex = '1';
-                    pinyinBtn.style.margin = '0';
-                    pinyinBtn.style.display = 'block';
+                    // 2. 기존 틀 '내부' 맨 위에 얹어질 가로 정렬용 한 줄(Row) 생성
+                    const upperRow = document.createElement('div');
+                    upperRow.id = 'daily-mission-upper-row';
+                    upperRow.style.display = 'flex';
+                    upperRow.style.flexDirection = 'row';
+                    upperRow.style.alignItems = 'center';
+                    upperRow.style.justifyContent = 'flex-start';
+                    upperRow.style.gap = '16px';
+                    upperRow.style.width = '100%';
+                    upperRow.style.marginBottom = '12px'; // 기존 버튼들과의 세로 간격
+                    upperRow.style.boxSizing = 'border-box';
+
+                    // 오늘의 학습 버튼 (기존 내비게이션 버튼 스타일 클래스 적용)
+                    const openBtn = document.createElement('button');
+                    openBtn.id = 'open-mission-btn';
+                    openBtn.className = 'btn-nav'; 
+                    openBtn.innerHTML = '🔥 오늘의 학습';
+                    openBtn.style.padding = '10px 16px';
+                    openBtn.style.margin = '0';
+                    openBtn.style.border = 'none';
+                    openBtn.style.borderRadius = '12px';
+                    openBtn.style.cursor = 'pointer';
+                    openBtn.style.fontWeight = 'bold';
+                    openBtn.onclick = openDailyMissionModal;
+
+                    // 자동 발음 체크박스
+                    const ttsWrap = document.createElement('label');
+                    ttsWrap.id = 'auto-tts-wrapper';
+                    ttsWrap.style.display = 'flex';
+                    ttsWrap.style.alignItems = 'center';
+                    ttsWrap.style.gap = '6px';
+                    ttsWrap.style.fontSize = '14px';
+                    ttsWrap.style.fontWeight = 'bold';
+                    ttsWrap.style.color = 'var(--text-main)';
+                    ttsWrap.style.cursor = 'pointer';
+                    ttsWrap.innerHTML = `<input type="checkbox" id="auto-tts" checked style="width:16px; height:16px; cursor:pointer;"> 🔊 자동발음`;
+
+                    upperRow.appendChild(openBtn);
+                    upperRow.appendChild(ttsWrap);
+
+                    // 기존 버튼들 바로 윗 공간에 자연스럽게 끼워 넣습니다.
+                    existingBox.insertBefore(upperRow, pinyinBtn);
+
+                    // 3. 기존 하단 버튼들의 클릭 이벤트 리스너 연동 고정
                     pinyinBtn.onclick = () => { 
                         closeDailyMissionModal(); 
                         isInsideDailyMission = false; 
                         openPinyinModal(); 
                     };
-
-                    gameBtn.style.flex = '1';
-                    gameBtn.style.margin = '0';
-                    gameBtn.style.display = 'block';
                     gameBtn.onclick = () => { 
                         closeDailyMissionModal(); 
                         isInsideDailyMission = false; 
                         openGameModal(); 
                     };
-
-                    // 원래 위치에서 3번째 줄 영역으로 안전하게 이동(이동 시 찌꺼기 안 남음)
-                    thirdRow.appendChild(pinyinBtn);
-                    thirdRow.appendChild(gameBtn);
-                    
-                    secondRow.after(thirdRow);
                 }
             }
 
-            // 팝업 모달창 생성 및 글자 겹침 방지 CSS 완벽 적용
+            // 4. 모달창 팝업 내부 글자 겹침 현상 완전 해결 (기존 카드 테마 클래스 유연하게 적용)
+            if (document.getElementById('daily-mission-modal')) return;
             const modal = document.createElement('div');
             modal.id = 'daily-mission-modal';
             modal.style.position = 'fixed';
@@ -445,9 +422,9 @@
                     <h3 style="color:var(--text-main); margin-top:10px; margin-bottom:4px; font-size:20px;">🎯 오늘의 숙제 (5단어)</h3>
                     <div id="dm-progress" style="font-size:14px; color:var(--text-main); opacity:0.7; margin-bottom:12px;">1 / 5</div>
                     
-                    <div id="dm-card" onclick="flipDailyCard()" style="width:100%; min-height:180px; background:var(--card-bg, #f9f9f9); border-radius:16px; display:flex; flex-direction:column; justify-content:center; align-items:center; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.05); margin-bottom:16px; position:relative; padding:20px; box-sizing:border-box; gap:8px;">
-                        <div id="dm-front" style="font-size:42px; font-weight:bold; color:var(--text-hanzi, #000); line-height:1.2; z-index:2;">汉字</div>
-                        <div id="dm-back" style="display:none; font-size:18px; color:var(--text-main); line-height:1.4; white-space:pre-line; z-index:2; margin-top:5px;">뜻 / 병음</div>
+                    <div id="dm-card" onclick="flipDailyCard()" style="width:100%; min-height:180px; background:var(--card-bg, #f9f9f9); border-radius:16px; display:flex; flex-direction:column; justify-content:center; align-items:center; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.05); margin-bottom:16px; position:relative; padding:20px; box-sizing:border-box; gap:10px;">
+                        <div id="dm-front" style="font-size:42px; font-weight:bold; color:var(--text-hanzi, #000); line-height:1.2; white-space:nowrap;">汉字</div>
+                        <div id="dm-back" style="display:none; font-size:18px; color:var(--text-main); line-height:1.4; white-space:pre-line; margin-top:5px;">뜻 / 병음</div>
                     </div>
 
                     <div style="display:flex; flex-direction:row; justify-content:space-between; gap:10px; margin-bottom:20px; width:100%;">
